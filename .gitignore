@@ -7,9 +7,6 @@ build/
 .yarn/
 out/
 
-firebase.json
-storage.rules
-.firebaserc
 .yarnrc.yml
 yarn.lock
 *.log
