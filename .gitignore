@@ -1,0 +1,16 @@
+tests/coverage/
+emulator_data/
+node_modules/
+.vercel/
+build/
+.next/
+.yarn/
+out/
+
+firebase.json
+storage.rules
+.firebaserc
+.yarnrc.yml
+yarn.lock
+*.log
+.env

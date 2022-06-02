@@ -1,0 +1,12 @@
+tests/coverage/
+emulator_data/
+node_modules/
+.vercel/
+build/
+.next/
+.yarn/
+out/
+
+yarn.lock
+*.log
+.env

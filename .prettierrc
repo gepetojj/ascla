@@ -1,0 +1,15 @@
+{
+	"trailingComma": "es5",
+	"tabWidth": 4,
+	"semi": true,
+	"singleQuote": false,
+	"arrowParens": "avoid",
+	"bracketSameLine": false,
+	"bracketSpacing": true,
+	"endOfLine": "crlf",
+	"jsxSingleQuote": false,
+	"printWidth": 100,
+	"useTabs": true,
+	"importOrder": ["^@(.*)$", "^[^./](.*)$", "^[./]"],
+	"importOrderSeparation": true
+}
