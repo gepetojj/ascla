@@ -29,6 +29,7 @@
 		"react-icons": "^4.3.1",
 		"react-responsive-carousel": "^3.2.23",
 		"remove-accents": "^0.4.2",
+		"sharp": "^0.30.6",
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
@@ -38,6 +39,7 @@
 		"@types/prettier": "^2.6.1",
 		"@types/react": "^18.0.9",
 		"@types/react-dom": "^18.0.4",
+		"@types/sharp": "^0",
 		"@types/uuid": "^8",
 		"@typescript-eslint/eslint-plugin": "^5.25.0",
 		"@typescript-eslint/parser": "^5.25.0",
