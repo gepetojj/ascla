@@ -1,5 +1,5 @@
 import { Main } from "components/layout/Main";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 
