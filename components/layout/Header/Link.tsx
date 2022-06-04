@@ -40,7 +40,7 @@ const HeaderLinkComponent: FC<HeaderLinkProps> = ({
 					{Children.toArray(children).map((option, index) => (
 						<div
 							key={`header-link-${index}`}
-							className="w-full text-center p-1 cursor-pointer hover:underline underline-offset-1 decoration-primary-main"
+							className="w-full text-center p-1 cursor-pointer hover:underline underline-offset-1"
 						>
 							{option}
 						</div>

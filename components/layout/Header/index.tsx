@@ -2,6 +2,7 @@ import { Button } from "@material-tailwind/react";
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { memo, FC, useCallback } from "react";
 
@@ -40,9 +41,15 @@ const HeaderComponent: FC = () => {
 					label="Sobre"
 					showOnHover
 				>
-					<a href="/sobre/historia">História</a>
-					<a href="/sobre/estatuto">Estatuto</a>
-					<a href="/sobre/sede">Sede</a>
+					<Link href="/sobre/historia" shallow>
+						<a>História</a>
+					</Link>
+					<Link href="/sobre/estatuto" shallow>
+						<a>Estatuto</a>
+					</Link>
+					<Link href="/sobre/sede" shallow>
+						<a>Sede</a>
+					</Link>
 				</HeaderLink>
 				<HeaderLink
 					href="#"
@@ -50,9 +57,15 @@ const HeaderComponent: FC = () => {
 					label="Cadeiras"
 					showOnHover
 				>
-					<a href="/cadeiras/patronos">Patronos</a>
-					<a href="/cadeiras/academicos">Acadêmicos</a>
-					<a href="/cadeiras/socios">Sócios</a>
+					<Link href="/cadeiras/patronos" shallow>
+						<a>Patronos</a>
+					</Link>
+					<Link href="/cadeiras/academicos" shallow>
+						<a>Acadêmicos</a>
+					</Link>
+					<Link href="/cadeiras/socios" shallow>
+						<a>Sócios</a>
+					</Link>
 				</HeaderLink>
 				<HeaderLink href="/blog" isActive={pathname.startsWith("/blog")}>
 					Blog
@@ -61,15 +74,13 @@ const HeaderComponent: FC = () => {
 					Contato
 				</HeaderLink>
 			</nav>
-			<div>
-				<Button
-					onClick={accountLinkHandler}
-					className="bg-secondary-800 font-body font-medium rounded-sm duration-200 shadow-none hover:shadow-none hover:brightness-95"
-					size="sm"
-				>
-					{!data ? "Entrar" : "Sua conta"}
-				</Button>
-			</div>
+			<Button
+				onClick={accountLinkHandler}
+				className="bg-secondary-800 font-body font-medium rounded-sm duration-200 shadow-none hover:shadow-none hover:brightness-95"
+				size="sm"
+			>
+				{!data ? "Entrar" : "Sua conta"}
+			</Button>
 		</header>
 	);
 };

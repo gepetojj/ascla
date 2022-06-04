@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { FC, memo, ReactNode } from "react";
 
 export interface HeaderLinkBaseAnchorProps {
@@ -27,23 +28,24 @@ const HeaderLinkBaseComponent: FC<HeaderLinkBaseProps> = ({
 }) => {
 	if (as === "anchor" && href) {
 		return (
-			<a
-				href={href}
-				className={`text-secondary-700 m-1 p-1 rounded-sm cursor-pointer duration-200 ${
-					isActive
-						? "bg-secondary-700/[0.17] hover:bg-secondary-700/20"
-						: "hover:bg-secondary-700/10"
-				}`}
-			>
-				{children}
-			</a>
+			<Link href={href} shallow>
+				<a
+					className={`text-secondary-700 m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
+						isActive
+							? "bg-secondary-700/[0.17] hover:bg-secondary-700/20"
+							: "hover:bg-secondary-700/10"
+					}`}
+				>
+					{children}
+				</a>
+			</Link>
 		);
 	}
 
 	return (
 		<button
 			type="button"
-			className={`text-secondary-700 m-1 p-1 rounded-sm cursor-pointer duration-200 ${
+			className={`text-secondary-700 m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
 				isHovering || isActive ? "bg-secondary-700/20" : "hover:bg-secondary-700/10"
 			}`}
 		>
