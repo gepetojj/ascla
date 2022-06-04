@@ -10,13 +10,13 @@ import "styles/globals.css";
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	const { pathname } = useRouter();
-	
+
 	const Layout = useMemo(() => {
 		if (pathname === "/conta") return <Component {...pageProps} />;
 
 		return (
 			<>
-				<div className="min-h-screen">
+				<div className="min-h-screen bg-cream-main">
 					<Header />
 					<Component {...pageProps} />
 				</div>

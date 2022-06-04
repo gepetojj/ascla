@@ -12,7 +12,10 @@ const Home: NextPage = () => {
 				<title>ASCLA - Academia Santanense de Letras, Ciências e Artes</title>
 			</Head>
 
-			<main className="w-screen px-2 py-6 bg-white">
+			<main className="p-6">
+				<h2 className="text-2xl text-center font-bold mt-4 mb-10">
+					Academia Santanense de Ciências, Letras e Artes
+				</h2>
 				<Carousel
 					autoPlay
 					infiniteLoop
@@ -38,10 +41,7 @@ const Home: NextPage = () => {
 						<p>Legenda 3</p>
 					</div>
 				</Carousel>
-				<div className="flex flex-col justify-center items-center pt-20">
-					<h2 className="text-2xl font-bold text-center break-words">
-						Academia Santanense de Letras, Ciências e Artes
-					</h2>
+				<div className="flex flex-col justify-center items-center px-6 py-20">
 					<blockquote className="px-8 pt-6">
 						<div className="flex">
 							<div className="w-fit pr-3">
