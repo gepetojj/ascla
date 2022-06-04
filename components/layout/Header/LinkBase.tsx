@@ -42,10 +42,9 @@ const HeaderLinkBaseComponent: FC<HeaderLinkBaseProps> = ({
 
 	return (
 		<button
+			type="button"
 			className={`text-secondary-700 m-1 p-1 rounded-sm cursor-pointer duration-200 ${
-				isHovering || isActive
-					? "bg-secondary-700/20"
-					: "hover:bg-secondary-700/10"
+				isHovering || isActive ? "bg-secondary-700/20" : "hover:bg-secondary-700/10"
 			}`}
 		>
 			{children}
