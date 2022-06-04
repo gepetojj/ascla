@@ -1,6 +1,8 @@
-import React, { memo, FC, ReactNode, HTMLProps, Children, useState, useCallback } from "react";
+import React, { memo, FC, ReactNode, Children, useState, useCallback } from "react";
 
-export interface HeaderLinkProps extends HTMLProps<HTMLAnchorElement> {
+import { HeaderLinkBase } from "./LinkBase";
+
+export interface HeaderLinkProps {
 	href: string;
 	isActive?: boolean;
 	label?: string;
@@ -14,7 +16,6 @@ const HeaderLinkComponent: FC<HeaderLinkProps> = ({
 	label,
 	showOnHover,
 	children,
-	...props
 }) => {
 	const [isHovering, setIsHovering] = useState(false);
 
@@ -27,22 +28,19 @@ const HeaderLinkComponent: FC<HeaderLinkProps> = ({
 				onMouseEnter={toggleHover}
 				onMouseLeave={toggleHover}
 			>
-				<button
-					className={`p-2 mx-1 rounded-sm duration-200 bg-orange-50 ${
-						isHovering || isActive ? "brightness-95" : "hover:brightness-95"
-					}`}
-				>
+				<HeaderLinkBase as="button" isActive={isActive} isHovering={isHovering}>
 					{label}
-				</button>
+				</HeaderLinkBase>
 				<div
-					className={`flex flex-col justify-center items-center absolute w-fit p-2 top-12 bg-orange-100 ease-linear transform origin-top duration-100 ${
+					className={`flex flex-col justify-center items-center absolute w-fit px-3 py-2 top-12 rounded-sm 
+					bg-gray-500/40 backdrop-blur-sm border border-gray-100/5 ease-linear transform origin-top duration-100 ${
 						isHovering ? "scale-100" : "scale-0"
 					}`}
 				>
 					{Children.toArray(children).map((option, index) => (
 						<div
 							key={`header-link-${index}`}
-							className="w-full p-1 cursor-pointer text-center bg-orange-100 duration-200 rounded-sm hover:brightness-95"
+							className="w-full text-center p-1 cursor-pointer hover:underline underline-offset-1 decoration-primary-main"
 						>
 							{option}
 						</div>
@@ -53,15 +51,9 @@ const HeaderLinkComponent: FC<HeaderLinkProps> = ({
 	}
 
 	return (
-		<a
-			className={`p-2 mx-1 rounded-sm duration-200 bg-orange-50 ${
-				isActive ? "brightness-95 hover:brightness-90" : "hover:brightness-95"
-			}`}
-			href={href}
-			{...props}
-		>
+		<HeaderLinkBase as="anchor" href={href} isActive={isActive}>
 			{children}
-		</a>
+		</HeaderLinkBase>
 	);
 };
 

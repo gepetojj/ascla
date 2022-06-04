@@ -10,12 +10,21 @@ const HeaderComponent: FC = () => {
 	const { data } = useSession();
 
 	return (
-		<header className="w-screen h-fit p-6 bg-orange-50">
-			<div className="flex items-center py-2 mb-2">
-				<Image src="/logo.jpg" alt="Logo da ASCLA" width={51} height={51} priority />
-				<h1 className="text-4xl ml-5">ASCLA</h1>
+		<header className="flex flex-col justify-center items-center bg-primary-main px-6 py-5 md:flex-row md:justify-between">
+			<div className="flex items-center">
+				<div className="flex items-center">
+					<Image
+						src="/logo-ascla.webp"
+						alt="Logo da ASCLA"
+						layout="fixed"
+						width={72}
+						height={72}
+						priority
+					/>
+				</div>
+				<h1 className="text-2xl font-medium text-secondary-800 ml-5">ASCLA</h1>
 			</div>
-			<nav className="flex justify-center items-center flex-wrap w-full">
+			<nav className="flex justify-center items-center flex-wrap w-full mx-6 my-3 md:flex-nowrap md:my-0">
 				<HeaderLink href="/" isActive={pathname === "/"}>
 					Início
 				</HeaderLink>
@@ -45,13 +54,15 @@ const HeaderComponent: FC = () => {
 				<HeaderLink href="/contato" isActive={pathname === "/contato"}>
 					Contato
 				</HeaderLink>
+			</nav>
+			<div>
 				<HeaderLink
 					href={!data ? "/conta" : "/conta/dados"}
 					isActive={pathname.startsWith("/conta")}
 				>
 					{!data ? "Entrar" : "Sua conta"}
 				</HeaderLink>
-			</nav>
+			</div>
 		</header>
 	);
 };
