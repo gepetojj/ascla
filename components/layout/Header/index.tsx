@@ -1,13 +1,19 @@
+import { Button } from "@material-tailwind/react";
+
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { memo, FC } from "react";
+import React, { memo, FC, useCallback } from "react";
 
 import { HeaderLink } from "./Link";
 
 const HeaderComponent: FC = () => {
-	const { pathname } = useRouter();
+	const { pathname, push } = useRouter();
 	const { data } = useSession();
+
+	const accountLinkHandler = useCallback(() => {
+		push(!data ? "/conta" : "/conta/dados", undefined, { shallow: true });
+	}, [push, data]);
 
 	return (
 		<header className="flex flex-col justify-center items-center bg-primary-main px-6 py-5 md:flex-row md:justify-between">
@@ -56,12 +62,13 @@ const HeaderComponent: FC = () => {
 				</HeaderLink>
 			</nav>
 			<div>
-				<HeaderLink
-					href={!data ? "/conta" : "/conta/dados"}
-					isActive={pathname.startsWith("/conta")}
+				<Button
+					onClick={accountLinkHandler}
+					className="bg-secondary-800 font-body font-medium rounded-sm duration-200 shadow-none hover:shadow-none hover:brightness-95"
+					size="sm"
 				>
 					{!data ? "Entrar" : "Sua conta"}
-				</HeaderLink>
+				</Button>
 			</div>
 		</header>
 	);

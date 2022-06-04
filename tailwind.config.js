@@ -52,6 +52,9 @@ module.exports = withMT({
 					500: "#808080",
 				},
 			},
+			fontFamily: {
+				body: ["'Montserrat'", "sans-serif"],
+			},
 		},
 	},
 	plugins: [require("@tailwindcss/typography")],
