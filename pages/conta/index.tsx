@@ -26,7 +26,7 @@ const Account: NextPage = () => {
 			</Head>
 
 			<main className="flex flex-col justify-center items-center h-screen bg-primary-300">
-				<div className="max-w-sm">
+				<div className="max-w-sm mx-6">
 					<div className="flex items-center mb-8">
 						<div className="flex items-center">
 							<Image

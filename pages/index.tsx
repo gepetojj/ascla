@@ -1,3 +1,4 @@
+import { Main } from "components/layout/Main";
 import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
@@ -12,10 +13,7 @@ const Home: NextPage = () => {
 				<title>ASCLA - Academia Santanense de Letras, Ciências e Artes</title>
 			</Head>
 
-			<main className="p-6">
-				<h2 className="text-2xl text-center font-bold mt-4 mb-10">
-					Academia Santanense de Ciências, Letras e Artes
-				</h2>
+			<Main title="Academia Santanense de Ciências, Letras e Artes">
 				<Carousel
 					autoPlay
 					infiniteLoop
@@ -47,7 +45,7 @@ const Home: NextPage = () => {
 							<div className="w-fit pr-3">
 								<GoQuote className="text-2xl" />
 							</div>
-							<p>
+							<p className="max-w-md">
 								Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque
 								magnam sit porro illo quasi soluta libero velit, sequi modi
 								doloremque quia voluptatibus cum eos totam iste esse! Sint, pariatur
@@ -57,7 +55,7 @@ const Home: NextPage = () => {
 						<p className="text-right font-bold pt-2">Autor/a</p>
 					</blockquote>
 				</div>
-			</main>
+			</Main>
 		</>
 	);
 };
