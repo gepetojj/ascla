@@ -1,5 +1,4 @@
-import { Button, Popover, PopoverContent, PopoverHandler } from "@material-tailwind/react";
-
+import { Button } from "components/input/Button";
 import type { Patron } from "entities/Patron";
 import { firestore } from "myFirebase/server";
 import type { GetServerSideProps, NextPage } from "next";
@@ -40,7 +39,7 @@ const AdminPatrons: NextPage<Data> = ({ patrons }) => {
 			<main className="flex flex-col justify-center items-center h-screen">
 				<div className="flex justify-between items-center w-96">
 					<h1 className="text-2xl font-bold">Patronos</h1>
-					<Link href="/admin/patronos/novo">
+					<Link href="/admin/patronos/novo" shallow>
 						<a>
 							<MdAdd className="text-3xl cursor-pointer" />
 						</a>
@@ -54,31 +53,19 @@ const AdminPatrons: NextPage<Data> = ({ patrons }) => {
 								className="flex items-center bg-orange-300 px-2 py-1 mb-2 rounded-sm"
 							>
 								<span className="w-80 max-w-xs truncate pr-3">{patron.name}</span>
-								<div className="flex items-center">
-									<Link href={`/admin/patronos/${patron.metadata.urlId}`}>
+								<div className="flex items-center gap-2">
+									<Link href={`/admin/patronos/${patron.metadata.urlId}`} shallow>
 										<a>
-											<MdMode className="text-xl cursor-pointer mr-2" />
+											<MdMode className="text-xl cursor-pointer" />
 										</a>
 									</Link>
-									<Popover>
-										<PopoverHandler>
-											<button>
-												<MdDelete className="text-xl" />
-											</button>
-										</PopoverHandler>
-										<PopoverContent className="flex flex-col max-w-sm">
-											<span className="mb-3">
-												Tem certeza que deseja deletar este patrono? Não
-												será possível recuperá-lo após isso.
-											</span>
-											<Button
-												color="red"
-												onClick={() => deletePatron(patron.id)}
-											>
-												Confirmar
-											</Button>
-										</PopoverContent>
-									</Popover>
+
+									<Button
+										title="Clique duas vezes para deletar o patrono permanentemente."
+										onDoubleClick={() => deletePatron(patron.id)}
+									>
+										<MdDelete className="text-xl" />
+									</Button>
 								</div>
 							</div>
 						))

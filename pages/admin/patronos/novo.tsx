@@ -1,22 +1,14 @@
-import {
-	Input,
-	Tab,
-	Tabs,
-	TabsBody,
-	TabsHeader,
-	TabPanel,
-	Button,
-	Select,
-	Option,
-} from "@material-tailwind/react";
-import { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/react";
 
-import { Editor } from "components/input/Editor";
-import { PatronView } from "components/view/Patron";
+import { Button } from "components/input/Button";
+// import { PatronView } from "components/view/Patron";
 import type { Academic } from "entities/Academic";
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
+
+const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminPatronsNew: NextPage = () => {
 	const [academics, setAcademics] = useState<Academic[]>([]);
@@ -88,9 +80,8 @@ const AdminPatronsNew: NextPage = () => {
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
 							<div className="mr-2 my-2">
-								<Input
-									label="Nome *"
-									color="orange"
+								<input
+									placeholder="Nome *"
 									className="w-80"
 									value={name}
 									onChange={({ target }) => setName(target.value)}
@@ -98,62 +89,37 @@ const AdminPatronsNew: NextPage = () => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<Select
-									label={
-										academics.length <= 0
-											? "Não há acadêmicos registrados"
-											: "Vincule a um acadêmico *"
-									}
-									color="orange"
-									className="w-80"
-									disabled={academics.length <= 0}
-								>
+								<select className="w-80" disabled={academics.length <= 0}>
 									{!!academics.length ? (
 										academics.map(academic => (
-											<Option
+											<option
 												key={academic.id}
 												onClick={() => setAcademicId(academic.id)}
 											>
 												{academic.name}
-											</Option>
+											</option>
 										))
 									) : (
-										<Option disabled>Não há acadêmicos registrados.</Option>
+										<option>Não há acadêmicos registrados.</option>
 									)}
-								</Select>
+								</select>
 							</div>
 						</div>
-						<Button type="submit" color="orange">
+						<Button className="bg-primary-400" type="submit">
 							Criar
 						</Button>
 					</div>
-					<Tabs value="editor" className="px-5">
-						<TabsHeader>
-							<Tab key="editor" value="editor">
-								Editor
-							</Tab>
-							<Tab key="preview" value="preview">
-								Visualizar
-							</Tab>
-						</TabsHeader>
-						<TabsBody>
-							<TabPanel key="editor" value="editor">
-								<Editor initialValue={editorContent} onChange={setEditorContent} />
-							</TabPanel>
-							<TabPanel key="preview" value="preview">
-								<PatronView
-									name={name || "Nome do patrono"}
-									bio={editorContent}
-									metadata={{
-										urlId: "",
-										createdAt: 0,
-										updatedAt: 0,
-										academicId,
-									}}
-								/>
-							</TabPanel>
-						</TabsBody>
-					</Tabs>
+					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
+					{/* <PatronView
+						name={name || "Nome do patrono"}
+						bio={editorContent}
+						metadata={{
+							urlId: "",
+							createdAt: 0,
+							updatedAt: 0,
+							academicId,
+						}}
+					/> */}
 				</form>
 			</main>
 		</>

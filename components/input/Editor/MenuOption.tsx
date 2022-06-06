@@ -1,5 +1,3 @@
-import { Tooltip } from "@material-tailwind/react";
-
 import React, { ButtonHTMLAttributes, FC, memo, ReactNode } from "react";
 
 export interface EditorMenuOptionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -15,17 +13,16 @@ const EditorMenuOptionComponent: FC<EditorMenuOptionProps> = ({
 	...props
 }) => {
 	return (
-		<Tooltip content={tooltip}>
-			<button
-				type="button"
-				className={`bg-grey-200 p-1 mx-1 rounded-sm duration-200 ${
-					isActive ? "brightness-90 hover:brightness-[.85]" : "hover:brightness-95"
-				}`}
-				{...props}
-			>
-				{children}
-			</button>
-		</Tooltip>
+		<button
+			type="button"
+			title={tooltip}
+			className={`bg-grey-200 p-1 mx-1 rounded-sm duration-200 ${
+				isActive ? "brightness-90 hover:brightness-[.85]" : "hover:brightness-95"
+			}`}
+			{...props}
+		>
+			{children}
+		</button>
 	);
 };
 

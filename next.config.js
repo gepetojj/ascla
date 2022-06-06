@@ -1,7 +1,7 @@
-const withTM = require("next-transpile-modules")(["@material-tailwind/react"]);
+const withBA = require("@next/bundle-analyzer")({ enabled: process.env.ANALYZE === "true" });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = withTM({
+const nextConfig = withBA({
 	reactStrictMode: true,
 	swcMinify: true,
 	compiler: {

@@ -1,5 +1,4 @@
-import { Button, Popover, PopoverContent, PopoverHandler } from "@material-tailwind/react";
-
+import { Button } from "components/input/Button";
 import type { Academic } from "entities/Academic";
 import { firestore } from "myFirebase/server";
 import type { GetServerSideProps, NextPage } from "next";
@@ -60,25 +59,13 @@ const AdminAcademics: NextPage<Data> = ({ academics }) => {
 											<MdMode className="text-xl cursor-pointer mr-2" />
 										</a>
 									</Link>
-									<Popover>
-										<PopoverHandler>
-											<button>
-												<MdDelete className="text-xl" />
-											</button>
-										</PopoverHandler>
-										<PopoverContent className="flex flex-col max-w-sm">
-											<span className="mb-3">
-												Tem certeza que deseja deletar este acadêmico? Não
-												será possível recuperá-lo após isso.
-											</span>
-											<Button
-												color="red"
-												onClick={() => deleteAcademic(academic.id)}
-											>
-												Confirmar
-											</Button>
-										</PopoverContent>
-									</Popover>
+
+									<Button
+										title="Clique duas vezes para deletar o acadêmico permanentemente."
+										onDoubleClick={() => deleteAcademic(academic.id)}
+									>
+										<MdDelete className="text-xl" />
+									</Button>
 								</div>
 							</div>
 						))

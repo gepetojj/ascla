@@ -1,12 +1,14 @@
-import { Input, Tab, Tabs, TabsBody, TabsHeader, TabPanel, Button } from "@material-tailwind/react";
 import type { JSONContent } from "@tiptap/react";
 
-import { Editor } from "components/input/Editor";
-import { PostView } from "components/view/Post";
+import { Button } from "components/input/Button";
+// import { PostView } from "components/view/Post";
 import { getIdFromText } from "helpers/getIdFromText";
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, ChangeEvent } from "react";
+
+const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminNewPost: NextPage = () => {
 	const [title, setTitle] = useState("");
@@ -62,9 +64,8 @@ const AdminNewPost: NextPage = () => {
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
 							<div className="mr-2 my-2">
-								<Input
-									label="Título *"
-									color="orange"
+								<input
+									placeholder="Título *"
 									className="w-80"
 									value={title}
 									onChange={onTitleChange}
@@ -72,9 +73,8 @@ const AdminNewPost: NextPage = () => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<Input
-									label="Descrição curta *"
-									color="orange"
+								<input
+									placeholder="Descrição curta *"
 									className="w-80"
 									value={description}
 									onChange={({ target }) => setDescription(target.value)}
@@ -82,47 +82,30 @@ const AdminNewPost: NextPage = () => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<Input
-									label="URL Personalizada"
-									color="orange"
+								<input
+									placeholder="URL Personalizada"
 									className="w-80"
 									value={customUrl}
 									readOnly
 								/>
 							</div>
 						</div>
-						<Button type="submit" color="orange">
+						<Button className="bg-primary-400" type="submit">
 							Postar
 						</Button>
 					</div>
-					<Tabs value="editor" className="px-5">
-						<TabsHeader>
-							<Tab key="editor" value="editor">
-								Editor
-							</Tab>
-							<Tab key="preview" value="preview">
-								Visualizar
-							</Tab>
-						</TabsHeader>
-						<TabsBody>
-							<TabPanel key="editor" value="editor">
-								<Editor initialValue={editorContent} onChange={setEditorContent} />
-							</TabPanel>
-							<TabPanel key="preview" value="preview">
-								<PostView
-									title={title || "Título"}
-									description={description || "Descrição"}
-									metadata={{
-										urlId: customUrl,
-										createdAt: Date.now(),
-										updatedAt: 0,
-										authorId: "Ainda não postado.",
-									}}
-									content={editorContent}
-								/>
-							</TabPanel>
-						</TabsBody>
-					</Tabs>
+					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
+					{/* <PostView
+						title={title || "Título"}
+						description={description || "Descrição"}
+						metadata={{
+							urlId: customUrl,
+							createdAt: Date.now(),
+							updatedAt: 0,
+							authorId: "Ainda não postado.",
+						}}
+						content={editorContent}
+					/> */}
 				</form>
 			</main>
 		</>

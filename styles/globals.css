@@ -2,10 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#__next {
-	@apply m-0 min-h-screen w-full overflow-x-hidden p-0;
+body {
 	font-family: "Montserrat", sans-serif;
 }
 

@@ -38,4 +38,5 @@ const EditorComponent: FC<EditorProps> = ({ initialValue, onChange }) => {
 	);
 };
 
-export const Editor = memo(EditorComponent);
+const Editor = memo(EditorComponent);
+export default Editor;

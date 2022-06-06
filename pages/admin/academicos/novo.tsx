@@ -1,22 +1,14 @@
-import {
-	Input,
-	Tab,
-	Tabs,
-	TabsBody,
-	TabsHeader,
-	TabPanel,
-	Button,
-	Select,
-	Option,
-} from "@material-tailwind/react";
-import { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/react";
 
-import { Editor } from "components/input/Editor";
-import { AcademicView } from "components/view/Academic";
+import { Button } from "components/input/Button";
+// import { AcademicView } from "components/view/Academic";
 import type { Patron } from "entities/Patron";
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
+
+const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminAcademicsNew: NextPage = () => {
 	const [patrons, setPatrons] = useState<Patron[]>([]);
@@ -88,9 +80,8 @@ const AdminAcademicsNew: NextPage = () => {
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
 							<div className="mr-2 my-2">
-								<Input
-									label="Nome *"
-									color="orange"
+								<input
+									placeholder="Nome *"
 									className="w-80"
 									value={name}
 									onChange={({ target }) => setName(target.value)}
@@ -98,62 +89,35 @@ const AdminAcademicsNew: NextPage = () => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<Select
-									label={
-										patrons.length <= 0
-											? "Não há patronos registrados"
-											: "Vincule a um patrono *"
-									}
-									color="orange"
-									className="w-80"
-									disabled={patrons.length <= 0}
-								>
+								<select className="w-80" disabled={patrons.length <= 0}>
 									{!!patrons.length ? (
 										patrons.map(patron => (
-											<Option
+											<option
 												key={patron.id}
 												onClick={() => setPatronId(patron.id)}
 											>
 												{patron.name}
-											</Option>
+											</option>
 										))
 									) : (
-										<Option disabled>Não há patronos registrados.</Option>
+										<option>Não há patronos registrados.</option>
 									)}
-								</Select>
+								</select>
 							</div>
 						</div>
-						<Button type="submit" color="orange">
-							Criar
-						</Button>
+						<Button type="submit">Criar</Button>
 					</div>
-					<Tabs value="editor" className="px-5">
-						<TabsHeader>
-							<Tab key="editor" value="editor">
-								Editor
-							</Tab>
-							<Tab key="preview" value="preview">
-								Visualizar
-							</Tab>
-						</TabsHeader>
-						<TabsBody>
-							<TabPanel key="editor" value="editor">
-								<Editor initialValue={editorContent} onChange={setEditorContent} />
-							</TabPanel>
-							<TabPanel key="preview" value="preview">
-								<AcademicView
-									name={name || "Nome do acadêmico"}
-									bio={editorContent}
-									metadata={{
-										urlId: "",
-										createdAt: 0,
-										updatedAt: 0,
-										patronId,
-									}}
-								/>
-							</TabPanel>
-						</TabsBody>
-					</Tabs>
+					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
+					{/* <AcademicView
+						name={name || "Nome do acadêmico"}
+						bio={editorContent}
+						metadata={{
+							urlId: "",
+							createdAt: 0,
+							updatedAt: 0,
+							patronId,
+						}}
+					/> */}
 				</form>
 			</main>
 		</>

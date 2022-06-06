@@ -1,3 +1,4 @@
+import { Button } from "components/input/Button";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -11,25 +12,25 @@ const Admin: NextPage = () => {
 			</Head>
 
 			<main className="flex flex-col justify-center items-center h-screen">
-				<h1 className="text-2xl font-bold">Página de Administração</h1>
-				<div className="flex flex-col justify-center items-center mt-4">
-					<Link href="/admin/destaques">
-						<a className="px-2 py-1 bg-orange-400 rounded-sm">Destaques</a>
+				<h1 className="text-2xl text-center font-bold">Página de Administração</h1>
+				<div className="flex flex-wrap justify-center items-center mt-4 gap-2">
+					<Link href="/admin/destaques" passHref>
+						<Button className="bg-orange-400">Destaques</Button>
 					</Link>
-					<Link href="/admin/blog">
-						<a className="px-2 py-1 bg-orange-400 rounded-sm">Blog</a>
+					<Link href="/admin/blog" passHref>
+						<Button className="bg-orange-400">Notícias</Button>
 					</Link>
-					<Link href="/admin/usuarios">
-						<a className="mt-2 px-2 py-1 bg-orange-400 rounded-sm">Usuários</a>
+					<Link href="/admin/usuarios" passHref>
+						<Button className="bg-orange-400">Usuários</Button>
 					</Link>
-					<Link href="/admin/patronos">
-						<a className="mt-2 px-2 py-1 bg-orange-400 rounded-sm">Patronos</a>
+					<Link href="/admin/patronos" passHref>
+						<Button className="bg-orange-400">Patronos</Button>
 					</Link>
-					<Link href="/admin/academicos">
-						<a className="mt-2 px-2 py-1 bg-orange-400 rounded-sm">Acadêmicos</a>
+					<Link href="/admin/academicos" passHref>
+						<Button className="bg-orange-400">Acadêmicos</Button>
 					</Link>
-					<Link href="/admin/socios">
-						<a className="mt-2 px-2 py-1 bg-orange-400 rounded-sm">Sócios</a>
+					<Link href="/admin/socios" passHref>
+						<Button className="bg-orange-400">Sócios</Button>
 					</Link>
 				</div>
 			</main>

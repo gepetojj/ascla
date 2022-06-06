@@ -1,17 +1,19 @@
-import { Input, Button, Tabs, TabsHeader, Tab, TabsBody, TabPanel } from "@material-tailwind/react";
-import { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/react";
 
-import { Editor } from "components/input/Editor";
-import { PostView } from "components/view/Post";
+import { Button } from "components/input/Button";
+// import { PostView } from "components/view/Post";
 import type { BlogPost } from "entities/BlogPost";
 import { firestore } from "myFirebase/server";
 import type { NextPage, GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useCallback, useState } from "react";
 
 interface Props {
 	post: BlogPost;
 }
+
+const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminPostEdit: NextPage<Props> = ({ post }) => {
 	const [title, setTitle] = useState(post.title);
@@ -59,9 +61,8 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
 							<div className="mr-2 my-2">
-								<Input
-									label="Título *"
-									color="orange"
+								<input
+									placeholder="Título *"
 									className="w-80"
 									value={title}
 									onChange={({ target }) => setTitle(target.value)}
@@ -69,9 +70,8 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<Input
-									label="Descrição curta *"
-									color="orange"
+								<input
+									placeholder="Descrição curta *"
 									className="w-80"
 									value={description}
 									onChange={({ target }) => setDescription(target.value)}
@@ -79,33 +79,17 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 								/>
 							</div>
 						</div>
-						<Button type="submit" color="orange">
+						<Button className="bg-primary-400" type="submit">
 							Atualizar
 						</Button>
 					</div>
-					<Tabs value="editor" className="px-5">
-						<TabsHeader>
-							<Tab key="editor" value="editor">
-								Editor
-							</Tab>
-							<Tab key="preview" value="preview">
-								Visualizar
-							</Tab>
-						</TabsHeader>
-						<TabsBody>
-							<TabPanel key="editor" value="editor">
-								<Editor initialValue={editorContent} onChange={setEditorContent} />
-							</TabPanel>
-							<TabPanel key="preview" value="preview">
-								<PostView
-									title={title || post.title}
-									description={description || post.description}
-									metadata={{ ...post.metadata, updatedAt: Date.now() }}
-									content={editorContent}
-								/>
-							</TabPanel>
-						</TabsBody>
-					</Tabs>
+					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
+					{/* <PostView
+						title={title || post.title}
+						description={description || post.description}
+						metadata={{ ...post.metadata, updatedAt: Date.now() }}
+						content={editorContent}
+					/> */}
 				</form>
 			</main>
 		</>

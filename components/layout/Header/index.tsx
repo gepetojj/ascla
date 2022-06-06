@@ -1,5 +1,4 @@
-import { Button } from "@material-tailwind/react";
-
+import { Button } from "components/input/Button";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,21 +16,24 @@ const HeaderComponent: FC = () => {
 	}, [push, data]);
 
 	return (
-		<header className="flex flex-col justify-center items-center bg-primary-main px-6 py-5 md:flex-row md:justify-between">
+		<header className="flex flex-col justify-center items-center bg-primary-main px-6 py-5 gap-4 md:flex-row md:justify-between">
 			<div className="flex items-center">
 				<div className="flex items-center">
 					<Image
 						src="/logo-ascla.webp"
 						alt="Logo da ASCLA"
 						layout="fixed"
-						width={72}
-						height={72}
+						width={92}
+						height={92}
 						priority
 					/>
 				</div>
-				<h1 className="text-2xl font-medium text-secondary-800 ml-5">ASCLA</h1>
+				<div className="flex flex-col justify-center ml-5">
+					<h1 className="text-2xl font-medium text-secondary-800">ASCLA</h1>
+					<h2 className="text-sm font-medium text-secondary-800">10 anos</h2>
+				</div>
 			</div>
-			<nav className="flex justify-center items-center flex-wrap w-full mx-6 my-3 md:flex-nowrap md:my-0">
+			<nav className="flex justify-center items-center flex-wrap w-full my-3 md:flex-nowrap md:my-0">
 				<HeaderLink href="/" isActive={pathname === "/"}>
 					Início
 				</HeaderLink>
@@ -74,13 +76,11 @@ const HeaderComponent: FC = () => {
 					Contato
 				</HeaderLink>
 			</nav>
-			<Button
-				onClick={accountLinkHandler}
-				className="bg-secondary-800 font-body font-medium rounded-sm duration-200 shadow-none hover:shadow-none hover:brightness-95"
-				size="sm"
-			>
-				{!data ? "Entrar" : "Sua conta"}
-			</Button>
+			<div>
+				<Button onClick={accountLinkHandler} className="bg-secondary-800 text-cream-100">
+					{!data ? "Entrar" : "Sua conta"}
+				</Button>
+			</div>
 		</header>
 	);
 };

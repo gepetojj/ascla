@@ -1,5 +1,4 @@
-import { Button, Popover, PopoverContent, PopoverHandler } from "@material-tailwind/react";
-
+import { Button } from "components/input/Button";
 import type { BlogPost } from "entities/BlogPost";
 import { firestore } from "myFirebase/server";
 import type { GetServerSideProps, NextPage } from "next";
@@ -60,22 +59,12 @@ const AdminBlog: NextPage<Data> = ({ posts }) => {
 											<MdMode className="text-xl cursor-pointer mr-2" />
 										</a>
 									</Link>
-									<Popover>
-										<PopoverHandler>
-											<button>
-												<MdDelete className="text-xl" />
-											</button>
-										</PopoverHandler>
-										<PopoverContent className="flex flex-col max-w-sm">
-											<span className="mb-3">
-												Tem certeza que deseja deletar este post? Não será
-												possível recuperá-lo após isso.
-											</span>
-											<Button color="red" onClick={() => deletePost(post.id)}>
-												Confirmar
-											</Button>
-										</PopoverContent>
-									</Popover>
+									<Button
+										title="Clique duas vezes para deletar o post permanentemente."
+										onDoubleClick={() => deletePost(post.id)}
+									>
+										<MdDelete className="text-xl" />
+									</Button>
 								</div>
 							</div>
 						))

@@ -1,10 +1,9 @@
-import { Card, CardBody, CardFooter } from "@material-tailwind/react";
-
+import { CardBlog } from "components/card/Blog";
+import { Main } from "components/layout/Main";
 import type { BlogPost } from "entities/BlogPost";
 import { firestore } from "myFirebase/server";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import React from "react";
 
 interface Props {
@@ -18,37 +17,15 @@ const Blog: NextPage<Props> = ({ posts }) => {
 				<title>ASCLA - Blog</title>
 			</Head>
 
-			<main className="flex flex-col h-full p-6">
-				<h1 className="text-2xl font-bold">Postagens do Blog</h1>
-				<div className="flex flex-wrap w-full mt-4">
+			<Main title="Notícias">
+				<div className="flex flex-col gap-4 w-full">
 					{posts.length ? (
-						posts.map(post => (
-							<Card key={post.id} className="w-96 bg-grey-50 m-2">
-								<CardBody className="flex flex-col">
-									<span className="text-xl font-bold break-words">
-										{post.title}
-									</span>
-									<span className="text-sm text-grey-800 italic mt-2 break-words">
-										{post.description}
-									</span>
-								</CardBody>
-								<CardFooter divider className="flex justify-between items-center">
-									<span className="text-xs">
-										{new Date(post.metadata.createdAt).toLocaleDateString()}
-									</span>
-									<Link href={`/blog/${post.metadata.urlId}`}>
-										<a className="text-xs cursor-pointer hover:underline">
-											Ler mais
-										</a>
-									</Link>
-								</CardFooter>
-							</Card>
-						))
+						posts.map(post => <CardBlog key={post.id} {...post} />)
 					) : (
 						<span className="text-lg italic">Ainda não há postagens :(</span>
 					)}
 				</div>
-			</main>
+			</Main>
 		</>
 	);
 };

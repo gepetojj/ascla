@@ -1,5 +1,4 @@
-import { Button } from "@material-tailwind/react";
-
+import { Button } from "components/input/Button";
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
@@ -32,16 +31,22 @@ const AccountData: NextPage = () => {
 					/>
 				</div>
 
-				{data.user.role === "admin" && (
-					<Link href="/admin">
-						<Button color="orange" className="mt-2">
-							Administração
-						</Button>
-					</Link>
-				)}
-				<Button color="red" className="mt-3" onClick={() => signOut()}>
-					Sair
-				</Button>
+				<div className="flex flex-col gap-2 mx-6 mt-4">
+					{data.user.role === "admin" && (
+						<Link href="/admin" passHref shallow>
+							<Button className="bg-primary-main" fullWidth>
+								Administração
+							</Button>
+						</Link>
+					)}
+					<Button
+						className="bg-red-500 text-cream-100"
+						onClick={() => signOut()}
+						fullWidth
+					>
+						Sair
+					</Button>
+				</div>
 			</main>
 		</>
 	);

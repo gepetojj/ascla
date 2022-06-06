@@ -1,5 +1,3 @@
-import { ThemeProvider } from "@material-tailwind/react";
-
 import { Footer } from "components/layout/Footer";
 import { Header } from "components/layout/Header";
 import { SessionProvider } from "next-auth/react";
@@ -27,9 +25,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
 
 	return (
 		<>
-			<SessionProvider session={session}>
-				<ThemeProvider>{Layout}</ThemeProvider>
-			</SessionProvider>
+			<SessionProvider session={session}>{Layout}</SessionProvider>
 		</>
 	);
 }

@@ -1,22 +1,13 @@
-import {
-	Input,
-	Button,
-	Tabs,
-	TabsHeader,
-	Tab,
-	TabsBody,
-	TabPanel,
-	Select,
-	Option,
-} from "@material-tailwind/react";
-import { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/react";
 
-import { Editor } from "components/input/Editor";
-import { AcademicView } from "components/view/Academic";
+import { Button } from "components/input/Button";
+// import { AcademicView } from "components/view/Academic";
 import type { Academic } from "entities/Academic";
 import type { Patron } from "entities/Patron";
+import { useFetcher } from "hooks/useFetcher";
 import { firestore } from "myFirebase/server";
 import type { NextPage, GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 
@@ -24,8 +15,14 @@ interface Props {
 	academic: Academic;
 }
 
+const DynamicEditor = dynamic(() => import("components/input/Editor"));
+
 const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [patrons, setPatrons] = useState<Patron[]>([]);
+	// TODO: Trocar request dos patrons para SWC e o update para useFetcher
+	const { data, fetcher, loading, error, errorData } = useFetcher<{ patrons: Patron[] }>(
+		"/api/patrons/list"
+	);
 
 	const [name, setName] = useState(academic.name);
 	const [patronId, setPatronId] = useState(academic.metadata.patronId);
@@ -33,24 +30,13 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
-		fetch("/api/patrons/list", {
-			method: "GET",
-			headers: { Accept: "application/json" },
-		})
-			.then(async res => {
-				const data = await res.json();
-				if (res.ok) {
-					setPatrons(data.patrons as Patron[]);
-					return;
-				}
+		fetcher();
+	}, [fetcher]);
 
-				console.error(res.status, data);
-				alert("Falha ao listar os patronos.");
-			})
-			.catch(() => {
-				alert("Falha ao listar os patronos.");
-			});
-	}, []);
+	useEffect(() => {
+		if (!loading && !error && data) setPatrons(data.patrons);
+		if (!loading && error && errorData) console.error(errorData);
+	}, [data, loading, error, errorData]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
@@ -93,9 +79,8 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
 							<div className="mr-2 my-2">
-								<Input
-									label="Nome *"
-									color="orange"
+								<input
+									placeholder="Nome *"
 									className="w-80"
 									value={name}
 									onChange={({ target }) => setName(target.value)}
@@ -103,59 +88,37 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<Select
-									label={
-										patrons.length <= 0
-											? "Não há patronos registrados"
-											: "Vincule a um patrono *"
-									}
-									color="orange"
+								<select
 									className="w-80"
 									value={academic.metadata.patronId}
 									disabled={patrons.length <= 0}
 								>
 									{!!patrons.length ? (
 										patrons.map(patron => (
-											<Option
+											<option
 												key={patron.id}
 												value={patron.id}
 												onClick={() => setPatronId(patron.id)}
 											>
 												{patron.name}
-											</Option>
+											</option>
 										))
 									) : (
-										<Option disabled>Não há patronos registrados.</Option>
+										<option>Não há patronos registrados.</option>
 									)}
-								</Select>
+								</select>
 							</div>
 						</div>
-						<Button type="submit" color="orange">
+						<Button className="bg-primary-400" type="submit">
 							Criar
 						</Button>
 					</div>
-					<Tabs value="editor" className="px-5">
-						<TabsHeader>
-							<Tab key="editor" value="editor">
-								Editor
-							</Tab>
-							<Tab key="preview" value="preview">
-								Visualizar
-							</Tab>
-						</TabsHeader>
-						<TabsBody>
-							<TabPanel key="editor" value="editor">
-								<Editor initialValue={editorContent} onChange={setEditorContent} />
-							</TabPanel>
-							<TabPanel key="preview" value="preview">
-								<AcademicView
-									name={name || academic.name}
-									bio={editorContent || academic.bio}
-									metadata={{ ...academic.metadata, updatedAt: Date.now() }}
-								/>
-							</TabPanel>
-						</TabsBody>
-					</Tabs>
+					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
+					{/* <AcademicView
+								name={name || academic.name}
+								bio={editorContent || academic.bio}
+								metadata={{ ...academic.metadata, updatedAt: Date.now() }}
+							/> */}
 				</form>
 			</main>
 		</>
