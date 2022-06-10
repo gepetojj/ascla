@@ -4,11 +4,13 @@ import { Button } from "components/input/Button";
 // import { PatronView } from "components/view/Patron";
 import type { Academic } from "entities/Academic";
 import type { Patron } from "entities/Patron";
-import { firestore } from "myFirebase/server";
+import { useFetcher } from "hooks/useFetcher";
+import { Collections } from "myFirebase/enums";
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import useSWR from "swr";
 
 interface Props {
 	patron: Patron;
@@ -18,6 +20,10 @@ const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	const [academics, setAcademics] = useState<Academic[]>([]);
+	const { data, error } = useSWR("/api/academics/list", (...args) =>
+		fetch(...args).then(res => res.json())
+	);
+	const updatePatron = useFetcher("/api/patrons/update", "put");
 
 	const [name, setName] = useState(patron.name);
 	const [academicId, setAcademicId] = useState(patron.metadata.academicId);
@@ -25,52 +31,29 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
-		fetch("/api/academics/list", {
-			method: "GET",
-			headers: { Accept: "application/json" },
-		})
-			.then(async res => {
-				const data = await res.json();
-				if (res.ok) {
-					setAcademics(data.academics as Academic[]);
-					return;
-				}
+		data && !error && setAcademics(data.academics);
+		!data && error && console.error(error);
+	}, [data, error]);
 
-				console.error(res.status, data);
-				alert("Falha ao listar os acadêmicos.");
-			})
-			.catch(() => {
-				alert("Falha ao listar os acadêmicos.");
-			});
-	}, []);
+	useEffect(() => {
+		if (!updatePatron.loading && updatePatron.error) {
+			alert("Houve um erro ao tentar atualizar o patrono.");
+			console.error(updatePatron.errorData);
+		}
+
+		if (!updatePatron.loading && updatePatron.data) {
+			alert("Patrono atualizado com sucesso.");
+		}
+	}, [updatePatron]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (!name || !academicId || !editorContent.content?.length) return;
 
-			fetch("/api/patrons/update", {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					id: patron.id,
-					name,
-					academicId,
-					bio: editorContent,
-				}),
-			})
-				.then(async res => {
-					if (res.ok) return alert("Patrono atualizado com sucesso.");
-
-					const json = await res.json();
-					console.error(res.status, json);
-					alert("Falha.");
-				})
-				.catch(() => {
-					alert("Falha.");
-				});
+			updatePatron.fetcher({ id: patron.id, name, academicId, bio: editorContent });
 		},
-		[patron.id, name, academicId, editorContent]
+		[updatePatron, patron.id, name, academicId, editorContent]
 	);
 
 	return (
@@ -97,9 +80,9 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 								<select
 									className="w-80"
 									value={patron.metadata.academicId}
-									disabled={academics.length <= 0}
+									disabled={!!academics && academics.length <= 0}
 								>
-									{!!academics.length ? (
+									{!!academics && !!academics.length ? (
 										academics.map(academic => (
 											<option
 												key={academic.id}
@@ -133,7 +116,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 export default AdminPatronsEdit;
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-	const col = firestore.collection("patrons");
+	const col = Collections.patrons;
 	const urlId = query.urlId;
 
 	if (!urlId || typeof urlId !== "string") return { notFound: true };

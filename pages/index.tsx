@@ -3,8 +3,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React from "react";
 import { GoQuote } from "react-icons/go";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.css";
 
 const Home: NextPage = () => {
 	return (
@@ -14,31 +12,9 @@ const Home: NextPage = () => {
 			</Head>
 
 			<Main title="Academia Santanense de Ciências, Letras e Artes">
-				<Carousel
-					autoPlay
-					infiniteLoop
-					showArrows
-					swipeable
-					stopOnHover
-					dynamicHeight
-					showThumbs={false}
-					interval={4000}
-					statusFormatter={(current, total) => `${current} de ${total}`}
-					className="px-4"
-				>
-					<div>
-						<div className="w-full h-52 bg-orange-500"></div>
-						<p>Legenda 1</p>
-					</div>
-					<div>
-						<div className="w-full h-52 bg-orange-400"></div>
-						<p>Legenda 2</p>
-					</div>
-					<div>
-						<div className="w-full h-52 bg-orange-300"></div>
-						<p>Legenda 3</p>
-					</div>
-				</Carousel>
+				<div className="w-full h-52 px-4">
+					<div className="w-full h-full bg-primary-main"></div>
+				</div>
 				<div className="flex flex-col justify-center items-center px-6 py-20">
 					<blockquote className="px-8 pt-6">
 						<div className="flex">

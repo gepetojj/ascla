@@ -3,20 +3,37 @@ import type { JSONContent } from "@tiptap/react";
 import { Button } from "components/input/Button";
 // import { PostView } from "components/view/Post";
 import { getIdFromText } from "helpers/getIdFromText";
+import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import React, { useCallback, useState, FormEvent, ChangeEvent } from "react";
+import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from "react";
 
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminNewPost: NextPage = () => {
+	const { data, error, errorData, loading, fetcher } = useFetcher(
+		"/api/blog/post/create",
+		"post"
+	);
+
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [customUrl, setCustomUrl] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 	});
+
+	useEffect(() => {
+		if (!loading && error) {
+			alert("Não foi possível criar o post.");
+			console.error(errorData);
+		}
+
+		if (!loading && data) {
+			alert("Post criado com sucesso.");
+		}
+	}, [loading, data, error, errorData]);
 
 	const onTitleChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
 		setTitle(target.value);
@@ -28,28 +45,9 @@ const AdminNewPost: NextPage = () => {
 			event.preventDefault();
 			if (!title || !description || !customUrl || !editorContent.content?.length) return;
 
-			fetch("/api/blog/post/create", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					title,
-					description,
-					customUrl,
-					content: editorContent,
-				}),
-			})
-				.then(async res => {
-					if (res.ok) return alert("Post criado com sucesso.");
-
-					const json = await res.json();
-					console.error(res.status, json);
-					alert("Falha.");
-				})
-				.catch(() => {
-					alert("Falha.");
-				});
+			fetcher({ title, description, customUrl, content: editorContent });
 		},
-		[title, description, customUrl, editorContent]
+		[fetcher, title, description, customUrl, editorContent]
 	);
 
 	return (

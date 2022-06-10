@@ -3,15 +3,21 @@ import type { JSONContent } from "@tiptap/react";
 import { Button } from "components/input/Button";
 // import { AcademicView } from "components/view/Academic";
 import type { Patron } from "entities/Patron";
+import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
+import useSWR from "swr";
 
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminAcademicsNew: NextPage = () => {
 	const [patrons, setPatrons] = useState<Patron[]>([]);
+	const { data, error } = useSWR("/api/patrons/list", (...args) =>
+		fetch(...args).then(res => res.json())
+	);
+	const createAcademic = useFetcher("/api/academics/create", "post");
 
 	const [name, setName] = useState("");
 	const [patronId, setPatronId] = useState("");
@@ -21,51 +27,29 @@ const AdminAcademicsNew: NextPage = () => {
 
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
-		fetch("/api/patrons/list", {
-			method: "GET",
-			headers: { Accept: "application/json" },
-		})
-			.then(async res => {
-				const data = await res.json();
-				if (res.ok) {
-					setPatrons(data.patrons as Patron[]);
-					return;
-				}
+		data && !error && setPatrons(data.patrons);
+		!data && error && console.error(error);
+	}, [data, error]);
 
-				console.error(res.status, data);
-				alert("Falha ao listar os patronos.");
-			})
-			.catch(() => {
-				alert("Falha ao listar os patronos.");
-			});
-	}, []);
+	useEffect(() => {
+		if (!createAcademic.loading && createAcademic.error) {
+			alert("Houve um erro ao tentar criar o acadêmico.");
+			console.error(createAcademic.errorData);
+		}
+
+		if (!createAcademic.loading && createAcademic.data) {
+			alert("Acadêmico criado com sucesso.");
+		}
+	}, [createAcademic]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 			if (!name || !patronId || !editorContent.content?.length) return;
 
-			fetch("/api/academics/create", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					name,
-					patronId,
-					bio: editorContent,
-				}),
-			})
-				.then(async res => {
-					if (res.ok) return alert("Acadêmico criado com sucesso.");
-
-					const data = await res.json();
-					console.error(res.status, data);
-					alert("Falha.");
-				})
-				.catch(() => {
-					alert("Falha.");
-				});
+			createAcademic.fetcher({ name, patronId, bio: editorContent });
 		},
-		[name, patronId, editorContent]
+		[createAcademic, name, patronId, editorContent]
 	);
 
 	return (
@@ -89,8 +73,11 @@ const AdminAcademicsNew: NextPage = () => {
 								/>
 							</div>
 							<div className="mr-2 my-2">
-								<select className="w-80" disabled={patrons.length <= 0}>
-									{!!patrons.length ? (
+								<select
+									className="w-80"
+									disabled={!!patrons && patrons.length <= 0}
+								>
+									{!!patrons && !!patrons.length ? (
 										patrons.map(patron => (
 											<option
 												key={patron.id}
@@ -105,7 +92,9 @@ const AdminAcademicsNew: NextPage = () => {
 								</select>
 							</div>
 						</div>
-						<Button type="submit">Criar</Button>
+						<Button className="bg-primary-400" type="submit">
+							Criar
+						</Button>
 					</div>
 					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
 					{/* <AcademicView

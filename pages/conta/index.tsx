@@ -1,4 +1,4 @@
-import { Button } from "flowbite-react";
+import { Button } from "components/input/Button";
 import { NextPage } from "next";
 import { useSession, signIn } from "next-auth/react";
 import Head from "next/head";
@@ -45,11 +45,13 @@ const Account: NextPage = () => {
 					</p>
 					<div className="flex justify-center items-center w-full mt-6">
 						<Button
-							className="flex justify-center items-center font-body font-medium text-black-main bg-primary-main rounded-sm shadow-none duration-200 hover:shadow-none hover:brightness-95 disabled:brightness-75 disabled:cursor-not-allowed"
-							disabled={status === "loading" || status === "authenticated"}
+							className="bg-primary-main"
+							disabled={status === "authenticated"}
+							loading={status === "loading"}
 							onClick={() => signIn("google")}
+							fullWidth
 						>
-							<ImGoogle className="mr-3" />
+							{status !== "loading" && <ImGoogle className="mr-3" />}
 							{!!data ? "Já logado" : "Entre com Google"}
 						</Button>
 					</div>
