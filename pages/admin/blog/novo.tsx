@@ -1,6 +1,7 @@
 import type { JSONContent } from "@tiptap/react";
 
 import { Button } from "components/input/Button";
+import type { DefaultResponse } from "entities/DefaultResponse";
 // import { PostView } from "components/view/Post";
 import { getIdFromText } from "helpers/getIdFromText";
 import { useFetcher } from "hooks/useFetcher";
@@ -8,11 +9,12 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { Store } from "react-notifications-component";
 
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminNewPost: NextPage = () => {
-	const { data, error, errorData, loading, fetcher } = useFetcher(
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/blog/post/create",
 		"post"
 	);
@@ -25,15 +27,43 @@ const AdminNewPost: NextPage = () => {
 	});
 
 	useEffect(() => {
-		if (!loading && error) {
-			alert("Não foi possível criar o post.");
-			console.error(errorData);
-		}
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Notícia criada com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		};
 
-		if (!loading && data) {
-			alert("Post criado com sucesso.");
-		}
-	}, [loading, data, error, errorData]);
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível criar a notícia. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
 
 	const onTitleChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
 		setTitle(target.value);
@@ -43,7 +73,19 @@ const AdminNewPost: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!title || !description || !customUrl || !editorContent.content?.length) return;
+			if (!title || !description || !customUrl || !editorContent.content?.length) {
+				Store.addNotification({
+					title: "Erro",
+					message: "Preencha todos os campos corretamente.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 5000,
+						onScreen: true,
+					},
+				});
+				return;
+			}
 
 			fetcher({ title, description, customUrl, content: editorContent });
 		},
@@ -88,7 +130,7 @@ const AdminNewPost: NextPage = () => {
 								/>
 							</div>
 						</div>
-						<Button className="bg-primary-400" type="submit">
+						<Button className="bg-primary-400" type="submit" loading={loading}>
 							Postar
 						</Button>
 					</div>

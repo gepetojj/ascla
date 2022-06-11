@@ -3,6 +3,7 @@ import type { JSONContent } from "@tiptap/react";
 import { Button } from "components/input/Button";
 // import { AcademicView } from "components/view/Academic";
 import type { Academic } from "entities/Academic";
+import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { useFetcher } from "hooks/useFetcher";
 import { Collections } from "myFirebase/enums";
@@ -10,6 +11,7 @@ import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
 interface Props {
@@ -23,7 +25,10 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const { data, error } = useSWR("/api/patrons/list", (...args) =>
 		fetch(...args).then(res => res.json())
 	);
-	const updateAcademic = useFetcher("/api/academics/update", "put");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/academics/update",
+		"put"
+	);
 
 	const [name, setName] = useState(academic.name);
 	const [patronId, setPatronId] = useState(academic.metadata.patronId);
@@ -36,29 +41,69 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	}, [data, error]);
 
 	useEffect(() => {
-		if (!updateAcademic.loading && updateAcademic.error) {
-			alert("Houve um erro ao tentar atualizar o acadêmico.");
-			console.error(updateAcademic.errorData);
-		}
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Acadêmico atualizado com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		};
 
-		if (!updateAcademic.loading && updateAcademic.data) {
-			alert("Acadêmico atualizado com sucesso.");
-		}
-	}, [updateAcademic]);
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível editar o acadêmico. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !patronId || !editorContent.content?.length) return;
+			if (!name || !patronId || !editorContent.content?.length) {
+				Store.addNotification({
+					title: "Erro",
+					message: "Preencha todos os campos corretamente.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 5000,
+						onScreen: true,
+					},
+				});
+				return;
+			}
 
-			updateAcademic.fetcher({
+			fetcher({
 				id: academic.id,
 				name,
 				patronId,
 				bio: editorContent,
 			});
 		},
-		[updateAcademic, academic.id, name, patronId, editorContent]
+		[fetcher, academic.id, name, patronId, editorContent]
 	);
 
 	return (
@@ -86,24 +131,22 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 									className="w-80"
 									value={academic.metadata.patronId}
 									disabled={!!patrons && patrons.length <= 0}
+									onChange={event => setPatronId(event.target.value)}
 								>
+									<option value="">Escolha um patrono</option>
 									{!!patrons && !!patrons.length ? (
 										patrons.map(patron => (
-											<option
-												key={patron.id}
-												value={patron.id}
-												onClick={() => setPatronId(patron.id)}
-											>
+											<option key={patron.id} value={patron.id}>
 												{patron.name}
 											</option>
 										))
 									) : (
-										<option>Não há patronos registrados.</option>
+										<option value="">Não há patronos registrados.</option>
 									)}
 								</select>
 							</div>
 						</div>
-						<Button className="bg-primary-400" type="submit">
+						<Button className="bg-primary-400" type="submit" loading={loading}>
 							Atualizar
 						</Button>
 					</div>

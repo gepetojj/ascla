@@ -3,12 +3,14 @@ import type { JSONContent } from "@tiptap/react";
 import { Button } from "components/input/Button";
 // import { PostView } from "components/view/Post";
 import type { BlogPost } from "entities/BlogPost";
+import type { DefaultResponse } from "entities/DefaultResponse";
 import { useFetcher } from "hooks/useFetcher";
 import { Collections } from "myFirebase/enums";
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import { Store } from "react-notifications-component";
 
 interface Props {
 	post: BlogPost;
@@ -17,27 +19,70 @@ interface Props {
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminPostEdit: NextPage<Props> = ({ post }) => {
-	const { data, error, loading, errorData, fetcher } = useFetcher("/api/blog/post/update", "put");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/blog/post/update",
+		"put"
+	);
 
 	const [title, setTitle] = useState(post.title);
 	const [description, setDescription] = useState(post.description);
 	const [editorContent, setEditorContent] = useState<JSONContent>(post.content);
 
 	useEffect(() => {
-		if (!loading && error) {
-			alert("Não foi possível atualizar o post.");
-			console.error(errorData);
-		}
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Notícia atualizada com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		};
 
-		if (!loading && data) {
-			alert("Post atualizado com sucesso.");
-		}
-	}, [loading, error, errorData, data]);
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível editar a notícia. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!description || !editorContent.content?.length) return;
+			if (!description || !editorContent.content?.length) {
+				Store.addNotification({
+					title: "Erro",
+					message: "Preencha todos os campos corretamente.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 5000,
+						onScreen: true,
+					},
+				});
+				return;
+			}
 
 			fetcher({ id: post.id, title, description, content: editorContent });
 		},
@@ -74,7 +119,7 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 								/>
 							</div>
 						</div>
-						<Button className="bg-primary-400" type="submit">
+						<Button className="bg-primary-400" type="submit" loading={loading}>
 							Atualizar
 						</Button>
 					</div>

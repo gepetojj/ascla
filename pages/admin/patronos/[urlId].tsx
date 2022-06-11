@@ -3,6 +3,7 @@ import type { JSONContent } from "@tiptap/react";
 import { Button } from "components/input/Button";
 // import { PatronView } from "components/view/Patron";
 import type { Academic } from "entities/Academic";
+import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { useFetcher } from "hooks/useFetcher";
 import { Collections } from "myFirebase/enums";
@@ -10,6 +11,7 @@ import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
 interface Props {
@@ -23,7 +25,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	const { data, error } = useSWR("/api/academics/list", (...args) =>
 		fetch(...args).then(res => res.json())
 	);
-	const updatePatron = useFetcher("/api/patrons/update", "put");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/patrons/update", "put");
 
 	const [name, setName] = useState(patron.name);
 	const [academicId, setAcademicId] = useState(patron.metadata.academicId);
@@ -36,24 +38,64 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	}, [data, error]);
 
 	useEffect(() => {
-		if (!updatePatron.loading && updatePatron.error) {
-			alert("Houve um erro ao tentar atualizar o patrono.");
-			console.error(updatePatron.errorData);
-		}
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Patrono registrado com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		};
 
-		if (!updatePatron.loading && updatePatron.data) {
-			alert("Patrono atualizado com sucesso.");
-		}
-	}, [updatePatron]);
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível criar o patrono. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !academicId || !editorContent.content?.length) return;
+			if (!name || !academicId || !editorContent.content?.length) {
+				Store.addNotification({
+					title: "Erro",
+					message: "Preencha todos os campos corretamente.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 5000,
+						onScreen: true,
+					},
+				});
+				return;
+			}
 
-			updatePatron.fetcher({ id: patron.id, name, academicId, bio: editorContent });
+			fetcher({ id: patron.id, name, academicId, bio: editorContent });
 		},
-		[updatePatron, patron.id, name, academicId, editorContent]
+		[fetcher, patron.id, name, academicId, editorContent]
 	);
 
 	return (
@@ -79,25 +121,24 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 							<div className="mr-2 my-2">
 								<select
 									className="w-80"
-									value={patron.metadata.academicId}
 									disabled={!!academics && academics.length <= 0}
+									defaultValue=""
+									onChange={event => setAcademicId(event.target.value)}
 								>
+									<option value="">Escolha um acadêmico.</option>
 									{!!academics && !!academics.length ? (
 										academics.map(academic => (
-											<option
-												key={academic.id}
-												onClick={() => setAcademicId(academic.id)}
-											>
+											<option key={academic.id} value={academic.id}>
 												{academic.name}
 											</option>
 										))
 									) : (
-										<option>Não há acadêmicos registrados.</option>
+										<option value="">Não há acadêmicos registrados.</option>
 									)}
 								</select>
 							</div>
 						</div>
-						<Button className="bg-primary-400" type="submit">
+						<Button className="bg-primary-400" type="submit" loading={loading}>
 							Atualizar
 						</Button>
 					</div>

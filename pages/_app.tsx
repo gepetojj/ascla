@@ -4,6 +4,8 @@ import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { ReactNotifications } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 import "styles/globals.css";
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
@@ -25,7 +27,10 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
 
 	return (
 		<>
-			<SessionProvider session={session}>{Layout}</SessionProvider>
+			<SessionProvider session={session}>
+				<ReactNotifications />
+				{Layout}
+			</SessionProvider>
 		</>
 	);
 }

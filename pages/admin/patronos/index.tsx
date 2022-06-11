@@ -1,34 +1,71 @@
 import { Button } from "components/input/Button";
+import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
-import { firestore } from "myFirebase/server";
+import { useFetcher } from "hooks/useFetcher";
+import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
+import { Store } from "react-notifications-component";
 
 interface Data {
 	patrons: Patron[];
 }
 
 const AdminPatrons: NextPage<Data> = ({ patrons }) => {
-	const deletePatron = useCallback((id: string) => {
-		fetch(`/api/patrons/delete?id=${id}`, { method: "DELETE" })
-			.then(async res => {
-				if (res.ok) {
-					alert("Patrono deletado com sucesso.");
-					window.location.reload();
-					return;
-				}
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/patrons/delete",
+		"delete"
+	);
 
-				const data = await res.json();
-				console.error(data);
-				alert("Falha.");
-			})
-			.catch(() => {
-				alert("Falha.");
+	useEffect(() => {
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Patrono deletado com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
 			});
-	}, []);
+			window.location.reload();
+		};
+
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível deletar o patrono. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
+
+	const deletePatron = useCallback(
+		(id: string) => {
+			fetcher(undefined, new URLSearchParams({ id }));
+		},
+		[fetcher]
+	);
 
 	return (
 		<>
@@ -63,6 +100,7 @@ const AdminPatrons: NextPage<Data> = ({ patrons }) => {
 									<Button
 										title="Clique duas vezes para deletar o patrono permanentemente."
 										onDoubleClick={() => deletePatron(patron.id)}
+										loading={loading}
 									>
 										<MdDelete className="text-xl" />
 									</Button>
@@ -81,7 +119,7 @@ const AdminPatrons: NextPage<Data> = ({ patrons }) => {
 export default AdminPatrons;
 
 export const getServerSideProps: GetServerSideProps<Data> = async () => {
-	const col = firestore.collection("patrons");
+	const col = Collections.patrons;
 	const query = await col.get();
 	const patrons: Patron[] = [];
 

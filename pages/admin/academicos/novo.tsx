@@ -1,6 +1,7 @@
 import type { JSONContent } from "@tiptap/react";
 
 import { Button } from "components/input/Button";
+import type { DefaultResponse } from "entities/DefaultResponse";
 // import { AcademicView } from "components/view/Academic";
 import type { Patron } from "entities/Patron";
 import { useFetcher } from "hooks/useFetcher";
@@ -8,6 +9,7 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
+import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
@@ -17,7 +19,10 @@ const AdminAcademicsNew: NextPage = () => {
 	const { data, error } = useSWR("/api/patrons/list", (...args) =>
 		fetch(...args).then(res => res.json())
 	);
-	const createAcademic = useFetcher("/api/academics/create", "post");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/academics/create",
+		"post"
+	);
 
 	const [name, setName] = useState("");
 	const [patronId, setPatronId] = useState("");
@@ -32,24 +37,64 @@ const AdminAcademicsNew: NextPage = () => {
 	}, [data, error]);
 
 	useEffect(() => {
-		if (!createAcademic.loading && createAcademic.error) {
-			alert("Houve um erro ao tentar criar o acadêmico.");
-			console.error(createAcademic.errorData);
-		}
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Acadêmico registrado com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		};
 
-		if (!createAcademic.loading && createAcademic.data) {
-			alert("Acadêmico criado com sucesso.");
-		}
-	}, [createAcademic]);
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível criar o acadêmico. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !patronId || !editorContent.content?.length) return;
+			if (!name || !patronId || !editorContent.content?.length) {
+				Store.addNotification({
+					title: "Erro",
+					message: "Preencha todos os campos corretamente.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 5000,
+						onScreen: true,
+					},
+				});
+				return;
+			}
 
-			createAcademic.fetcher({ name, patronId, bio: editorContent });
+			fetcher({ name, patronId, bio: editorContent });
 		},
-		[createAcademic, name, patronId, editorContent]
+		[fetcher, name, patronId, editorContent]
 	);
 
 	return (
@@ -76,23 +121,23 @@ const AdminAcademicsNew: NextPage = () => {
 								<select
 									className="w-80"
 									disabled={!!patrons && patrons.length <= 0}
+									defaultValue={""}
+									onChange={event => setPatronId(event.target.value)}
 								>
+									<option value="">Escolha um patrono</option>
 									{!!patrons && !!patrons.length ? (
 										patrons.map(patron => (
-											<option
-												key={patron.id}
-												onClick={() => setPatronId(patron.id)}
-											>
+											<option key={patron.id} value={patron.id}>
 												{patron.name}
 											</option>
 										))
 									) : (
-										<option>Não há patronos registrados.</option>
+										<option value="">Não há patronos registrados.</option>
 									)}
 								</select>
 							</div>
 						</div>
-						<Button className="bg-primary-400" type="submit">
+						<Button className="bg-primary-400" type="submit" loading={loading}>
 							Criar
 						</Button>
 					</div>

@@ -1,34 +1,71 @@
 import { Button } from "components/input/Button";
 import type { Academic } from "entities/Academic";
-import { firestore } from "myFirebase/server";
+import type { DefaultResponse } from "entities/DefaultResponse";
+import { useFetcher } from "hooks/useFetcher";
+import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
+import { Store } from "react-notifications-component";
 
 interface Data {
 	academics: Academic[];
 }
 
 const AdminAcademics: NextPage<Data> = ({ academics }) => {
-	const deleteAcademic = useCallback((id: string) => {
-		fetch(`/api/academics/delete?id=${id}`, { method: "DELETE" })
-			.then(async res => {
-				if (res.ok) {
-					alert("Acadêmico deletado com sucesso.");
-					window.location.reload();
-					return;
-				}
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/academics/delete",
+		"delete"
+	);
 
-				const data = await res.json();
-				console.error(data);
-				alert("Falha.");
-			})
-			.catch(() => {
-				alert("Falha.");
+	useEffect(() => {
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Acadêmico deletado com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
 			});
-	}, []);
+			window.location.reload();
+		};
+
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível deletar o acadêmico. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
+
+	const deleteAcademic = useCallback(
+		(id: string) => {
+			fetcher(undefined, new URLSearchParams({ id }));
+		},
+		[fetcher]
+	);
 
 	return (
 		<>
@@ -63,6 +100,7 @@ const AdminAcademics: NextPage<Data> = ({ academics }) => {
 									<Button
 										title="Clique duas vezes para deletar o acadêmico permanentemente."
 										onDoubleClick={() => deleteAcademic(academic.id)}
+										loading={loading}
 									>
 										<MdDelete className="text-xl" />
 									</Button>
@@ -81,7 +119,7 @@ const AdminAcademics: NextPage<Data> = ({ academics }) => {
 export default AdminAcademics;
 
 export const getServerSideProps: GetServerSideProps<Data> = async () => {
-	const col = firestore.collection("academics");
+	const col = Collections.academics;
 	const query = await col.get();
 	const academics: Academic[] = [];
 

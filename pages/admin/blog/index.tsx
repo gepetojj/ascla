@@ -1,34 +1,71 @@
 import { Button } from "components/input/Button";
 import type { BlogPost } from "entities/BlogPost";
-import { firestore } from "myFirebase/server";
+import type { DefaultResponse } from "entities/DefaultResponse";
+import { useFetcher } from "hooks/useFetcher";
+import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
+import { Store } from "react-notifications-component";
 
 interface Data {
 	posts: BlogPost[];
 }
 
 const AdminBlog: NextPage<Data> = ({ posts }) => {
-	const deletePost = useCallback((id: string) => {
-		fetch(`/api/blog/post/delete?id=${id}`, { method: "DELETE" })
-			.then(async res => {
-				if (res.ok) {
-					alert("Post deletado com sucesso.");
-					window.location.reload();
-					return;
-				}
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/blog/post/delete",
+		"delete"
+	);
 
-				const json = await res.json();
-				console.error(json);
-				alert("Falha.");
-			})
-			.catch(() => {
-				alert("Falha.");
+	useEffect(() => {
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Notícia deletada com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
 			});
-	}, []);
+			window.location.reload();
+		};
+
+		const onError = (err?: DefaultResponse) => {
+			Store.addNotification({
+				title: "Erro",
+				message: `Não foi possível deletar a notícia. ${
+					err?.message && `Motivo: ${err.message}`
+				}`,
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
+
+	const deletePost = useCallback(
+		(id: string) => {
+			fetcher(undefined, new URLSearchParams({ id }));
+		},
+		[fetcher]
+	);
 
 	return (
 		<>
@@ -62,6 +99,7 @@ const AdminBlog: NextPage<Data> = ({ posts }) => {
 									<Button
 										title="Clique duas vezes para deletar o post permanentemente."
 										onDoubleClick={() => deletePost(post.id)}
+										loading={loading}
 									>
 										<MdDelete className="text-xl" />
 									</Button>
@@ -80,7 +118,7 @@ const AdminBlog: NextPage<Data> = ({ posts }) => {
 export default AdminBlog;
 
 export const getServerSideProps: GetServerSideProps<Data> = async () => {
-	const col = firestore.collection("posts");
+	const col = Collections.posts;
 	const query = await col.get();
 	const posts: BlogPost[] = [];
 

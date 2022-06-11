@@ -8,6 +8,7 @@ import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
+import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
@@ -17,7 +18,7 @@ const AdminPatronsNew: NextPage = () => {
 	const { data, error } = useSWR("/api/academics/list", (...args) =>
 		fetch(...args).then(res => res.json())
 	);
-	const createPatron = useFetcher("/api/patrons/create", "post");
+	const { fetcher, events, loading } = useFetcher("/api/patrons/create", "post");
 
 	const [name, setName] = useState("");
 	const [academicId, setAcademicId] = useState("");
@@ -32,24 +33,62 @@ const AdminPatronsNew: NextPage = () => {
 	}, [data, error]);
 
 	useEffect(() => {
-		if (!createPatron.loading && createPatron.error) {
-			alert("Houve um erro ao tentar criar o acadêmico.");
-			console.error(createPatron.errorData);
-		}
+		const onSuccess = () => {
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Acadêmico registrado com sucesso.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		};
 
-		if (!createPatron.loading && createPatron.data) {
-			alert("Acadêmico criado com sucesso.");
-		}
-	}, [createPatron]);
+		const onError = (err: unknown) => {
+			Store.addNotification({
+				title: "Erro",
+				message: "Não foi possível criar o acadêmico.",
+				type: "danger",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+			console.error(err);
+		};
+
+		events.on("success", onSuccess);
+		events.on("error", onError);
+
+		return () => {
+			events.removeListener("success", onSuccess);
+			events.removeListener("error", onError);
+		};
+	}, [events]);
 
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !academicId || !editorContent.content?.length) return;
+			if (!name || !academicId || !editorContent.content?.length) {
+				Store.addNotification({
+					title: "Erro",
+					message: "Preencha todos os campos corretamente.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 5000,
+						onScreen: true,
+					},
+				});
+				return;
+			}
 
-			createPatron.fetcher({ name, academicId, bio: editorContent });
+			fetcher({ name, academicId, bio: editorContent });
 		},
-		[createPatron, name, academicId, editorContent]
+		[fetcher, name, academicId, editorContent]
 	);
 
 	return (
@@ -76,23 +115,23 @@ const AdminPatronsNew: NextPage = () => {
 								<select
 									className="w-80"
 									disabled={!!academics && academics.length <= 0}
+									defaultValue=""
+									onChange={event => setAcademicId(event.target.value)}
 								>
+									<option value="">Escolha um acadêmico</option>
 									{!!academics && !!academics.length ? (
 										academics.map(academic => (
-											<option
-												key={academic.id}
-												onClick={() => setAcademicId(academic.id)}
-											>
+											<option key={academic.id} value={academic.id}>
 												{academic.name}
 											</option>
 										))
 									) : (
-										<option>Não há acadêmicos registrados.</option>
+										<option value="">Não há acadêmicos registrados.</option>
 									)}
 								</select>
 							</div>
 						</div>
-						<Button className="bg-primary-400" type="submit">
+						<Button className="bg-primary-400" type="submit" loading={loading}>
 							Criar
 						</Button>
 					</div>

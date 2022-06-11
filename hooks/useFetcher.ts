@@ -1,49 +1,59 @@
+import EventEmitter from "events";
 import { useCallback, useState } from "react";
 
-export interface UseFetcherReturn<I> {
-	data: I | undefined;
-	fetcher: (body?: Record<string, unknown>) => Promise<void>;
+export interface UseFetcherEvents<I> extends EventEmitter {
+	on(event: "success", listener: (data: I) => void): this;
+	on(event: "error", listener: (error?: I | Error) => void): this;
+}
 
+export interface UseFetcherReturn<I> {
 	loading: boolean;
-	error: boolean;
-	errorData?: Record<string, unknown>;
+	events: UseFetcherEvents<I>;
+	fetcher: (body?: Record<string, unknown>, searchParams?: URLSearchParams) => Promise<void>;
 }
 
 export const useFetcher = <I>(
 	url: string,
 	method: "get" | "post" | "put" | "delete" = "get"
 ): UseFetcherReturn<I> => {
-	const [data, setData] = useState<I>();
+	const [events] = useState(new EventEmitter());
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
-	const [errorData, setErrorData] = useState<UseFetcherReturn<I>["errorData"]>();
 
 	const fetcher: UseFetcherReturn<I>["fetcher"] = useCallback(
-		async body => {
-			try {
-				const response = await fetch(url, {
-					method: method.toUpperCase(),
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-					},
-					body: body && JSON.stringify(body),
-				});
-				setLoading(false);
-				setError(!response.ok);
+		async (body, searchParams) => {
+			setLoading(true);
 
-				const data = await response.json();
-				if (!response.ok) return setErrorData(data);
-				setData(data as I);
-			} catch {
-				setData(undefined);
+			try {
+				const response = await fetch(
+					`${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
+					{
+						method: method.toUpperCase(),
+						headers: {
+							Accept: "application/json",
+							"Content-Type": "application/json",
+						},
+						body: body && JSON.stringify(body),
+					}
+				);
+
 				setLoading(false);
-				setError(true);
+				const data = await response.json();
+
+				if (response.ok) {
+					events.emit("success", data as I);
+					return;
+				}
+
+				events.emit("error", data);
+			} catch {
+				setLoading(false);
+				events.emit("error");
 			}
+
 			return;
 		},
-		[url, method]
+		[url, method, events]
 	);
 
-	return { data, fetcher, loading, error, errorData };
+	return { loading, events, fetcher };
 };
