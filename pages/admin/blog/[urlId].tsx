@@ -7,8 +7,8 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage, GetServerSideProps } from "next";
+import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
@@ -91,9 +91,7 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Blog - Editar notícia</title>
-			</Head>
+			<NextSeo title="Administração - Notícias - Editar" noindex nofollow />
 
 			<main className="flex flex-col h-screen pt-4">
 				<h1 className="text-2xl text-center font-bold">Editar notícia</h1>

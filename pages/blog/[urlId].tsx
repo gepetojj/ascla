@@ -2,7 +2,7 @@ import { PostView } from "components/view/Post";
 import { BlogPost as EBlogPost } from "entities/BlogPost";
 import { firestore } from "myFirebase/server";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -12,9 +12,7 @@ interface Props {
 const BlogPost: NextPage<Props> = ({ post }) => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Blog - {post.title}</title>
-			</Head>
+			<NextSeo title={`Notícias - ${post.title || "Não encontrado"}`} />
 
 			<main>
 				<PostView {...post} showUserInteractions />

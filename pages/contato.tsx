@@ -1,6 +1,6 @@
 import { Main } from "components/layout/Main";
 import type { NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdMap, MdCall, MdEmail } from "react-icons/md";
@@ -8,9 +8,7 @@ import { MdMap, MdCall, MdEmail } from "react-icons/md";
 const Contact: NextPage = () => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Contato</title>
-			</Head>
+			<NextSeo title="Contato" />
 
 			<Main title="Contato" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex flex-col max-w-5xl gap-3 text-black-100">

@@ -6,8 +6,8 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
+import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
 import { Store } from "react-notifications-component";
 import useSWR from "swr";
@@ -100,9 +100,7 @@ const AdminAcademicsNew: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Acadêmicos - Novo</title>
-			</Head>
+			<NextSeo title="Administração - Acadêmicos - Novo" noindex nofollow />
 
 			<main className="flex flex-col h-screen pt-4">
 				<h1 className="text-2xl text-center font-bold">Novo acadêmico</h1>

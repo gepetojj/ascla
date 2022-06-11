@@ -1,7 +1,7 @@
 import { Button } from "components/input/Button";
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -12,9 +12,7 @@ const AccountData: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Sua conta</title>
-			</Head>
+			<NextSeo title="Sua conta" />
 
 			<main className="flex flex-col">
 				<div className="flex justify-between items-center mx-6">

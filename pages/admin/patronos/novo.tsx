@@ -5,8 +5,8 @@ import { Button } from "components/input/Button";
 import type { Academic } from "entities/Academic";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
+import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
 import { Store } from "react-notifications-component";
 import useSWR from "swr";
@@ -94,9 +94,7 @@ const AdminPatronsNew: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Patronos - Novo</title>
-			</Head>
+			<NextSeo title="Administração - Patronos - Novo" noindex nofollow />
 
 			<main className="flex flex-col h-screen pt-4">
 				<h1 className="text-2xl text-center font-bold">Novo patrono</h1>

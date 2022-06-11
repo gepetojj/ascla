@@ -4,7 +4,7 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
@@ -69,9 +69,7 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Acadêmicos</title>
-			</Head>
+			<NextSeo title="Administração - Acadêmicos" noindex nofollow />
 
 			<main className="flex flex-col justify-center items-center h-screen">
 				<div className="flex justify-between items-center w-96">

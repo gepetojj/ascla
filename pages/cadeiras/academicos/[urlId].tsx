@@ -2,6 +2,7 @@ import { AcademicView } from "components/view/Academic";
 import type { Academic as EAcademic } from "entities/Academic";
 import { firestore } from "myFirebase/server";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { NextSeo } from "next-seo";
 import Head from "next/head";
 import React from "react";
 
@@ -12,6 +13,7 @@ interface Props {
 const Academic: NextPage<Props> = ({ academic }) => {
 	return (
 		<>
+			<NextSeo title={`Acadêmicos - ${academic.name || "Não encontrado"}`} />
 			<Head>
 				<title>ASCLA - Acadêmicos - {academic.name}</title>
 			</Head>

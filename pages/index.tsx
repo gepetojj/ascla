@@ -1,16 +1,11 @@
 import { Main } from "components/layout/Main";
 import type { NextPage } from "next";
-import Head from "next/head";
 import React from "react";
 import { GoQuote } from "react-icons/go";
 
 const Home: NextPage = () => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Academia Santanense de Letras, Ciências e Artes</title>
-			</Head>
-
 			<Main title="Academia Santanense de Ciências, Letras e Artes">
 				<div className="w-full h-60 px-4">
 					<div className="w-full h-full bg-primary-main"></div>

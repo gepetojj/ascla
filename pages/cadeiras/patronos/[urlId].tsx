@@ -2,7 +2,7 @@ import { PatronView } from "components/view/Patron";
 import type { Patron as EPatron } from "entities/Patron";
 import { firestore } from "myFirebase/server";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -12,9 +12,7 @@ interface Props {
 const Patron: NextPage<Props> = ({ patron }) => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Patronos - {patron.name}</title>
-			</Head>
+			<NextSeo title={`Patronos - ${patron.name || "Não encontrado"}`} />
 
 			<main>
 				<PatronView {...patron} />

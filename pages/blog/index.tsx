@@ -3,7 +3,7 @@ import { Main } from "components/layout/Main";
 import type { BlogPost } from "entities/BlogPost";
 import { firestore } from "myFirebase/server";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -13,9 +13,7 @@ interface Props {
 const Blog: NextPage<Props> = ({ posts }) => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Blog</title>
-			</Head>
+			<NextSeo title="Notícias" />
 
 			<Main title="Notícias">
 				<div className="flex flex-col gap-4 w-full">

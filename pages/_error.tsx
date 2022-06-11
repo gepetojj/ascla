@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React, { useEffect, useState } from "react";
 
 interface Props {
@@ -27,9 +27,8 @@ const Error: NextPage<Props> = ({ statusCode }) => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Houve um erro ({statusCode})</title>
-			</Head>
+			<NextSeo title={`Houve um erro (${statusCode})`} />
+
 			<main className="flex flex-col h-screen justify-center items-center">
 				<h2 className="text-3xl font-bold">Houve um erro - {statusCode}</h2>
 				<p className="text-lg font-medium">{errorMessage}</p>

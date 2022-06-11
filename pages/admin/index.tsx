@@ -1,15 +1,13 @@
 import { Button } from "components/input/Button";
 import type { NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React from "react";
 
 const Admin: NextPage = () => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração</title>
-			</Head>
+			<NextSeo title="Administração" />
 
 			<main className="flex flex-col justify-center items-center h-screen">
 				<h1 className="text-2xl text-center font-bold">Página de Administração</h1>

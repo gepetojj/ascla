@@ -4,7 +4,7 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
@@ -69,13 +69,11 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Blog</title>
-			</Head>
+			<NextSeo title="Administração - Notícias" noindex nofollow />
 
 			<main className="flex flex-col justify-center items-center h-screen">
 				<div className="flex justify-between items-center w-96">
-					<h1 className="text-2xl font-bold">Postagens do blog</h1>
+					<h1 className="text-2xl font-bold">Notícias</h1>
 					<Link href="/admin/blog/novo">
 						<a>
 							<MdAdd className="text-3xl cursor-pointer" />

@@ -1,14 +1,12 @@
 import { Main } from "components/layout/Main";
 import type { NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 const AboutStatute: NextPage = () => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Sobre - Estatuto</title>
-			</Head>
+			<NextSeo title="Sobre - Estatuto" />
 
 			<Main
 				title="Estatuto da ASCLA"

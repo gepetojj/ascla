@@ -3,7 +3,7 @@ import { Main } from "components/layout/Main";
 import type { Patron } from "entities/Patron";
 import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -13,9 +13,7 @@ interface Props {
 const Patrons: NextPage<Props> = ({ patrons }) => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Patronos</title>
-			</Head>
+			<NextSeo title="Patronos" />
 
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex justify-center items-center flex-wrap max-w-5xl">

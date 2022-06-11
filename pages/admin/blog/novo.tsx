@@ -6,8 +6,8 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import { getIdFromText } from "helpers/getIdFromText";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
+import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { Store } from "react-notifications-component";
 
@@ -95,9 +95,7 @@ const AdminNewPost: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Blog - Novo</title>
-			</Head>
+			<NextSeo title="Administração - Notícias - Nova" noindex nofollow />
 
 			<main className="flex flex-col h-screen pt-4">
 				<h1 className="text-2xl text-center font-bold">Novo post</h1>

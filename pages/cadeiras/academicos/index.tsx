@@ -3,7 +3,7 @@ import { Main } from "components/layout/Main";
 import type { Academic } from "entities/Academic";
 import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -13,9 +13,7 @@ interface Props {
 const Patrons: NextPage<Props> = ({ academics }) => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Acadêmicos</title>
-			</Head>
+			<NextSeo title="Acadêmicos" />
 
 			<Main
 				title="Acadêmicos"

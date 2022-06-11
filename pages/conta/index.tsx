@@ -1,7 +1,7 @@
 import { Button } from "components/input/Button";
 import { NextPage } from "next";
 import { useSession, signIn } from "next-auth/react";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -20,9 +20,7 @@ const Account: NextPage = () => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Faça login</title>
-			</Head>
+			<NextSeo title="Faça login" />
 
 			<main className="flex flex-col justify-center items-center h-screen bg-primary-300">
 				<div className="max-w-sm mx-6">

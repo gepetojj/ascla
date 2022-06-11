@@ -8,8 +8,8 @@ import type { Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage, GetServerSideProps } from "next";
+import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 import useSWR from "swr";
@@ -108,9 +108,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Administração - Acadêmicos - Editar</title>
-			</Head>
+			<NextSeo title="Administração - Acadêmicos - Editar" noindex nofollow />
 
 			<main className="flex flex-col h-screen pt-4">
 				<h1 className="text-2xl text-center font-bold">Editar acadêmico</h1>

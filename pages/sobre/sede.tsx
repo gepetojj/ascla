@@ -1,14 +1,12 @@
 import { Main } from "components/layout/Main";
 import type { NextPage } from "next";
-import Head from "next/head";
+import { NextSeo } from "next-seo";
 import React from "react";
 
 const AboutOffice: NextPage = () => {
 	return (
 		<>
-			<Head>
-				<title>ASCLA - Sobre - Sede</title>
-			</Head>
+			<NextSeo title="Sobre - Sede" />
 
 			<Main
 				title="Sede da ASCLA"
