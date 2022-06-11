@@ -12,7 +12,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<Main title="Academia Santanense de Ciências, Letras e Artes">
-				<div className="w-full h-52 px-4">
+				<div className="w-full h-60 px-4">
 					<div className="w-full h-full bg-primary-main"></div>
 				</div>
 				<div className="flex flex-col justify-center items-center px-6 py-20">

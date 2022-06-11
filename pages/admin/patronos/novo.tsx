@@ -24,6 +24,7 @@ const AdminPatronsNew: NextPage = () => {
 	const [academicId, setAcademicId] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
+		content: [{ type: "paragraph" }],
 	});
 
 	// Lista os acadêmicos para mostrar na seleção
@@ -36,7 +37,7 @@ const AdminPatronsNew: NextPage = () => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Acadêmico registrado com sucesso.",
+				message: "Patrono registrado com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -49,7 +50,7 @@ const AdminPatronsNew: NextPage = () => {
 		const onError = (err: unknown) => {
 			Store.addNotification({
 				title: "Erro",
-				message: "Não foi possível criar o acadêmico.",
+				message: "Não foi possível criar o patrono.",
 				type: "danger",
 				container: "bottom-right",
 				dismiss: {

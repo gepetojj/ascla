@@ -24,6 +24,7 @@ const AdminNewPost: NextPage = () => {
 	const [customUrl, setCustomUrl] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
+		content: [{ type: "paragraph" }],
 	});
 
 	useEffect(() => {

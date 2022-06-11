@@ -5,15 +5,15 @@ import type { Session } from "next-auth";
 
 import { requireAdmin } from "./requireAdmin";
 
-export type PostHandlerCallback<I> = (
+export type ApiHandlerCallback<I> = (
 	col: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
 	session: Session | null
 ) => Promise<NextApiResponse<I | DefaultResponse>>;
 
-export type PostHandlerMethods = "get" | "post" | "put" | "delete";
+export type ApiHandlerMethods = "get" | "post" | "put" | "delete";
 
-export interface PostHandlerOptions {
-	method: PostHandlerMethods;
+export interface ApiHandlerOptions {
+	method: ApiHandlerMethods;
 	col: CollectionName;
 	adminOnly?: boolean;
 }
@@ -21,8 +21,8 @@ export interface PostHandlerOptions {
 export const apiHandler = async <I>(
 	req: NextApiRequest,
 	res: NextApiResponse,
-	{ method, col, adminOnly }: PostHandlerOptions,
-	callback: PostHandlerCallback<I>
+	{ method, col, adminOnly }: ApiHandlerOptions,
+	callback: ApiHandlerCallback<I>
 ): Promise<NextApiResponse<I | DefaultResponse>> => {
 	if (req.method !== method.toLocaleUpperCase()) {
 		res.status(405).json({ message: "Método não aceito." });

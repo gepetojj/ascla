@@ -28,11 +28,12 @@ const AdminAcademicsNew: NextPage = () => {
 	const [patronId, setPatronId] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
+		content: [{ type: "paragraph" }],
 	});
 
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setPatrons(data.patrons);
+		data && !error && setPatrons(data.patrons || []);
 		!data && error && console.error(error);
 	}, [data, error]);
 

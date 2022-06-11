@@ -1,8 +1,8 @@
 import { Button } from "components/input/Button";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -10,11 +10,11 @@ import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
-interface Data {
+interface Props {
 	academics: Academic[];
 }
 
-const AdminAcademics: NextPage<Data> = ({ academics }) => {
+const AdminAcademics: NextPage<Props> = ({ academics }) => {
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/academics/delete",
 		"delete"
@@ -118,21 +118,17 @@ const AdminAcademics: NextPage<Data> = ({ academics }) => {
 
 export default AdminAcademics;
 
-export const getServerSideProps: GetServerSideProps<Data> = async () => {
-	const col = Collections.academics;
-	const query = await col.get();
-	const academics: Academic[] = [];
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler(ctx, { col: "academics", autoTry: true }, async col => {
+		const query = await col.get();
+		const academics: Academic[] = [];
 
-	if (!query.empty) {
-		query.forEach(doc => {
-			const academic = doc.data() as Academic;
-			academics.push(academic);
-		});
-	}
+		if (!query.empty) {
+			for (const doc of query.docs) {
+				const academic = doc.data() as Academic;
+				academics.push({ ...academic, bio: {} });
+			}
+		}
 
-	return {
-		props: {
-			academics,
-		},
-	};
-};
+		return { props: { academics } };
+	});

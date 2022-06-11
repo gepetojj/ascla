@@ -4,8 +4,8 @@ import { Button } from "components/input/Button";
 // import { PostView } from "components/view/Post";
 import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import { Collections } from "myFirebase/enums";
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -92,11 +92,11 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 	return (
 		<>
 			<Head>
-				<title>ASCLA - Administração - Blog - Editar post</title>
+				<title>ASCLA - Administração - Blog - Editar notícia</title>
 			</Head>
 
 			<main className="flex flex-col h-screen pt-4">
-				<h1 className="text-2xl text-center font-bold">Editar post</h1>
+				<h1 className="text-2xl text-center font-bold">Editar notícia</h1>
 				<form className="flex flex-col pt-4" onSubmit={onFormSubmit}>
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
@@ -120,7 +120,7 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 							</div>
 						</div>
 						<Button className="bg-primary-400" type="submit" loading={loading}>
-							Atualizar
+							Editar
 						</Button>
 					</div>
 					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
@@ -138,20 +138,17 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 
 export default AdminPostEdit;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-	const col = Collections.posts;
-	const urlId = query.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "posts", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
+			const post = query.docs[0];
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
+			if (query.empty || !post.exists) return { notFound: true };
 
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const post = query.docs[0];
-		if (query.empty || !post) return { notFound: true };
-
-		return { props: { post: post.data() as BlogPost } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
+			const data = post.data() as BlogPost;
+			return { props: { post: data } };
+		}
+	);

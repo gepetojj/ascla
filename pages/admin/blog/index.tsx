@@ -1,8 +1,8 @@
 import { Button } from "components/input/Button";
 import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -10,11 +10,11 @@ import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
-interface Data {
+interface Props {
 	posts: BlogPost[];
 }
 
-const AdminBlog: NextPage<Data> = ({ posts }) => {
+const AdminBlog: NextPage<Props> = ({ posts }) => {
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/blog/post/delete",
 		"delete"
@@ -117,21 +117,17 @@ const AdminBlog: NextPage<Data> = ({ posts }) => {
 
 export default AdminBlog;
 
-export const getServerSideProps: GetServerSideProps<Data> = async () => {
-	const col = Collections.posts;
-	const query = await col.get();
-	const posts: BlogPost[] = [];
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(ctx, { col: "posts", autoTry: true }, async col => {
+		const query = await col.get();
+		const posts: BlogPost[] = [];
 
-	if (!query.empty) {
-		query.forEach(doc => {
-			const post = doc.data() as BlogPost;
-			posts.push(post);
-		});
-	}
+		if (!query.empty) {
+			for (const doc of query.docs) {
+				const post = doc.data() as BlogPost;
+				posts.push({ ...post, content: {} });
+			}
+		}
 
-	return {
-		props: {
-			posts,
-		},
-	};
-};
+		return { props: { posts } };
+	});

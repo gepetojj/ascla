@@ -5,8 +5,8 @@ import { Button } from "components/input/Button";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import { Collections } from "myFirebase/enums";
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -113,7 +113,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 			</Head>
 
 			<main className="flex flex-col h-screen pt-4">
-				<h1 className="text-2xl text-center font-bold">Atualizar acadêmico</h1>
+				<h1 className="text-2xl text-center font-bold">Editar acadêmico</h1>
 				<form className="flex flex-col pt-4" onSubmit={onFormSubmit}>
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
@@ -129,9 +129,9 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 							<div className="mr-2 my-2">
 								<select
 									className="w-80"
-									value={academic.metadata.patronId}
 									disabled={!!patrons && patrons.length <= 0}
 									onChange={event => setPatronId(event.target.value)}
+									defaultValue={academic.metadata.patronId}
 								>
 									<option value="">Escolha um patrono</option>
 									{!!patrons && !!patrons.length ? (
@@ -147,7 +147,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 							</div>
 						</div>
 						<Button className="bg-primary-400" type="submit" loading={loading}>
-							Atualizar
+							Editar
 						</Button>
 					</div>
 					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
@@ -164,20 +164,17 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 
 export default AdminAcademicsEdit;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-	const col = Collections.academics;
-	const urlId = query.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "academics", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
+			const academic = query.docs[0];
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
+			if (query.empty || !academic.exists) return { notFound: true };
 
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const academic = query.docs[0];
-		if (query.empty || !academic) return { notFound: true };
-
-		return { props: { academic: academic.data() as Academic } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
+			const data = academic.data() as Academic;
+			return { props: { academic: data } };
+		}
+	);

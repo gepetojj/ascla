@@ -5,8 +5,8 @@ import { Button } from "components/input/Button";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import { Collections } from "myFirebase/enums";
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
@@ -105,7 +105,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 			</Head>
 
 			<main className="flex flex-col h-screen pt-4">
-				<h1 className="text-2xl text-center font-bold">Atualizar patrono</h1>
+				<h1 className="text-2xl text-center font-bold">Editar patrono</h1>
 				<form className="flex flex-col pt-4" onSubmit={onFormSubmit}>
 					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
 						<div className="flex flex-wrap">
@@ -122,7 +122,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 								<select
 									className="w-80"
 									disabled={!!academics && academics.length <= 0}
-									defaultValue=""
+									defaultValue={patron.metadata.academicId}
 									onChange={event => setAcademicId(event.target.value)}
 								>
 									<option value="">Escolha um acadêmico.</option>
@@ -139,7 +139,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 							</div>
 						</div>
 						<Button className="bg-primary-400" type="submit" loading={loading}>
-							Atualizar
+							Editar
 						</Button>
 					</div>
 					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
@@ -156,20 +156,17 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 
 export default AdminPatronsEdit;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
-	const col = Collections.patrons;
-	const urlId = query.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "patrons", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
+			const patron = query.docs[0];
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
+			if (query.empty || !patron.exists) return { notFound: true };
 
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const patron = query.docs[0];
-		if (query.empty || !patron) return { notFound: true };
-
-		return { props: { patron: patron.data() as Patron } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
+			const data = patron.data() as Patron;
+			return { props: { patron: data } };
+		}
+	);

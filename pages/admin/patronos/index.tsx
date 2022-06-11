@@ -1,8 +1,8 @@
 import { Button } from "components/input/Button";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import { Collections } from "myFirebase/enums";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -10,11 +10,11 @@ import React, { useCallback, useEffect } from "react";
 import { MdDelete, MdMode, MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
-interface Data {
+interface Props {
 	patrons: Patron[];
 }
 
-const AdminPatrons: NextPage<Data> = ({ patrons }) => {
+const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/patrons/delete",
 		"delete"
@@ -118,21 +118,17 @@ const AdminPatrons: NextPage<Data> = ({ patrons }) => {
 
 export default AdminPatrons;
 
-export const getServerSideProps: GetServerSideProps<Data> = async () => {
-	const col = Collections.patrons;
-	const query = await col.get();
-	const patrons: Patron[] = [];
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async col => {
+		const query = await col.get();
+		const patrons: Patron[] = [];
 
-	if (!query.empty) {
-		query.forEach(doc => {
-			const patron = doc.data() as Patron;
-			patrons.push(patron);
-		});
-	}
+		if (!query.empty) {
+			for (const doc of query.docs) {
+				const patron = doc.data() as Patron;
+				patrons.push({ ...patron, bio: {} });
+			}
+		}
 
-	return {
-		props: {
-			patrons,
-		},
-	};
-};
+		return { props: { patrons } };
+	});
