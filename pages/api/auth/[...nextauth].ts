@@ -1,8 +1,7 @@
 import type { User } from "entities/User";
+import { Collections } from "myFirebase/enums";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
-
-import { firestore } from "../../../firebase/server";
 
 export default NextAuth({
 	providers: [
@@ -22,7 +21,7 @@ export default NextAuth({
 	],
 	callbacks: {
 		async signIn({ account, profile }) {
-			const users = firestore.collection("users");
+			const users = Collections.users;
 			const user: User = {
 				id: profile.sub || "",
 				metadata: {
@@ -48,23 +47,13 @@ export default NextAuth({
 				}
 			}
 
-			/* // Atualiza os dados do usuário caso estejam diferentes.
-			const data = query.docs[0].data();
-			if (data !== user) {
-				try {
-					await users.doc(user.id).update(user);
-				} catch (err) {
-					console.error(err);
-					return false;
-				}
-			} */
-
 			return true;
 		},
 		async jwt({ token, user }) {
 			if (!user) return token;
 
-			const userDoc = await firestore.collection("users").doc(user.id).get();
+			const col = Collections.users;
+			const userDoc = await col.doc(user.id).get();
 			const data = userDoc.data() as User | undefined;
 
 			if (!userDoc.exists || !data) return token;
@@ -81,5 +70,6 @@ export default NextAuth({
 	},
 	pages: {
 		signIn: "/conta",
+		signOut: "/conta/dados",
 	},
 });

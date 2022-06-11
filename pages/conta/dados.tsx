@@ -39,7 +39,7 @@ const AccountData: NextPage = () => {
 					)}
 					<Button
 						className="bg-red-500 text-cream-100"
-						onClick={() => signOut()}
+						onClick={() => signOut({ callbackUrl: "/conta" })}
 						fullWidth
 					>
 						Sair
