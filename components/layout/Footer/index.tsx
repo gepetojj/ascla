@@ -6,7 +6,7 @@ import { FooterTopic } from "./Topic";
 
 const FooterComponent: FC = () => {
 	return (
-		<footer className="flex flex-col w-full h-full p-6 gap-8 bg-primary-main">
+		<footer className="flex flex-col w-full h-full p-6 gap-8 bg-primary-main text-black-100">
 			<div className="flex items-center gap-4">
 				<div>
 					<Image
@@ -18,11 +18,11 @@ const FooterComponent: FC = () => {
 						priority
 					/>
 				</div>
-				<h3 className="text-xl text-secondary-800 font-semibold">
+				<h3 className="text-xl font-semibold">
 					Academia Santanense de Ciências, Letras e Artes
 				</h3>
 			</div>
-			<div className="flex justify-center items-center flex-wrap gap-x-8 gap-y-4 px-2 sm:justify-between">
+			<div className="flex justify-center items-center flex-wrap gap-x-8 gap-y-4 px-2 sm:justify-between sm:items-start">
 				<FooterTopic title="Pesquisar:">
 					<div className="relative w-60">
 						<input
@@ -36,7 +36,7 @@ const FooterComponent: FC = () => {
 					</div>
 				</FooterTopic>
 				<FooterTopic title="Academias" onCenter>
-					<ul className="text-secondary-800">
+					<ul>
 						<li>
 							<a
 								href="https://www.academia.org.br/"
@@ -59,6 +59,16 @@ const FooterComponent: FC = () => {
 						</li>
 						<li>
 							<a
+								href="http://acala.org.br/"
+								target="_blank"
+								rel="noreferrer"
+								className="hover:underline"
+							>
+								ACALA
+							</a>
+						</li>
+						<li>
+							<a
 								href="https://apalca.com.br/"
 								target="_blank"
 								rel="noreferrer"
@@ -70,7 +80,7 @@ const FooterComponent: FC = () => {
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Blogs" onCenter>
-					<ul className="text-secondary-800">
+					<ul>
 						<li>
 							<a
 								href="https://www.apensocomgrifo.com/"
@@ -81,30 +91,20 @@ const FooterComponent: FC = () => {
 								Apenso com Grifo
 							</a>
 						</li>
-						<li>
-							<a
-								href="#"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								Outro blog
-							</a>
-						</li>
-						<li>
-							<a
-								href="#"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								Mais um blog
-							</a>
-						</li>
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Jornais da Região" onCenter>
-					<ul className="text-secondary-800">
+					<ul>
+						<li>
+							<a
+								href="https://www.maltanet.com.br/v2/"
+								target="_blank"
+								rel="noreferrer"
+								className="hover:underline"
+							>
+								Maltanet
+							</a>
+						</li>
 						<li>
 							<a
 								href="https://d.gazetadealagoas.com.br/"
@@ -117,18 +117,28 @@ const FooterComponent: FC = () => {
 						</li>
 						<li>
 							<a
-								href="#"
+								href="https://www.historiadealagoas.com.br"
 								target="_blank"
 								rel="noreferrer"
 								className="hover:underline"
 							>
-								Outro jornal
+								História de Alagoas
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.alagoasnanet.com.br/v3/"
+								target="_blank"
+								rel="noreferrer"
+								className="hover:underline"
+							>
+								Alagoas na Net
 							</a>
 						</li>
 					</ul>
 				</FooterTopic>
 			</div>
-			<span className="text-center text-sm text-secondary-800 font-medium mt-2">
+			<span className="text-center text-sm font-medium mt-2">
 				ASCLA - {new Date().getFullYear()} - Código aberto no{" "}
 				<a
 					href="http://github.com/gepetojj/ascla-website"

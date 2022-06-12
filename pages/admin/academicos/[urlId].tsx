@@ -1,7 +1,7 @@
 import type { JSONContent } from "@tiptap/react";
 
-import { Button } from "components/input/Button";
-// import { AcademicView } from "components/view/Academic";
+import { TextInput } from "components/input/TextInput";
+import { AdminForm } from "components/layout/AdminForm";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
@@ -9,7 +9,6 @@ import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage, GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 import useSWR from "swr";
@@ -17,8 +16,6 @@ import useSWR from "swr";
 interface Props {
 	academic: Academic;
 }
-
-const DynamicEditor = dynamic(() => import("components/input/Editor"));
 
 const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [patrons, setPatrons] = useState<Patron[]>([]);
@@ -110,52 +107,42 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 		<>
 			<NextSeo title="Administração - Acadêmicos - Editar" noindex nofollow />
 
-			<main className="flex flex-col h-screen pt-4">
-				<h1 className="text-2xl text-center font-bold">Editar acadêmico</h1>
-				<form className="flex flex-col pt-4" onSubmit={onFormSubmit}>
-					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
-						<div className="flex flex-wrap">
-							<div className="mr-2 my-2">
-								<input
-									placeholder="Nome *"
-									className="w-80"
-									value={name}
-									onChange={({ target }) => setName(target.value)}
-									required
-								/>
-							</div>
-							<div className="mr-2 my-2">
-								<select
-									className="w-80"
-									disabled={!!patrons && patrons.length <= 0}
-									onChange={event => setPatronId(event.target.value)}
-									defaultValue={academic.metadata.patronId}
-								>
-									<option value="">Escolha um patrono</option>
-									{!!patrons && !!patrons.length ? (
-										patrons.map(patron => (
-											<option key={patron.id} value={patron.id}>
-												{patron.name}
-											</option>
-										))
-									) : (
-										<option value="">Não há patronos registrados.</option>
-									)}
-								</select>
-							</div>
-						</div>
-						<Button className="bg-primary-400" type="submit" loading={loading}>
-							Editar
-						</Button>
-					</div>
-					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
-					{/* <AcademicView
-								name={name || academic.name}
-								bio={editorContent || academic.bio}
-								metadata={{ ...academic.metadata, updatedAt: Date.now() }}
-							/> */}
-				</form>
-			</main>
+			<AdminForm
+				title="Editar acadêmico"
+				onFormSubmit={onFormSubmit}
+				submitLabel="Editar"
+				loading={loading}
+				editorContent={editorContent}
+				onEditorChange={setEditorContent}
+			>
+				<>
+					<TextInput
+						id="name"
+						label="Nome *"
+						className="w-full sm:w-80"
+						value={name}
+						onChange={({ target }) => setName(target.value)}
+						required
+					/>
+					<select
+						className="w-full sm:w-80"
+						defaultValue={academic.metadata.patronId}
+						onChange={event => setPatronId(event.target.value)}
+						disabled={!!patrons && patrons.length <= 0}
+					>
+						<option value="">Escolha um patrono</option>
+						{!!patrons && !!patrons.length ? (
+							patrons.map(patron => (
+								<option key={patron.id} value={patron.id}>
+									{patron.name}
+								</option>
+							))
+						) : (
+							<option value="">Não há patronos registrados.</option>
+						)}
+					</select>
+				</>
+			</AdminForm>
 		</>
 	);
 };

@@ -1,14 +1,13 @@
 import type { JSONContent } from "@tiptap/react";
 
-import { Button } from "components/input/Button";
-// import { PostView } from "components/view/Post";
+import { TextInput } from "components/input/TextInput";
+import { AdminForm } from "components/layout/AdminForm";
 import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage, GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
-import dynamic from "next/dynamic";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
@@ -16,13 +15,8 @@ interface Props {
 	post: BlogPost;
 }
 
-const DynamicEditor = dynamic(() => import("components/input/Editor"));
-
 const AdminPostEdit: NextPage<Props> = ({ post }) => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
-		"/api/blog/post/update",
-		"put"
-	);
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/blog/update", "put");
 
 	const [title, setTitle] = useState(post.title);
 	const [description, setDescription] = useState(post.description);
@@ -32,7 +26,7 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Notícia atualizada com sucesso.",
+				message: "Postagem atualizada com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -45,7 +39,7 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 		const onError = (err?: DefaultResponse) => {
 			Store.addNotification({
 				title: "Erro",
-				message: `Não foi possível editar a notícia. ${
+				message: `Não foi possível editar a postagem. ${
 					err?.message && `Motivo: ${err.message}`
 				}`,
 				type: "danger",
@@ -91,45 +85,35 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 
 	return (
 		<>
-			<NextSeo title="Administração - Notícias - Editar" noindex nofollow />
+			<NextSeo title="Administração - Blog - Editar" noindex nofollow />
 
-			<main className="flex flex-col h-screen pt-4">
-				<h1 className="text-2xl text-center font-bold">Editar notícia</h1>
-				<form className="flex flex-col pt-4" onSubmit={onFormSubmit}>
-					<div className="flex flex-wrap justify-between items-center w-full px-5 pb-5">
-						<div className="flex flex-wrap">
-							<div className="mr-2 my-2">
-								<input
-									placeholder="Título *"
-									className="w-80"
-									value={title}
-									onChange={({ target }) => setTitle(target.value)}
-									required
-								/>
-							</div>
-							<div className="mr-2 my-2">
-								<input
-									placeholder="Descrição curta *"
-									className="w-80"
-									value={description}
-									onChange={({ target }) => setDescription(target.value)}
-									required
-								/>
-							</div>
-						</div>
-						<Button className="bg-primary-400" type="submit" loading={loading}>
-							Editar
-						</Button>
-					</div>
-					<DynamicEditor initialValue={editorContent} onChange={setEditorContent} />
-					{/* <PostView
-						title={title || post.title}
-						description={description || post.description}
-						metadata={{ ...post.metadata, updatedAt: Date.now() }}
-						content={editorContent}
-					/> */}
-				</form>
-			</main>
+			<AdminForm
+				title="Editar postagem"
+				onFormSubmit={onFormSubmit}
+				submitLabel="Editar"
+				loading={loading}
+				editorContent={editorContent}
+				onEditorChange={setEditorContent}
+			>
+				<>
+					<TextInput
+						id="title"
+						label="Título *"
+						className="w-full sm:w-80"
+						value={title}
+						onChange={({ target }) => setTitle(target.value)}
+						required
+					/>
+					<TextInput
+						id="description"
+						label="Descrição curta *"
+						className="w-full sm:w-80"
+						value={description}
+						onChange={({ target }) => setDescription(target.value)}
+						required
+					/>
+				</>
+			</AdminForm>
 		</>
 	);
 };
@@ -139,7 +123,7 @@ export default AdminPostEdit;
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
-		{ col: "posts", ensure: { query: ["urlId"] }, autoTry: true },
+		{ col: "blogPosts", ensure: { query: ["urlId"] }, autoTry: true },
 		async col => {
 			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
 			const post = query.docs[0];

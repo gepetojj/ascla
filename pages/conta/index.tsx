@@ -22,7 +22,7 @@ const Account: NextPage = () => {
 		<>
 			<NextSeo title="Faça login" />
 
-			<main className="flex flex-col justify-center items-center h-screen bg-primary-300">
+			<main className="flex flex-col justify-center items-center h-screen bg-primary-200">
 				<div className="max-w-sm mx-6">
 					<div className="flex items-center mb-8">
 						<div className="flex items-center">
@@ -35,7 +35,7 @@ const Account: NextPage = () => {
 								priority
 							/>
 						</div>
-						<h1 className="text-2xl font-medium text-secondary-800 ml-4">ASCLA</h1>
+						<h1 className="text-2xl font-medium text-black-100 ml-4">ASCLA</h1>
 					</div>
 					<h2 className="text-2xl font-bold">Faça login</h2>
 					<p className="mt-1 text-black-200">

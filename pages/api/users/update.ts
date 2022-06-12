@@ -9,7 +9,7 @@ interface UpdateUser {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
-	return apiHandler(req, res, { method: "put", col: "users", adminOnly: true }, async col => {
+	return apiHandler(req, res, { method: "put", col: "users", role: "admin" }, async col => {
 		const { id, role }: UpdateUser = req.body;
 
 		// TODO: Adicionar validação aos dados

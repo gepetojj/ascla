@@ -7,9 +7,17 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 import useSWR from "swr";
 
-export type CardBlogProps = BlogPost;
+export interface CardBlogProps extends BlogPost {
+	type: "blog" | "noticias";
+}
 
-const CardBlogComponent: FC<CardBlogProps> = ({ title, description, thumbnailUrl, metadata }) => {
+const CardBlogComponent: FC<CardBlogProps> = ({
+	title,
+	description,
+	thumbnailUrl,
+	metadata,
+	type,
+}) => {
 	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
 		fetch(...args).then(res => res.json())
 	);
@@ -21,7 +29,7 @@ const CardBlogComponent: FC<CardBlogProps> = ({ title, description, thumbnailUrl
 	}, [data, error]);
 
 	return (
-		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-cream-500 sm:flex-row sm:justify-start sm:items-start">
+		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-secondary-400 sm:flex-row sm:justify-start sm:items-start">
 			<div className="flex justify-center items-center max-w-[300px] w-full h-full rounded shadow">
 				{thumbnailUrl ? (
 					<Image
@@ -53,8 +61,8 @@ const CardBlogComponent: FC<CardBlogProps> = ({ title, description, thumbnailUrl
 							<span>{new Date(metadata.createdAt).toLocaleDateString()}</span>
 						</div>
 					</div>
-					<Link href={`/blog/${metadata.urlId}`}>
-						<a className="text-secondary-600 underline-offset-1 hover:underline">
+					<Link href={`/${type || "blog"}/${metadata.urlId}`}>
+						<a className="text-black-main underline-offset-1 hover:underline">
 							Ler mais
 						</a>
 					</Link>

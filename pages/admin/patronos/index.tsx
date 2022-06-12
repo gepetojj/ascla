@@ -1,4 +1,4 @@
-import { Button } from "components/input/Button";
+import { EditableItem } from "components/card/EditableItem";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
@@ -7,7 +7,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React, { useCallback, useEffect } from "react";
-import { MdDelete, MdMode, MdAdd } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
@@ -80,30 +80,17 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 						</a>
 					</Link>
 				</div>
-				<div className="flex flex-col justify-center items-center mt-4">
+				<div className="flex flex-col justify-center items-center mt-4 gap-2">
 					{patrons?.length ? (
 						patrons.map(patron => (
-							<div
+							<EditableItem
 								key={patron.id}
-								className="flex items-center bg-orange-300 px-2 py-1 mb-2 rounded-sm"
-							>
-								<span className="w-80 max-w-xs truncate pr-3">{patron.name}</span>
-								<div className="flex items-center gap-2">
-									<Link href={`/admin/patronos/${patron.metadata.urlId}`} shallow>
-										<a>
-											<MdMode className="text-xl cursor-pointer" />
-										</a>
-									</Link>
-
-									<Button
-										title="Clique duas vezes para deletar o patrono permanentemente."
-										onDoubleClick={() => deletePatron(patron.id)}
-										loading={loading}
-									>
-										<MdDelete className="text-xl" />
-									</Button>
-								</div>
-							</div>
+								title={patron.name}
+								editUrl={`/admin/patronos/${patron.metadata.urlId}`}
+								deleteAction={() => deletePatron(patron.id)}
+								loading={loading}
+								deleteLabel="Clique duas vezes para deletar o patrono permanentemente."
+							/>
 						))
 					) : (
 						<p>Não há patronos ainda.</p>

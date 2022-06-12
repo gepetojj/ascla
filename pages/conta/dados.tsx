@@ -30,7 +30,7 @@ const AccountData: NextPage = () => {
 				</div>
 
 				<div className="flex flex-col gap-2 mx-6 mt-4">
-					{data.user.role === "admin" && (
+					{data.user.role !== "common" && (
 						<Link href="/admin" passHref shallow>
 							<Button className="bg-primary-main" fullWidth>
 								Administração

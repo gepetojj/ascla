@@ -15,7 +15,7 @@ interface NewPatron {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
-	return apiHandler(req, res, { method: "post", col: "patrons", adminOnly: true }, async col => {
+	return apiHandler(req, res, { method: "post", col: "patrons", role: "admin" }, async col => {
 		const { name, academicId, bio }: NewPatron = req.body;
 		const customUrl = getIdFromText(name);
 

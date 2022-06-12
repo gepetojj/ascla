@@ -13,7 +13,7 @@ interface UpdatePatron {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
-	return apiHandler(req, res, { method: "put", col: "patrons", adminOnly: true }, async col => {
+	return apiHandler(req, res, { method: "put", col: "patrons", role: "admin" }, async col => {
 		const { id, name, academicId, bio }: UpdatePatron = req.body;
 
 		// TODO: Adicionar validação aos dados

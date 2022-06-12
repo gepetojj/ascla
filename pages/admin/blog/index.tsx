@@ -1,13 +1,14 @@
-import { Button } from "components/input/Button";
+import { EditableItem } from "components/card/EditableItem";
 import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { GetServerSideProps, NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React, { useCallback, useEffect } from "react";
-import { MdDelete, MdMode, MdAdd } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
@@ -15,16 +16,14 @@ interface Props {
 }
 
 const AdminBlog: NextPage<Props> = ({ posts }) => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
-		"/api/blog/post/delete",
-		"delete"
-	);
+	const { data } = useSession();
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/blog/delete", "delete");
 
 	useEffect(() => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Notícia deletada com sucesso.",
+				message: "Postagem deletada com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -38,7 +37,7 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 		const onError = (err?: DefaultResponse) => {
 			Store.addNotification({
 				title: "Erro",
-				message: `Não foi possível deletar a notícia. ${
+				message: `Não foi possível deletar a postagem. ${
 					err?.message && `Motivo: ${err.message}`
 				}`,
 				type: "danger",
@@ -60,7 +59,7 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 		};
 	}, [events]);
 
-	const deletePost = useCallback(
+	const deleteNews = useCallback(
 		(id: string) => {
 			fetcher(undefined, new URLSearchParams({ id }));
 		},
@@ -69,43 +68,46 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 
 	return (
 		<>
-			<NextSeo title="Administração - Notícias" noindex nofollow />
+			<NextSeo title="Administração - Blog" noindex nofollow />
 
 			<main className="flex flex-col justify-center items-center h-screen">
 				<div className="flex justify-between items-center w-96">
-					<h1 className="text-2xl font-bold">Notícias</h1>
+					<h1 className="text-2xl font-bold">Blog</h1>
 					<Link href="/admin/blog/novo">
 						<a>
 							<MdAdd className="text-3xl cursor-pointer" />
 						</a>
 					</Link>
 				</div>
-				<div className="flex flex-col justify-center items-center mt-4">
-					{posts?.length ? (
-						posts.map(post => (
-							<div
-								key={post.id}
-								className="flex items-center bg-orange-300 px-2 py-1 mb-2 rounded-sm"
-							>
-								<span className="w-80 max-w-xs truncate pr-3">{post.title}</span>
-								<div className="flex items-center">
-									<Link href={`/admin/blog/${post.metadata.urlId}`}>
-										<a>
-											<MdMode className="text-xl cursor-pointer mr-2" />
-										</a>
-									</Link>
-									<Button
-										title="Clique duas vezes para deletar o post permanentemente."
-										onDoubleClick={() => deletePost(post.id)}
-										loading={loading}
-									>
-										<MdDelete className="text-xl" />
-									</Button>
-								</div>
-							</div>
-						))
+				<div className="flex flex-col justify-center items-center mt-4 gap-2">
+					{!!posts &&
+					posts.filter(post =>
+						data?.user?.role === "academic"
+							? post.metadata.authorId === data?.user?.id
+							: true
+					).length ? (
+						posts
+							.filter(post =>
+								data?.user?.role === "academic"
+									? post.metadata.authorId === data?.user?.id
+									: true
+							)
+							.map(post => (
+								<EditableItem
+									key={post.id}
+									title={post.title}
+									editUrl={`/admin/blog/${post.metadata.urlId}`}
+									deleteAction={() => deleteNews(post.id)}
+									loading={loading}
+									deleteLabel="Clique duas vezes para deletar a postagem permanentemente."
+								/>
+							))
 					) : (
-						<p>Não há postagens ainda.</p>
+						<p>
+							{data?.user?.role === "academic"
+								? "Você não fez postagens ainda."
+								: "Não há postagens ainda."}
+						</p>
 					)}
 				</div>
 			</main>
@@ -116,7 +118,7 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 export default AdminBlog;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "posts", autoTry: true }, async col => {
+	gSSPHandler<Props>(ctx, { col: "blogPosts", autoTry: true }, async col => {
 		const query = await col.get();
 		const posts: BlogPost[] = [];
 

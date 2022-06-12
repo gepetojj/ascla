@@ -1,24 +1,24 @@
+import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import type { User } from "entities/User";
 import { apiHandler } from "helpers/apiHandler";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 interface Response extends DefaultResponse {
-	users?: User[];
+	news?: BlogPost[];
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	return apiHandler(req, res, { method: "get", col: "users", role: "admin" }, async col => {
+	return apiHandler(req, res, { method: "get", col: "news" }, async col => {
 		try {
 			const query = await col.get();
-			const users: User[] = [];
+			const news: BlogPost[] = [];
 
-			query.forEach(user => users.push(user.data() as User));
+			query.forEach(post => news.push(post.data() as BlogPost));
 
-			res.json({ message: "Usuários listados com sucesso.", users });
+			res.json({ message: "Notícias listadas com sucesso.", news });
 		} catch (err) {
 			console.error(err);
-			res.status(500).json({ message: "Não foi possível listar os usuários." });
+			res.status(500).json({ message: "Não foi possível listar as notícias." });
 		}
 
 		return res;

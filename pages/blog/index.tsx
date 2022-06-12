@@ -1,7 +1,7 @@
 import { CardBlog } from "components/card/Blog";
 import { Main } from "components/layout/Main";
 import type { BlogPost } from "entities/BlogPost";
-import { firestore } from "myFirebase/server";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
@@ -13,14 +13,14 @@ interface Props {
 const Blog: NextPage<Props> = ({ posts }) => {
 	return (
 		<>
-			<NextSeo title="Notícias" />
+			<NextSeo title="Blog" />
 
-			<Main title="Notícias">
-				<div className="flex flex-col gap-4 w-full">
-					{posts.length ? (
-						posts.map(post => <CardBlog key={post.id} {...post} />)
+			<Main title="Blog" className="flex flex-col justify-center items-center p-6 pb-10">
+				<div className="flex flex-col gap-4 max-w-5xl w-full">
+					{!!posts && posts.length ? (
+						posts.map(post => <CardBlog key={post.id} {...post} type="blog" />)
 					) : (
-						<span className="text-lg italic">Ainda não há postagens :(</span>
+						<span className="text-lg text-center">Ainda não há postagens.</span>
 					)}
 				</div>
 			</Main>
@@ -30,20 +30,14 @@ const Blog: NextPage<Props> = ({ posts }) => {
 
 export default Blog;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ res }) => {
-	const col = firestore.collection("posts");
-
-	try {
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler(ctx, { col: "blogPosts", autoTry: true }, async col => {
 		const query = await col.get();
 		const posts: BlogPost[] = [];
-		if (query.empty || !query.docs.length) return { props: { posts } };
 
-		// Remove o conteúdo, já que não será usado agora e pode aumentar muito o tamanho da transferência
-		query.forEach(doc => posts.push({ ...doc.data(), content: {} } as BlogPost));
+		if (!query.empty) {
+			for (const post of query.docs) posts.push({ ...post.data(), content: {} } as BlogPost);
+		}
+
 		return { props: { posts } };
-	} catch (err) {
-		console.error(err);
-		res.statusCode = 500;
-		return { props: { posts: [] } };
-	}
-};
+	});

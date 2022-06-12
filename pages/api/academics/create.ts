@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	return await apiHandler(
 		req,
 		res,
-		{ method: "post", col: "academics", adminOnly: true },
+		{ method: "post", col: "academics", role: "admin" },
 		async col => {
 			const { name, patronId, bio }: NewAcademic = req.body;
 			const customUrl = getIdFromText(name);

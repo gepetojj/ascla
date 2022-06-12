@@ -3,42 +3,29 @@ import type { JSONContent } from "@tiptap/react";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import type { Patron } from "entities/Patron";
+import { getIdFromText } from "helpers/getIdFromText";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import React, { useCallback, useState, FormEvent, useEffect } from "react";
+import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { Store } from "react-notifications-component";
-import useSWR from "swr";
 
-const AdminAcademicsNew: NextPage = () => {
-	const [patrons, setPatrons] = useState<Patron[]>([]);
-	const { data, error } = useSWR("/api/patrons/list", (...args) =>
-		fetch(...args).then(res => res.json())
-	);
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
-		"/api/academics/create",
-		"post"
-	);
+const AdminNewsNewPost: NextPage = () => {
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/news/create", "post");
 
-	const [name, setName] = useState("");
-	const [patronId, setPatronId] = useState("");
+	const [title, setTitle] = useState("");
+	const [description, setDescription] = useState("");
+	const [customUrl, setCustomUrl] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 		content: [{ type: "paragraph" }],
 	});
 
-	// Lista os patronos para mostrar na seleção
-	useEffect(() => {
-		data && !error && setPatrons(data.patrons || []);
-		!data && error && console.error(error);
-	}, [data, error]);
-
 	useEffect(() => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Acadêmico registrado com sucesso.",
+				message: "Notícia criada com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -51,7 +38,7 @@ const AdminAcademicsNew: NextPage = () => {
 		const onError = (err?: DefaultResponse) => {
 			Store.addNotification({
 				title: "Erro",
-				message: `Não foi possível criar o acadêmico. ${
+				message: `Não foi possível criar a notícia. ${
 					err?.message && `Motivo: ${err.message}`
 				}`,
 				type: "danger",
@@ -73,10 +60,15 @@ const AdminAcademicsNew: NextPage = () => {
 		};
 	}, [events]);
 
+	const onTitleChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
+		setTitle(target.value);
+		setCustomUrl(getIdFromText(target.value));
+	}, []);
+
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !patronId || !editorContent.content?.length) {
+			if (!title || !description || !customUrl || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -90,53 +82,51 @@ const AdminAcademicsNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ name, patronId, bio: editorContent });
+			fetcher({ title, description, customUrl, content: editorContent });
 		},
-		[fetcher, name, patronId, editorContent]
+		[fetcher, title, description, customUrl, editorContent]
 	);
 
 	return (
 		<>
-			<NextSeo title="Administração - Acadêmicos - Novo" noindex nofollow />
+			<NextSeo title="Administração - Notícias - Novo" noindex nofollow />
 
 			<AdminForm
-				title="Novo acadêmico"
+				title="Nova notícia"
 				onFormSubmit={onFormSubmit}
-				submitLabel="Criar"
+				submitLabel="Postar"
 				loading={loading}
 				editorContent={editorContent}
 				onEditorChange={setEditorContent}
 			>
 				<>
 					<TextInput
-						id="name"
-						label="Nome *"
+						id="title"
+						label="Título *"
 						className="w-full sm:w-80"
-						value={name}
-						onChange={({ target }) => setName(target.value)}
+						value={title}
+						onChange={onTitleChange}
 						required
 					/>
-					<select
+					<TextInput
+						id="description"
+						label="Descrição curta *"
 						className="w-full sm:w-80"
-						defaultValue={""}
-						onChange={event => setPatronId(event.target.value)}
-						disabled={!!patrons && patrons.length <= 0}
-					>
-						<option value="">Escolha um patrono</option>
-						{!!patrons && !!patrons.length ? (
-							patrons.map(patron => (
-								<option key={patron.id} value={patron.id}>
-									{patron.name}
-								</option>
-							))
-						) : (
-							<option value="">Não há patronos registrados.</option>
-						)}
-					</select>
+						value={description}
+						onChange={({ target }) => setDescription(target.value)}
+						required
+					/>
+					<TextInput
+						id="customUrl"
+						label="URL Personalizada"
+						className="w-full sm:w-80"
+						value={customUrl}
+						readOnly
+					/>
 				</>
 			</AdminForm>
 		</>
 	);
 };
 
-export default AdminAcademicsNew;
+export default AdminNewsNewPost;

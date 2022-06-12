@@ -30,10 +30,10 @@ const HeaderLinkBaseComponent: FC<HeaderLinkBaseProps> = ({
 		return (
 			<Link href={href} shallow>
 				<a
-					className={`text-secondary-700 m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
+					className={`m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
 						isActive
-							? "bg-secondary-700/[0.17] hover:bg-secondary-700/20"
-							: "hover:bg-secondary-700/10"
+							? "bg-black-400/[0.17] hover:bg-black-400/20"
+							: "hover:bg-black-400/10"
 					}`}
 				>
 					{children}
@@ -45,8 +45,8 @@ const HeaderLinkBaseComponent: FC<HeaderLinkBaseProps> = ({
 	return (
 		<button
 			type="button"
-			className={`text-secondary-700 m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
-				isHovering || isActive ? "bg-secondary-700/20" : "hover:bg-secondary-700/10"
+			className={`m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
+				isHovering || isActive ? "bg-black-400/20" : "hover:bg-black-400/10"
 			}`}
 		>
 			{children}

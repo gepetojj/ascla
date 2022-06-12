@@ -2,7 +2,7 @@
 	"name": "ascla-website",
 	"description": "",
 	"author": "Gepetojj <contato.gepetojj@gmail.com>",
-	"version": "0.12.0",
+	"version": "0.13.0",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
@@ -15,6 +15,7 @@
 		"analyze": "cross-env ANALYZE=true next build"
 	},
 	"dependencies": {
+		"@headlessui/react": "^1.6.4",
 		"@next/bundle-analyzer": "^12.1.6",
 		"@tiptap/extension-link": "^2.0.0-beta.38",
 		"@tiptap/extension-text-align": "^2.0.0-beta.29",

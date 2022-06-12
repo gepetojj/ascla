@@ -1,5 +1,5 @@
 import { EditableItem } from "components/card/EditableItem";
-import type { Academic } from "entities/Academic";
+import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
@@ -11,12 +11,12 @@ import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	academics: Academic[];
+	news: BlogPost[];
 }
 
-const AdminAcademics: NextPage<Props> = ({ academics }) => {
+const AdminNews: NextPage<Props> = ({ news }) => {
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
-		"/api/academics/delete",
+		"/api/news/delete",
 		"delete"
 	);
 
@@ -24,7 +24,7 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Acadêmico deletado com sucesso.",
+				message: "Notícia deletada com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -38,7 +38,7 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 		const onError = (err?: DefaultResponse) => {
 			Store.addNotification({
 				title: "Erro",
-				message: `Não foi possível deletar o acadêmico. ${
+				message: `Não foi possível deletar a notícia. ${
 					err?.message && `Motivo: ${err.message}`
 				}`,
 				type: "danger",
@@ -60,7 +60,7 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 		};
 	}, [events]);
 
-	const deleteAcademic = useCallback(
+	const deleteNews = useCallback(
 		(id: string) => {
 			fetcher(undefined, new URLSearchParams({ id }));
 		},
@@ -69,31 +69,31 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 
 	return (
 		<>
-			<NextSeo title="Administração - Acadêmicos" noindex nofollow />
+			<NextSeo title="Administração - Notícias" noindex nofollow />
 
 			<main className="flex flex-col justify-center items-center h-screen">
 				<div className="flex justify-between items-center w-96">
-					<h1 className="text-2xl font-bold">Acadêmicos</h1>
-					<Link href="/admin/academicos/novo">
+					<h1 className="text-2xl font-bold">Notícias</h1>
+					<Link href="/admin/noticias/novo">
 						<a>
 							<MdAdd className="text-3xl cursor-pointer" />
 						</a>
 					</Link>
 				</div>
 				<div className="flex flex-col justify-center items-center mt-4 gap-2">
-					{academics?.length ? (
-						academics.map(academic => (
+					{news?.length ? (
+						news.map(post => (
 							<EditableItem
-								key={academic.id}
-								title={academic.name}
-								editUrl={`/admin/academicos/${academic.metadata.urlId}`}
-								deleteAction={() => deleteAcademic(academic.id)}
+								key={post.id}
+								title={post.title}
+								editUrl={`/admin/noticias/${post.metadata.urlId}`}
+								deleteAction={() => deleteNews(post.id)}
 								loading={loading}
-								deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
+								deleteLabel="Clique duas vezes para deletar a notícia permanentemente."
 							/>
 						))
 					) : (
-						<p>Não há acadêmicos ainda.</p>
+						<p>Não há notícias ainda.</p>
 					)}
 				</div>
 			</main>
@@ -101,19 +101,19 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 	);
 };
 
-export default AdminAcademics;
+export default AdminNews;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler(ctx, { col: "academics", autoTry: true }, async col => {
+	gSSPHandler<Props>(ctx, { col: "news", autoTry: true }, async col => {
 		const query = await col.get();
-		const academics: Academic[] = [];
+		const news: BlogPost[] = [];
 
 		if (!query.empty) {
 			for (const doc of query.docs) {
-				const academic = doc.data() as Academic;
-				academics.push({ ...academic, bio: {} });
+				const post = doc.data() as BlogPost;
+				news.push({ ...post, content: {} });
 			}
 		}
 
-		return { props: { academics } };
+		return { props: { news } };
 	});

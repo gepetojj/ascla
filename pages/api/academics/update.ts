@@ -13,7 +13,7 @@ interface UpdateAcademic {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
-	return apiHandler(req, res, { method: "put", col: "academics", adminOnly: true }, async col => {
+	return apiHandler(req, res, { method: "put", col: "academics", role: "admin" }, async col => {
 		const { id, name, patronId, bio }: UpdateAcademic = req.body;
 
 		// TODO: Adicionar validação aos dados

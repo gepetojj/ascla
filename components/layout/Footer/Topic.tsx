@@ -9,7 +9,7 @@ export interface FooterTopicProps {
 const FooterTopicComponent: FC<FooterTopicProps> = ({ title, children, onCenter }) => {
 	return (
 		<div className={`flex flex-col gap-4 ${onCenter ? "text-center" : "text-left"}`}>
-			<h4 className="text-lg text-secondary-800 font-medium">{title}</h4>
+			<h4 className="text-lg font-medium">{title}</h4>
 			{children}
 		</div>
 	);

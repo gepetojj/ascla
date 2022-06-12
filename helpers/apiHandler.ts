@@ -1,9 +1,10 @@
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { UserRole } from "entities/User";
 import { CollectionName, Collections } from "myFirebase/enums";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Session } from "next-auth";
 
-import { requireAdmin } from "./requireAdmin";
+import { requireRole } from "./requireRole";
 
 export type ApiHandlerCallback<I> = (
 	col: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
@@ -15,13 +16,13 @@ export type ApiHandlerMethods = "get" | "post" | "put" | "delete";
 export interface ApiHandlerOptions {
 	method: ApiHandlerMethods;
 	col: CollectionName;
-	adminOnly?: boolean;
+	role?: UserRole;
 }
 
 export const apiHandler = async <I>(
 	req: NextApiRequest,
 	res: NextApiResponse,
-	{ method, col, adminOnly }: ApiHandlerOptions,
+	{ method, col, role }: ApiHandlerOptions,
 	callback: ApiHandlerCallback<I>
 ): Promise<NextApiResponse<I | DefaultResponse>> => {
 	if (req.method !== method.toLocaleUpperCase()) {
@@ -29,8 +30,8 @@ export const apiHandler = async <I>(
 		return res;
 	}
 
-	const { authorized, unauthorized, session } = await requireAdmin<I>(req, res);
-	if (adminOnly && !authorized) return unauthorized();
+	const { authorized, unauthorized, session } = await requireRole<I>(req, res, role);
+	if (role && role !== "common" && !authorized) return unauthorized();
 
 	return await callback(Collections[col], session);
 };

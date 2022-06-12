@@ -1,16 +1,18 @@
 import { firestore } from "./server";
 
-export type CollectionName = "posts" | "patrons" | "academics" | "users";
+export type CollectionName = "blogPosts" | "news" | "patrons" | "academics" | "users";
 
 export enum CollectionsNames {
-	posts = "posts",
+	blogPosts = "blogPosts",
+	news = "news",
 	patrons = "patrons",
 	academics = "academics",
 	users = "users",
 }
 
 export const Collections = {
-	posts: firestore.collection(CollectionsNames.posts),
+	blogPosts: firestore.collection(CollectionsNames.blogPosts),
+	news: firestore.collection(CollectionsNames.news),
 	patrons: firestore.collection(CollectionsNames.patrons),
 	academics: firestore.collection(CollectionsNames.academics),
 	users: firestore.collection(CollectionsNames.users),

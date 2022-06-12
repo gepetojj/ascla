@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	return apiHandler(
 		req,
 		res,
-		{ method: "delete", col: "academics", adminOnly: true },
+		{ method: "delete", col: "academics", role: "admin" },
 		async col => {
 			const { id } = req.query;
 

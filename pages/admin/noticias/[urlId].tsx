@@ -2,30 +2,31 @@ import type { JSONContent } from "@tiptap/react";
 
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
+import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import { getIdFromText } from "helpers/getIdFromText";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
-import type { NextPage } from "next";
+import type { NextPage, GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
-import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
-const AdminBlogNew: NextPage = () => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/blog/create", "post");
+interface Props {
+	news: BlogPost;
+}
 
-	const [title, setTitle] = useState("");
-	const [description, setDescription] = useState("");
-	const [customUrl, setCustomUrl] = useState("");
-	const [editorContent, setEditorContent] = useState<JSONContent>({
-		type: "doc",
-		content: [{ type: "paragraph" }],
-	});
+const AdminNewsEdit: NextPage<Props> = ({ news }) => {
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/news/update", "put");
+
+	const [title, setTitle] = useState(news.title);
+	const [description, setDescription] = useState(news.description);
+	const [editorContent, setEditorContent] = useState<JSONContent>(news.content);
 
 	useEffect(() => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Postagem criada com sucesso.",
+				message: "Notícia atualizada com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -38,7 +39,7 @@ const AdminBlogNew: NextPage = () => {
 		const onError = (err?: DefaultResponse) => {
 			Store.addNotification({
 				title: "Erro",
-				message: `Não foi possível criar a postagem. ${
+				message: `Não foi possível editar a notícia. ${
 					err?.message && `Motivo: ${err.message}`
 				}`,
 				type: "danger",
@@ -60,15 +61,10 @@ const AdminBlogNew: NextPage = () => {
 		};
 	}, [events]);
 
-	const onTitleChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
-		setTitle(target.value);
-		setCustomUrl(getIdFromText(target.value));
-	}, []);
-
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!title || !description || !customUrl || !editorContent.content?.length) {
+			if (!description || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -82,19 +78,19 @@ const AdminBlogNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ title, description, customUrl, content: editorContent });
+			fetcher({ id: news.id, title, description, content: editorContent });
 		},
-		[fetcher, title, description, customUrl, editorContent]
+		[fetcher, news.id, title, description, editorContent]
 	);
 
 	return (
 		<>
-			<NextSeo title="Administração - Blog - Novo" noindex nofollow />
+			<NextSeo title="Administração - Notícias - Editar" noindex nofollow />
 
 			<AdminForm
-				title="Nova postagem"
+				title="Editar notícia"
 				onFormSubmit={onFormSubmit}
-				submitLabel="Postar"
+				submitLabel="Editar"
 				loading={loading}
 				editorContent={editorContent}
 				onEditorChange={setEditorContent}
@@ -105,7 +101,7 @@ const AdminBlogNew: NextPage = () => {
 						label="Título *"
 						className="w-full sm:w-80"
 						value={title}
-						onChange={onTitleChange}
+						onChange={({ target }) => setTitle(target.value)}
 						required
 					/>
 					<TextInput
@@ -116,17 +112,25 @@ const AdminBlogNew: NextPage = () => {
 						onChange={({ target }) => setDescription(target.value)}
 						required
 					/>
-					<TextInput
-						id="customUrl"
-						label="URL Personalizada"
-						className="w-full sm:w-80"
-						value={customUrl}
-						readOnly
-					/>
 				</>
 			</AdminForm>
 		</>
 	);
 };
 
-export default AdminBlogNew;
+export default AdminNewsEdit;
+
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "news", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
+			const news = query.docs[0];
+
+			if (query.empty || !news.exists) return { notFound: true };
+
+			const data = news.data() as BlogPost;
+			return { props: { news: data } };
+		}
+	);

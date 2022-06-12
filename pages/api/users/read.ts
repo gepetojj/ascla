@@ -8,7 +8,7 @@ interface Response extends DefaultResponse {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	return apiHandler(req, res, { method: "get", col: "users", adminOnly: true }, async col => {
+	return apiHandler(req, res, { method: "get", col: "users" }, async (col, session) => {
 		try {
 			const { id } = req.query;
 
@@ -24,7 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			const user = query.data() as User;
-			res.json({ message: "Usuário listado com sucesso.", user });
+
+			if (user.metadata.role !== "common" || session?.user?.role === "admin") {
+				res.json({ message: "Usuário listado com sucesso.", user });
+				return res;
+			}
+			res.status(401).json({ message: "Você não tem permissão para acessar esse conteúdo." });
 		} catch (err) {
 			console.error(err);
 			res.status(500).json({ message: "Não foi possível listar o usuário." });

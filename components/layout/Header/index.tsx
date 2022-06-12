@@ -16,7 +16,7 @@ const HeaderComponent: FC = () => {
 	}, [push, data]);
 
 	return (
-		<header className="flex flex-col justify-center items-center bg-primary-main px-6 py-5 gap-4 md:flex-row md:justify-between">
+		<header className="flex flex-col justify-center items-center bg-primary-main text-black-100 px-6 py-5 gap-4 md:flex-row md:justify-between">
 			<div className="flex items-center">
 				<div className="flex items-center">
 					<Image
@@ -29,8 +29,8 @@ const HeaderComponent: FC = () => {
 					/>
 				</div>
 				<div className="flex flex-col justify-center ml-5">
-					<h1 className="text-2xl font-medium text-secondary-800">ASCLA</h1>
-					<h2 className="text-sm font-medium text-secondary-800">10 anos</h2>
+					<h1 className="text-2xl font-medium">ASCLA</h1>
+					<h2 className="text-sm font-medium">10 anos</h2>
 				</div>
 			</div>
 			<nav className="flex justify-center items-center flex-wrap w-full my-3 md:flex-nowrap md:my-0">
@@ -69,8 +69,11 @@ const HeaderComponent: FC = () => {
 						<a>Sócios</a>
 					</Link>
 				</HeaderLink>
-				<HeaderLink href="/blog" isActive={pathname.startsWith("/blog")}>
+				<HeaderLink href="/noticias" isActive={pathname.startsWith("/noticias")}>
 					Notícias
+				</HeaderLink>
+				<HeaderLink href="/blog" isActive={pathname.startsWith("/blog")}>
+					Blog
 				</HeaderLink>
 				<HeaderLink href="/contato" isActive={pathname === "/contato"}>
 					Contato

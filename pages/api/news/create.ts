@@ -6,7 +6,7 @@ import { apiHandler } from "helpers/apiHandler";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuid } from "uuid";
 
-interface NewPost {
+interface NewNewsPost {
 	title: string;
 	description: string;
 	customUrl: string;
@@ -18,18 +18,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	return apiHandler(
 		req,
 		res,
-		{ method: "post", col: "posts", adminOnly: true },
+		{ method: "post", col: "news", role: "admin" },
 		async (col, session) => {
 			if (!session?.user?.id) {
 				res.status(401).json({ message: "Houve um erro com sua sessão." });
 				return res;
 			}
 
-			const { title, description, customUrl, content }: NewPost = req.body;
+			const { title, description, customUrl, content }: NewNewsPost = req.body;
 
 			// TODO: Adicionar validação aos dados
 			if (!title || !description || !content.content?.length) {
-				res.status(400).json({ message: "Informe os dados do post corretamente." });
+				res.status(400).json({ message: "Informe os dados da notícia corretamente." });
 				return res;
 			}
 
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 			}
 
-			const post: BlogPost = {
+			const news: BlogPost = {
 				id: uuid(),
 				metadata: {
 					urlId: customUrl || uuid(),
@@ -55,11 +55,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			};
 
 			try {
-				await col.doc(post.id).create(post);
-				res.json({ message: "Post criado com sucesso." });
+				await col.doc(news.id).create(news);
+				res.json({ message: "Notícia criada com sucesso." });
 			} catch (err) {
 				console.error(err);
-				res.status(500).json({ message: "Não foi possível criar o post." });
+				res.status(500).json({ message: "Não foi possível criar a notícia." });
 			}
 
 			return res;

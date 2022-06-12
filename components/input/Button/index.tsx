@@ -31,13 +31,21 @@ const ButtonComponent: FC<ButtonProps> = ({
 		if (asAnchor)
 			return (
 				<a className={attributes.className}>
-					{loading && <CgSpinner className="text-xl text-current mr-2 animate-spin" />}
+					{loading && (
+						<div>
+							<CgSpinner className="text-xl text-current mr-2 animate-spin" />
+						</div>
+					)}
 					{children}
 				</a>
 			);
 		return (
 			<button {...attributes}>
-				{loading && <CgSpinner className="text-xl text-current mr-2 animate-spin" />}
+				{loading && (
+					<div>
+						<CgSpinner className="text-xl text-current mr-2 animate-spin" />
+					</div>
+				)}
 				{children}
 			</button>
 		);

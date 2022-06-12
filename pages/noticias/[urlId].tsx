@@ -7,35 +7,35 @@ import { NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	post: EBlogPost;
+	news: EBlogPost;
 }
 
-const BlogPost: NextPage<Props> = ({ post }) => {
+const NewsPost: NextPage<Props> = ({ news }) => {
 	return (
 		<>
-			<NextSeo title={`Blog - ${post.title || "Não encontrado"}`} />
+			<NextSeo title={`Notícias - ${news.title || "Não encontrado"}`} />
 
-			<Main title={post.title} className="p-6 pb-12">
-				<PostView {...post} />
+			<Main title={news.title} className="p-6 pb-12">
+				<PostView {...news} />
 			</Main>
 		</>
 	);
 };
 
-export default BlogPost;
+export default NewsPost;
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = Collections.blogPosts;
+	const col = Collections.news;
 	const urlId = params?.urlId;
 
 	if (!urlId || typeof urlId !== "string") return { notFound: true };
 
 	try {
 		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const post = query.docs[0];
-		if (query.empty || !post.exists) return { notFound: true };
+		const news = query.docs[0];
+		if (query.empty || !news.exists) return { notFound: true };
 
-		return { props: { post: post.data() as EBlogPost } };
+		return { props: { news: news.data() as EBlogPost } };
 	} catch (err) {
 		console.error(err);
 		return { notFound: true };
@@ -43,7 +43,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	const col = Collections.blogPosts;
+	const col = Collections.news;
 	const paths: { params: { urlId: string } }[] = [];
 
 	try {

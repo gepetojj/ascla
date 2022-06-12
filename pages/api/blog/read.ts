@@ -8,7 +8,7 @@ interface Response extends DefaultResponse {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	return apiHandler(req, res, { method: "get", col: "posts" }, async col => {
+	return apiHandler(req, res, { method: "get", col: "blogPosts" }, async col => {
 		const postUrlId = req.query.urlId;
 
 		if (!postUrlId || typeof postUrlId !== "string") {
