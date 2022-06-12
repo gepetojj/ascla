@@ -3,14 +3,13 @@ import React, { memo, FC, ReactNode } from "react";
 export interface FooterTopicProps {
 	title: string;
 	children: ReactNode;
+	onCenter?: boolean;
 }
 
-const FooterTopicComponent: FC<FooterTopicProps> = ({ title, children }) => {
+const FooterTopicComponent: FC<FooterTopicProps> = ({ title, children, onCenter }) => {
 	return (
-		<div className="flex flex-col m-3">
-			<h3 className="font-medium border-b border-dotted border-orange-300 pb-1 mb-2">
-				{title}
-			</h3>
+		<div className={`flex flex-col gap-4 ${onCenter ? "text-center" : "text-left"}`}>
+			<h4 className="text-lg text-secondary-800 font-medium">{title}</h4>
 			{children}
 		</div>
 	);

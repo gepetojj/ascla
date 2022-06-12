@@ -1,3 +1,4 @@
+import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
 import { BlogPost as EBlogPost } from "entities/BlogPost";
 import { firestore } from "myFirebase/server";
@@ -14,9 +15,9 @@ const BlogPost: NextPage<Props> = ({ post }) => {
 		<>
 			<NextSeo title={`Notícias - ${post.title || "Não encontrado"}`} />
 
-			<main>
+			<Main title={post.title}>
 				<PostView {...post} showUserInteractions />
-			</main>
+			</Main>
 		</>
 	);
 };

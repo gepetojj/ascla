@@ -1,13 +1,25 @@
 import type { BlogPost } from "entities/BlogPost";
+import type { User } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useState, useEffect } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
+import useSWR from "swr";
 
 export type CardBlogProps = BlogPost;
 
 const CardBlogComponent: FC<CardBlogProps> = ({ title, description, thumbnailUrl, metadata }) => {
+	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
+		fetch(...args).then(res => res.json())
+	);
+	const [author, setAuthor] = useState<User>();
+
+	useEffect(() => {
+		data && !error && setAuthor(data.user);
+		!data && error && console.error(error);
+	}, [data, error]);
+
 	return (
 		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-cream-500 sm:flex-row sm:justify-start sm:items-start">
 			<div className="flex justify-center items-center max-w-[300px] w-full h-full rounded shadow">
@@ -34,7 +46,7 @@ const CardBlogComponent: FC<CardBlogProps> = ({ title, description, thumbnailUrl
 					<div className="flex flex-wrap gap-5 text-black-200 truncate">
 						<div className="flex items-center gap-2">
 							<MdAccountCircle className="text-xl" />
-							<span>{metadata.authorId}</span>
+							<span>{author?.name || "Nome do autor"}</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<AiOutlineClockCircle className="text-xl" />

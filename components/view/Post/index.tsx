@@ -5,21 +5,29 @@ import { generateHTML } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import type { BlogPost } from "entities/BlogPost";
+import type { User } from "entities/User";
+import Image from "next/image";
 import React, { FC, memo, useEffect, useState } from "react";
-import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { MdUpdate } from "react-icons/md";
+import useSWR from "swr";
 
 export interface PostViewProps extends Omit<BlogPost, "id"> {
 	showUserInteractions?: boolean;
 }
 
-const PostViewComponent: FC<PostViewProps> = ({
-	metadata,
-	title,
-	description,
-	content,
-	showUserInteractions,
-}) => {
+const PostViewComponent: FC<PostViewProps> = ({ metadata, content }) => {
+	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
+		fetch(...args).then(res => res.json())
+	);
+	const [author, setAuthor] = useState<User>();
+
 	const [contentToHTML, setContentToHTML] = useState("");
+
+	useEffect(() => {
+		data && !error && setAuthor(data.user);
+		!data && error && console.error(error);
+	}, [data, error]);
 
 	useEffect(() => {
 		const htmlString = generateHTML(content, [
@@ -34,49 +42,40 @@ const PostViewComponent: FC<PostViewProps> = ({
 	}, [content]);
 
 	return (
-		<section className="flex justify-between w-full h-full p-6">
-			<article className="flex flex-col w-full">
-				<h1 className="text-3xl font-bold mb-2 truncate">{title}</h1>
-				<span className="text-sm text-grey-800 italic break-words">{description}</span>
-				<hr className="my-4 text-grey-700 rounded-sm" />
+		<section className="flex flex-col-reverse justify-center w-full h-full gap-10 md:flex-row">
+			<article className="flex justify-center max-w-2xl w-full">
 				<div
 					className="prose max-w-full"
 					dangerouslySetInnerHTML={{ __html: contentToHTML }}
 				></div>
 			</article>
-			<aside className="flex flex-col h-fit w-60 ml-4">
-				<div className="bg-blue-grey-50 rounded-sm p-4">
-					<div className="flex flex-col w-full">
-						<h2 className="text-center text-xl font-semibold">Autor</h2>
-						<span className="italic truncate">{metadata.authorId}</span>
-					</div>
-					<div className="flex flex-col w-full text-center mt-2">
-						<h2 className="text-xl font-semibold">Postado em</h2>
-						<span className="italic truncate">
-							{new Date(metadata.createdAt).toLocaleDateString()}
-						</span>
-					</div>
-					{metadata.updatedAt > 0 && (
-						<div className="flex flex-col w-full text-center mt-2">
-							<h2 className="text-xl font-semibold">Atualizado em</h2>
-							<span className="italic truncate">
-								{new Date(metadata.updatedAt).toLocaleDateString()}
-							</span>
-						</div>
-					)}
+			<aside className="flex flex-row justify-center items-center gap-4 md:flex-col md:justify-start md:gap-0">
+				<div>
+					<Image
+						src={author?.avatarUrl || "/usuario-padrao.webp"}
+						alt="Avatar do usuário"
+						width={74}
+						height={74}
+						className="rounded-full"
+					/>
 				</div>
-				{showUserInteractions && (
-					<div className="flex justify-between items-center bg-blue-grey-50 rounded-sm p-4 mt-4">
-						<div className="flex justify-center items-center w-1/2">
-							<AiOutlineLike className="text-xl cursor-pointer" />
-							<span className="ml-2">0</span>
+				<div>
+					<h3 className="text-lg text-center text-black-main font-medium break-words">
+						{author?.name || "Nome do autor"}
+					</h3>
+					<div className="flex justify-center gap-2">
+						<div className="flex items-center gap-1 text-xs">
+							<AiOutlineClockCircle className="text-xl" />
+							<span>{new Date(metadata.createdAt).toLocaleDateString()}</span>
 						</div>
-						<div className="flex justify-center items-center w-1/2">
-							<AiOutlineDislike className="text-xl cursor-pointer" />
-							<span className="ml-2">0</span>
-						</div>
+						{metadata.updatedAt > 0 && (
+							<div className="flex items-center gap-1 text-xs">
+								<MdUpdate className="text-xl" />
+								<span>{new Date(metadata.updatedAt).toLocaleDateString()}</span>
+							</div>
+						)}
 					</div>
-				)}
+				</div>
 			</aside>
 		</section>
 	);
