@@ -1,22 +1,44 @@
-import { PatronView } from "components/view/Patron";
+import { Main } from "components/layout/Main";
+import { ChairOccupantView } from "components/view/ChairOccupant";
+import type { Academic } from "entities/Academic";
 import type { Patron as EPatron } from "entities/Patron";
-import { firestore } from "myFirebase/server";
+import { useJSON } from "hooks/useJSON";
+import { Collections } from "myFirebase/enums";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
 interface Props {
 	patron: EPatron;
 }
 
 const Patron: NextPage<Props> = ({ patron }) => {
+	const { data, error } = useSWR(
+		`/api/academics/read?id=${patron.metadata.academicId}`,
+		(...args) => fetch(...args).then(res => res.json())
+	);
+	const [academic, setAcademic] = useState<Academic>();
+	const bioHTML = useJSON(patron.bio);
+
+	useEffect(() => {
+		data && !error && setAcademic(data.academic);
+		!data && error && console.error(error);
+	}, [data, error]);
+
 	return (
 		<>
 			<NextSeo title={`Patronos - ${patron.name || "Não encontrado"}`} />
 
-			<main>
-				<PatronView {...patron} />
-			</main>
+			<Main title={patron.name} className="p-6 pb-12">
+				<ChairOccupantView
+					{...patron}
+					chair={1}
+					bioHTML={bioHTML}
+					oppositeName={academic?.name}
+					oppositeUrlId={academic?.metadata.urlId}
+				/>
+			</Main>
 		</>
 	);
 };
@@ -24,7 +46,7 @@ const Patron: NextPage<Props> = ({ patron }) => {
 export default Patron;
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = firestore.collection("patrons");
+	const col = Collections.patrons;
 	const urlId = params?.urlId;
 
 	if (!urlId || typeof urlId !== "string") return { notFound: true };
@@ -42,7 +64,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	const col = firestore.collection("patrons");
+	const col = Collections.patrons;
 	const paths: { params: { urlId: string } }[] = [];
 
 	try {

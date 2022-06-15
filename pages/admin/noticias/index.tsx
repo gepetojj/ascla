@@ -15,10 +15,7 @@ interface Props {
 }
 
 const AdminNews: NextPage<Props> = ({ news }) => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
-		"/api/news/delete",
-		"delete"
-	);
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/news/delete", "delete");
 
 	useEffect(() => {
 		const onSuccess = () => {

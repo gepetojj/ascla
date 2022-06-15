@@ -1,26 +1,44 @@
-import { AcademicView } from "components/view/Academic";
+import { Main } from "components/layout/Main";
+import { ChairOccupantView } from "components/view/ChairOccupant";
 import type { Academic as EAcademic } from "entities/Academic";
-import { firestore } from "myFirebase/server";
+import type { Patron } from "entities/Patron";
+import { useJSON } from "hooks/useJSON";
+import { Collections } from "myFirebase/enums";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import Head from "next/head";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
 interface Props {
 	academic: EAcademic;
 }
 
 const Academic: NextPage<Props> = ({ academic }) => {
+	const { data, error } = useSWR(
+		`/api/patrons/read?id=${academic.metadata.patronId}`,
+		(...args) => fetch(...args).then(res => res.json())
+	);
+	const [patron, setPatron] = useState<Patron>();
+	const bioHTML = useJSON(academic.bio);
+
+	useEffect(() => {
+		data && !error && setPatron(data.patron);
+		!data && error && console.error(error);
+	}, [data, error]);
+
 	return (
 		<>
 			<NextSeo title={`Acadêmicos - ${academic.name || "Não encontrado"}`} />
-			<Head>
-				<title>ASCLA - Acadêmicos - {academic.name}</title>
-			</Head>
 
-			<main>
-				<AcademicView {...academic} />
-			</main>
+			<Main title={academic.name} className="p-6 pb-12">
+				<ChairOccupantView
+					{...academic}
+					chair={1}
+					bioHTML={bioHTML}
+					oppositeName={patron?.name}
+					oppositeUrlId={patron?.metadata.urlId}
+				/>
+			</Main>
 		</>
 	);
 };
@@ -28,7 +46,7 @@ const Academic: NextPage<Props> = ({ academic }) => {
 export default Academic;
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = firestore.collection("academics");
+	const col = Collections.academics;
 	const urlId = params?.urlId;
 
 	if (!urlId || typeof urlId !== "string") return { notFound: true };
@@ -46,7 +64,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	const col = firestore.collection("academics");
+	const col = Collections.academics;
 	const paths: { params: { urlId: string } }[] = [];
 
 	try {
