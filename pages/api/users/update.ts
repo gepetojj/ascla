@@ -1,5 +1,5 @@
 import type { DefaultResponse } from "entities/DefaultResponse";
-import { User, UserRole } from "entities/User";
+import type { User, UserRole } from "entities/User";
 import { apiHandler } from "helpers/apiHandler";
 import type { NextApiRequest, NextApiResponse } from "next";
 

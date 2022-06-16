@@ -52,11 +52,13 @@ export default NextAuth({
 			if (!user) return token;
 
 			const col = Collections.users;
-			const userDoc = await col.doc(user.id).get();
-			const data = userDoc.data() as User | undefined;
+			const doc = await col.doc(user.id).get();
+			const data = doc.data() as User | undefined;
 
-			if (!userDoc.exists || !data) return token;
+			if (!doc.exists || !data) return token;
 			token.role = data.metadata.role;
+			token.name = data.name;
+			token.picture = data.avatarUrl || user.image;
 			return token;
 		},
 		async session({ session, token }) {
