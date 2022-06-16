@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/react";
 
+import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { DefaultResponse } from "entities/DefaultResponse";
@@ -22,7 +23,7 @@ const AdminAcademicsNew: NextPage = () => {
 	);
 
 	const [name, setName] = useState("");
-	const [patronId, setPatronId] = useState("");
+	const [selectedPatron, setSelectedPatron] = useState(patrons.find(() => false));
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 		content: [{ type: "paragraph" }],
@@ -30,7 +31,7 @@ const AdminAcademicsNew: NextPage = () => {
 
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setPatrons(data.patrons || []);
+		data && !error && setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
 		!data && error && console.error(error);
 	}, [data, error]);
 
@@ -76,7 +77,7 @@ const AdminAcademicsNew: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !patronId || !editorContent.content?.length) {
+			if (!name || !selectedPatron?.id || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -90,9 +91,9 @@ const AdminAcademicsNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ name, patronId, bio: editorContent });
+			fetcher({ name, patronId: selectedPatron.id, bio: editorContent });
 		},
-		[fetcher, name, patronId, editorContent]
+		[fetcher, name, selectedPatron, editorContent]
 	);
 
 	return (
@@ -116,23 +117,12 @@ const AdminAcademicsNew: NextPage = () => {
 						onChange={({ target }) => setName(target.value)}
 						required
 					/>
-					<select
-						className="w-full sm:w-80"
-						defaultValue={""}
-						onChange={event => setPatronId(event.target.value)}
-						disabled={!!patrons && patrons.length <= 0}
-					>
-						<option value="">Escolha um patrono</option>
-						{!!patrons && !!patrons.length ? (
-							patrons.map(patron => (
-								<option key={patron.id} value={patron.id}>
-									{patron.name}
-								</option>
-							))
-						) : (
-							<option value="">Não há patronos registrados.</option>
-						)}
-					</select>
+					<Select
+						label="Escolha um patrono *"
+						options={patrons}
+						selected={selectedPatron}
+						onChange={selected => setSelectedPatron(selected as Patron)}
+					/>
 				</>
 			</AdminForm>
 		</>

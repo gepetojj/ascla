@@ -2,21 +2,24 @@ import type { BlogPost } from "entities/BlogPost";
 import type { User } from "entities/User";
 import { useJSON } from "hooks/useJSON";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { FC, memo, useEffect, useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
-import { MdUpdate } from "react-icons/md";
+import { MdShare, MdUpdate } from "react-icons/md";
+import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
 export interface PostViewProps extends Omit<BlogPost, "id"> {
 	showUserInteractions?: boolean;
 }
 
-const PostViewComponent: FC<PostViewProps> = ({ metadata, content }) => {
+const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, description }) => {
 	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
 		fetch(...args).then(res => res.json())
 	);
 	const [author, setAuthor] = useState<User>();
 	const contentHTML = useJSON(content);
+	const { pathname } = useRouter();
 
 	useEffect(() => {
 		data && !error && setAuthor(data.user);
@@ -56,6 +59,41 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content }) => {
 								<span>{new Date(metadata.updatedAt).toLocaleDateString()}</span>
 							</div>
 						)}
+					</div>
+					<div className="flex justify-center mt-4">
+						<button
+							className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95"
+							onClick={() => {
+								try {
+									navigator.share({
+										title: `ASCLA - ${title}`,
+										text: description,
+										url: `https://asclasi.com/${pathname.split("/")[1]}/${
+											metadata.urlId
+										}`,
+									});
+								} catch {
+									navigator.clipboard.writeText(
+										`https://asclasi.com/${pathname.split("/")[1]}/${
+											metadata.urlId
+										}`
+									);
+									Store.addNotification({
+										title: "Sucesso",
+										message: "Link copiado para a área de transferência.",
+										type: "success",
+										container: "bottom-right",
+										dismiss: {
+											duration: 5000,
+											onScreen: true,
+										},
+									});
+								}
+							}}
+						>
+							<MdShare className="text-xl" />
+							<span>Compartilhar</span>
+						</button>
 					</div>
 				</div>
 			</aside>

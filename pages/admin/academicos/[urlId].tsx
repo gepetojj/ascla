@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/react";
 
+import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { Academic } from "entities/Academic";
@@ -28,14 +29,17 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	);
 
 	const [name, setName] = useState(academic.name);
-	const [patronId, setPatronId] = useState(academic.metadata.patronId);
+	const [selectedPatron, setSelectedPatron] = useState<Patron | undefined>(undefined);
 	const [editorContent, setEditorContent] = useState<JSONContent>(academic.bio);
 
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setPatrons(data.patrons);
+		if (data && !error) {
+			setPatrons(data.patrons);
+			setSelectedPatron(patrons.find(({ id }) => id === academic.metadata.patronId));
+		}
 		!data && error && console.error(error);
-	}, [data, error]);
+	}, [academic, patrons, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -79,7 +83,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !patronId || !editorContent.content?.length) {
+			if (!name || !selectedPatron?.id || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -96,11 +100,11 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 			fetcher({
 				id: academic.id,
 				name,
-				patronId,
+				patronId: selectedPatron.id,
 				bio: editorContent,
 			});
 		},
-		[fetcher, academic.id, name, patronId, editorContent]
+		[fetcher, academic.id, name, selectedPatron, editorContent]
 	);
 
 	return (
@@ -124,23 +128,12 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 						onChange={({ target }) => setName(target.value)}
 						required
 					/>
-					<select
-						className="w-full sm:w-80"
-						defaultValue={academic.metadata.patronId}
-						onChange={event => setPatronId(event.target.value)}
-						disabled={!!patrons && patrons.length <= 0}
-					>
-						<option value="">Escolha um patrono</option>
-						{!!patrons && !!patrons.length ? (
-							patrons.map(patron => (
-								<option key={patron.id} value={patron.id}>
-									{patron.name}
-								</option>
-							))
-						) : (
-							<option value="">Não há patronos registrados.</option>
-						)}
-					</select>
+					<Select
+						label="Escolha um patrono *"
+						options={patrons}
+						selected={selectedPatron}
+						onChange={selected => setSelectedPatron(selected as Patron)}
+					/>
 				</>
 			</AdminForm>
 		</>

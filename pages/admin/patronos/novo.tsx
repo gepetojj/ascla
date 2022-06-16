@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/react";
 
+import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { Academic } from "entities/Academic";
@@ -18,7 +19,7 @@ const AdminPatronsNew: NextPage = () => {
 	const { fetcher, events, loading } = useFetcher("/api/patrons/create", "post");
 
 	const [name, setName] = useState("");
-	const [academicId, setAcademicId] = useState("");
+	const [selectedAcademic, setSelectedAcademic] = useState(academics.find(() => false));
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 		content: [{ type: "paragraph" }],
@@ -26,7 +27,7 @@ const AdminPatronsNew: NextPage = () => {
 
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setAcademics(data.academics);
+		data && !error && setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
 		!data && error && console.error(error);
 	}, [data, error]);
 
@@ -70,7 +71,7 @@ const AdminPatronsNew: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !academicId || !editorContent.content?.length) {
+			if (!name || !selectedAcademic || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -84,9 +85,9 @@ const AdminPatronsNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ name, academicId, bio: editorContent });
+			fetcher({ name, academicId: selectedAcademic.id, bio: editorContent });
 		},
-		[fetcher, name, academicId, editorContent]
+		[fetcher, name, selectedAcademic, editorContent]
 	);
 
 	return (
@@ -110,23 +111,12 @@ const AdminPatronsNew: NextPage = () => {
 						onChange={({ target }) => setName(target.value)}
 						required
 					/>
-					<select
-						className="w-full sm:w-80"
-						defaultValue=""
-						onChange={event => setAcademicId(event.target.value)}
-						disabled={!!academics && academics.length <= 0}
-					>
-						<option value="">Escolha um acadêmico.</option>
-						{!!academics && !!academics.length ? (
-							academics.map(academic => (
-								<option key={academic.id} value={academic.id}>
-									{academic.name}
-								</option>
-							))
-						) : (
-							<option value="">Não há acadêmicos registrados.</option>
-						)}
-					</select>
+					<Select
+						label="Escolha um acadêmico *"
+						options={academics}
+						selected={selectedAcademic}
+						onChange={selected => setSelectedAcademic(selected as Academic)}
+					/>
 				</>
 			</AdminForm>
 		</>

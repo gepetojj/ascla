@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/react";
 
+import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { Academic } from "entities/Academic";
@@ -25,20 +26,23 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/patrons/update", "put");
 
 	const [name, setName] = useState(patron.name);
-	const [academicId, setAcademicId] = useState(patron.metadata.academicId);
+	const [selectedAcademic, setSelectedAcademic] = useState<Academic | undefined>(undefined);
 	const [editorContent, setEditorContent] = useState<JSONContent>(patron.bio);
 
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setAcademics(data.academics);
+		if (data && !error) {
+			setAcademics(data.academics);
+			setSelectedAcademic(academics.find(({ id }) => id === patron.metadata.academicId));
+		}
 		!data && error && console.error(error);
-	}, [data, error]);
+	}, [academics, patron, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {
 			Store.addNotification({
 				title: "Sucesso",
-				message: "Patrono registrado com sucesso.",
+				message: "Patrono atualizado com sucesso.",
 				type: "success",
 				container: "bottom-right",
 				dismiss: {
@@ -51,7 +55,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 		const onError = (err?: DefaultResponse) => {
 			Store.addNotification({
 				title: "Erro",
-				message: `Não foi possível criar o patrono. ${
+				message: `Não foi possível editar o patrono. ${
 					err?.message && `Motivo: ${err.message}`
 				}`,
 				type: "danger",
@@ -76,7 +80,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !academicId || !editorContent.content?.length) {
+			if (!name || !selectedAcademic || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -90,9 +94,9 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 				return;
 			}
 
-			fetcher({ id: patron.id, name, academicId, bio: editorContent });
+			fetcher({ id: patron.id, name, academicId: selectedAcademic.id, bio: editorContent });
 		},
-		[fetcher, patron.id, name, academicId, editorContent]
+		[fetcher, patron.id, name, selectedAcademic, editorContent]
 	);
 
 	return (
@@ -116,23 +120,12 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 						onChange={({ target }) => setName(target.value)}
 						required
 					/>
-					<select
-						className="w-full sm:w-80"
-						defaultValue={patron.metadata.academicId}
-						onChange={event => setAcademicId(event.target.value)}
-						disabled={!!academics && academics.length <= 0}
-					>
-						<option value="">Escolha um acadêmico.</option>
-						{!!academics && !!academics.length ? (
-							academics.map(academic => (
-								<option key={academic.id} value={academic.id}>
-									{academic.name}
-								</option>
-							))
-						) : (
-							<option value="">Não há acadêmicos registrados.</option>
-						)}
-					</select>
+					<Select
+						label="Escolha um acadêmico *"
+						options={academics}
+						selected={selectedAcademic}
+						onChange={selected => setSelectedAcademic(selected as Academic)}
+					/>
 				</>
 			</AdminForm>
 		</>

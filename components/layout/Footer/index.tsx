@@ -141,7 +141,7 @@ const FooterComponent: FC = () => {
 			<span className="text-center text-sm font-medium mt-2">
 				ASCLA - {new Date().getFullYear()} - Código aberto no{" "}
 				<a
-					href="http://github.com/gepetojj/ascla-website"
+					href="http://github.com/gepetojj/ascla"
 					target="_blank"
 					rel="noreferrer"
 					className="hover:underline"
