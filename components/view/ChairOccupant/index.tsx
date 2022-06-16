@@ -7,6 +7,7 @@ export interface ChairOccupantViewProps {
 	chair: number;
 	avatarUrl?: string;
 	bioHTML: string;
+	oppositeType: "academic" | "patron";
 	oppositeName?: string;
 	oppositeUrlId?: string;
 }
@@ -16,6 +17,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 	chair,
 	avatarUrl,
 	bioHTML,
+	oppositeType,
 	oppositeName,
 	oppositeUrlId,
 }) => {
@@ -25,7 +27,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 				<div>
 					<Image
 						src={avatarUrl || "/usuario-padrao.webp"}
-						alt="Avatar do acadêmico"
+						alt="Avatar do participante"
 						width={86}
 						height={86}
 						className="rounded-full"
@@ -36,10 +38,16 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 					<span className="truncate">Cadeira Nº {chair < 10 ? `0${chair}` : chair}</span>
 				</div>
 				<div className="w-full text-center">
-					<h2 className="text-center text-xl font-semibold">Patrono</h2>
-					<Link href={`/cadeiras/patronos/${oppositeUrlId}`}>
+					<h2 className="text-center text-xl font-semibold">
+						{oppositeType === "academic" ? "Acadêmico" : "Patrono"}
+					</h2>
+					<Link
+						href={`/cadeiras/${
+							oppositeType === "academic" ? "academicos" : "patronos"
+						}/${oppositeUrlId}`}
+					>
 						<a className="truncate hover:underline">
-							{oppositeName || "Nome do patrono"}
+							{oppositeName || "Nome do participante"}
 						</a>
 					</Link>
 				</div>
