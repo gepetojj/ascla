@@ -1,7 +1,7 @@
 import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Main } from "components/layout/Main";
 import type { Patron } from "entities/Patron";
-import { Collections } from "myFirebase/enums";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
@@ -37,18 +37,14 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 
 export default Patrons;
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-	const col = Collections.patrons;
-	const patrons: Patron[] = [];
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async col => {
+		const patrons: Patron[] = [];
 
-	try {
 		const query = await col.get();
-		if (query.empty || !query.docs.length) return { props: { patrons } };
+		if (!query.empty && query.docs.length) {
+			for (const doc of query.docs) patrons.push(doc.data() as Patron);
+		}
 
-		query.docs.forEach(doc => patrons.push({ ...(doc.data() as Patron), bio: {} }));
 		return { props: { patrons } };
-	} catch (err) {
-		console.error(err);
-		return { props: { patrons } };
-	}
-};
+	});

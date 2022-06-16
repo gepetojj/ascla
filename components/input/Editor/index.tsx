@@ -31,7 +31,7 @@ const EditorComponent: FC<EditorProps> = ({ initialValue, onChange }) => {
 	});
 
 	return (
-		<div className="bg-grey-50 pt-4 shadow-sm rounded-sm">
+		<div className="bg-gray-100 border border-black-200/10 pt-4 rounded">
 			<EditorMenu editor={editor} />
 			<EditorContent editor={editor} className="prose max-w-full" />
 		</div>

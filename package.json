@@ -2,9 +2,8 @@
 	"name": "ascla-website",
 	"description": "",
 	"author": "Gepetojj <contato.gepetojj@gmail.com>",
-	"version": "0.14.0",
+	"version": "0.15.0",
 	"license": "MIT",
-	"private": true,
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",

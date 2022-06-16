@@ -34,8 +34,8 @@ const EditorMenuComponent: FC<EditorMenuProps> = ({ editor }) => {
 	if (!editor) return null;
 
 	return (
-		<div className="flex flex-wrap p-2 mx-4 bg-grey-200 rounded-md">
-			<div className="flex items-center mr-1">
+		<div className="flex flex-wrap p-2 mx-4 bg-slate-50 rounded-md gap-1">
+			<div className="flex items-center">
 				<EditorMenuOption
 					tooltip="Desfazer"
 					onClick={() => editor.chain().focus().undo().run()}
@@ -49,7 +49,7 @@ const EditorMenuComponent: FC<EditorMenuProps> = ({ editor }) => {
 					<MdRedo className="text-xl" />
 				</EditorMenuOption>
 			</div>
-			<div className="mr-1">
+			<div>
 				<EditorMenuOption
 					tooltip="Título 1"
 					onClick={() => toggleHeading(1)}
@@ -100,7 +100,7 @@ const EditorMenuComponent: FC<EditorMenuProps> = ({ editor }) => {
 					Parágrafo
 				</EditorMenuOption>
 			</div>
-			<div className="flex items-center mr-1">
+			<div className="flex items-center">
 				<EditorMenuOption
 					tooltip="Negrito"
 					onClick={() => editor.chain().focus().toggleBold().run()}
@@ -123,7 +123,7 @@ const EditorMenuComponent: FC<EditorMenuProps> = ({ editor }) => {
 					<MdFormatItalic className="text-xl" />
 				</EditorMenuOption>
 			</div>
-			<div className="flex items-center mr-1">
+			<div className="flex items-center">
 				<EditorMenuOption
 					tooltip="Alinhar à esquerda"
 					onClick={() => editor.commands.setTextAlign("left")}

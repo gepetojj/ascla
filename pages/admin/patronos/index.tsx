@@ -1,4 +1,5 @@
 import { EditableItem } from "components/card/EditableItem";
+import { Main } from "components/layout/Main";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
@@ -71,32 +72,34 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 		<>
 			<NextSeo title="Administração - Patronos" noindex nofollow />
 
-			<main className="flex flex-col justify-center items-center h-screen">
-				<div className="flex justify-between items-center w-96">
-					<h1 className="text-2xl font-bold">Patronos</h1>
-					<Link href="/admin/patronos/novo" shallow>
-						<a>
-							<MdAdd className="text-3xl cursor-pointer" />
-						</a>
-					</Link>
+			<Main title="Patronos">
+				<div className="flex flex-col justify-center items-center gap-4">
+					<div className="flex justify-between items-center max-w-xl w-full">
+						<h1 className="text-2xl font-semibold">Registro</h1>
+						<Link href="/admin/patronos/novo" shallow>
+							<a>
+								<MdAdd className="text-3xl cursor-pointer" />
+							</a>
+						</Link>
+					</div>
+					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-2">
+						{patrons?.length ? (
+							patrons.map(patron => (
+								<EditableItem
+									key={patron.id}
+									title={patron.name}
+									editUrl={`/admin/patronos/${patron.metadata.urlId}`}
+									deleteAction={() => deletePatron(patron.id)}
+									loading={loading}
+									deleteLabel="Clique duas vezes para deletar o patrono permanentemente."
+								/>
+							))
+						) : (
+							<p>Não há patronos ainda.</p>
+						)}
+					</div>
 				</div>
-				<div className="flex flex-col justify-center items-center mt-4 gap-2">
-					{patrons?.length ? (
-						patrons.map(patron => (
-							<EditableItem
-								key={patron.id}
-								title={patron.name}
-								editUrl={`/admin/patronos/${patron.metadata.urlId}`}
-								deleteAction={() => deletePatron(patron.id)}
-								loading={loading}
-								deleteLabel="Clique duas vezes para deletar o patrono permanentemente."
-							/>
-						))
-					) : (
-						<p>Não há patronos ainda.</p>
-					)}
-				</div>
-			</main>
+			</Main>
 		</>
 	);
 };

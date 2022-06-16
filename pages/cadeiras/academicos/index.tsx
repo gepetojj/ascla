@@ -1,7 +1,7 @@
 import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Main } from "components/layout/Main";
 import type { Academic } from "entities/Academic";
-import { Collections } from "myFirebase/enums";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
@@ -40,18 +40,14 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 
 export default Patrons;
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-	const col = Collections.academics;
-	const academics: Academic[] = [];
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(ctx, { col: "academics", autoTry: true }, async col => {
+		const academics: Academic[] = [];
 
-	try {
 		const query = await col.get();
-		if (query.empty || !query.docs.length) return { props: { academics } };
+		if (!query.empty && query.docs.length) {
+			for (const doc of query.docs) academics.push(doc.data() as Academic);
+		}
 
-		query.docs.forEach(doc => academics.push({ ...(doc.data() as Academic), bio: {} }));
 		return { props: { academics } };
-	} catch (err) {
-		console.error(err);
-		return { props: { academics } };
-	}
-};
+	});

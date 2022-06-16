@@ -1,4 +1,5 @@
 import { EditableItem } from "components/card/EditableItem";
+import { Main } from "components/layout/Main";
 import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
@@ -68,32 +69,34 @@ const AdminNews: NextPage<Props> = ({ news }) => {
 		<>
 			<NextSeo title="Administração - Notícias" noindex nofollow />
 
-			<main className="flex flex-col justify-center items-center h-screen">
-				<div className="flex justify-between items-center w-96">
-					<h1 className="text-2xl font-bold">Notícias</h1>
-					<Link href="/admin/noticias/novo">
-						<a>
-							<MdAdd className="text-3xl cursor-pointer" />
-						</a>
-					</Link>
+			<Main title="Notícias">
+				<div className="flex flex-col justify-center items-center gap-4">
+					<div className="flex justify-between items-center max-w-xl w-full">
+						<h1 className="text-2xl font-semibold">Postagens</h1>
+						<Link href="/admin/noticias/novo">
+							<a>
+								<MdAdd className="text-3xl cursor-pointer" />
+							</a>
+						</Link>
+					</div>
+					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-2">
+						{news?.length ? (
+							news.map(post => (
+								<EditableItem
+									key={post.id}
+									title={post.title}
+									editUrl={`/admin/noticias/${post.metadata.urlId}`}
+									deleteAction={() => deleteNews(post.id)}
+									loading={loading}
+									deleteLabel="Clique duas vezes para deletar a notícia permanentemente."
+								/>
+							))
+						) : (
+							<p>Não há notícias ainda.</p>
+						)}
+					</div>
 				</div>
-				<div className="flex flex-col justify-center items-center mt-4 gap-2">
-					{news?.length ? (
-						news.map(post => (
-							<EditableItem
-								key={post.id}
-								title={post.title}
-								editUrl={`/admin/noticias/${post.metadata.urlId}`}
-								deleteAction={() => deleteNews(post.id)}
-								loading={loading}
-								deleteLabel="Clique duas vezes para deletar a notícia permanentemente."
-							/>
-						))
-					) : (
-						<p>Não há notícias ainda.</p>
-					)}
-				</div>
-			</main>
+			</Main>
 		</>
 	);
 };

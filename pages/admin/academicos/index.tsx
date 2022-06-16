@@ -1,4 +1,5 @@
 import { EditableItem } from "components/card/EditableItem";
+import { Main } from "components/layout/Main";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
@@ -71,32 +72,34 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 		<>
 			<NextSeo title="Administração - Acadêmicos" noindex nofollow />
 
-			<main className="flex flex-col justify-center items-center h-screen">
-				<div className="flex justify-between items-center w-96">
-					<h1 className="text-2xl font-bold">Acadêmicos</h1>
-					<Link href="/admin/academicos/novo">
-						<a>
-							<MdAdd className="text-3xl cursor-pointer" />
-						</a>
-					</Link>
+			<Main title="Acadêmicos">
+				<div className="flex flex-col justify-center items-center gap-4">
+					<div className="flex justify-between items-center max-w-xl w-full">
+						<h1 className="text-2xl font-semibold">Registro</h1>
+						<Link href="/admin/academicos/novo">
+							<a>
+								<MdAdd className="text-3xl cursor-pointer" />
+							</a>
+						</Link>
+					</div>
+					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-2">
+						{academics?.length ? (
+							academics.map(academic => (
+								<EditableItem
+									key={academic.id}
+									title={academic.name}
+									editUrl={`/admin/academicos/${academic.metadata.urlId}`}
+									deleteAction={() => deleteAcademic(academic.id)}
+									loading={loading}
+									deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
+								/>
+							))
+						) : (
+							<p>Não há acadêmicos ainda.</p>
+						)}
+					</div>
 				</div>
-				<div className="flex flex-col justify-center items-center mt-4 gap-2">
-					{academics?.length ? (
-						academics.map(academic => (
-							<EditableItem
-								key={academic.id}
-								title={academic.name}
-								editUrl={`/admin/academicos/${academic.metadata.urlId}`}
-								deleteAction={() => deleteAcademic(academic.id)}
-								loading={loading}
-								deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
-							/>
-						))
-					) : (
-						<p>Não há acadêmicos ainda.</p>
-					)}
-				</div>
-			</main>
+			</Main>
 		</>
 	);
 };

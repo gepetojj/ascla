@@ -1,4 +1,5 @@
 import { Button } from "components/input/Button";
+import { Main } from "components/layout/Main";
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
@@ -14,22 +15,25 @@ const AccountData: NextPage = () => {
 		<>
 			<NextSeo title="Sua conta" />
 
-			<main className="flex flex-col">
-				<div className="flex justify-between items-center mx-6">
+			<Main title="Sua conta">
+				<div className="flex justify-center items-center gap-6">
+					<div>
+						<Image
+							src={String(data.user.image)}
+							alt="Avatar do usuário"
+							width={62}
+							height={62}
+							className="rounded-full"
+						/>
+					</div>
 					<div className="flex flex-col">
 						<span>Nome: {data.user.name}</span>
 						<span>Email: {data.user.email}</span>
 						<span>Cargo: {data.user.role}</span>
 					</div>
-					<Image
-						src={String(data.user.image)}
-						alt="Avatar do usuário"
-						width={62}
-						height={62}
-					/>
 				</div>
 
-				<div className="flex flex-col gap-2 mx-6 mt-4">
+				<div className="flex flex-col gap-2 mt-6">
 					{data.user.role !== "common" && (
 						<Link href="/admin" passHref shallow>
 							<Button className="bg-primary-main" fullWidth>
@@ -45,7 +49,7 @@ const AccountData: NextPage = () => {
 						Sair
 					</Button>
 				</div>
-			</main>
+			</Main>
 		</>
 	);
 };

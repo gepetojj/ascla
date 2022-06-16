@@ -20,8 +20,8 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 	deleteLabel,
 }) => {
 	return (
-		<div className="flex items-center bg-secondary-400 px-2 py-1 gap-3 rounded-sm">
-			<span className="w-80 max-w-xs truncate">{title}</span>
+		<div className="flex justify-between items-center w-full bg-secondary-400 px-2 py-1 gap-3 rounded-sm">
+			<span className="max-w-full break-words">{title}</span>
 			<div className="flex items-center gap-2">
 				<Link href={editUrl} shallow>
 					<a>
