@@ -32,7 +32,6 @@ export default NextAuth({
 				email: profile.email || "",
 				avatarUrl: String(profile.picture),
 				name: profile.name || "",
-				bio: "",
 			};
 
 			// Cria o usuário no banco de dados se não existir.
