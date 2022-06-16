@@ -1,3 +1,4 @@
+import { Main } from "components/layout/Main";
 import { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React, { useEffect, useState } from "react";
@@ -29,10 +30,12 @@ const Error: NextPage<Props> = ({ statusCode }) => {
 		<>
 			<NextSeo title={`Houve um erro (${statusCode})`} />
 
-			<main className="flex flex-col h-screen justify-center items-center">
-				<h2 className="text-3xl font-bold">Houve um erro - {statusCode}</h2>
-				<p className="text-lg font-medium">{errorMessage}</p>
-			</main>
+			<Main title={`Houve um erro - ${statusCode}`}>
+				<div className="flex flex-col text-center">
+					<h3 className="text-xl font-semibold">Aconteceu um problema:</h3>
+					<p className="text-lg font-medium">{errorMessage}</p>
+				</div>
+			</Main>
 		</>
 	);
 };
