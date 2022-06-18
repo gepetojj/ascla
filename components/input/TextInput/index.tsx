@@ -8,6 +8,8 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	label: string;
 	/** Determina se o estado de erro está ativo. */
 	error?: boolean;
+	/** Adiciona classes css para a parent div do input */
+	parentClassName?: string;
 }
 
 /**
@@ -18,9 +20,15 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
  * @param {TextInputProps} ...props Props do componente, desestruturados
  * @returns {FC<TextInputProps>} Componente
  */
-const TextInputComponent: FC<TextInputProps> = ({ id, label, error, ...props }) => {
+const TextInputComponent: FC<TextInputProps> = ({
+	id,
+	label,
+	error,
+	parentClassName,
+	...props
+}) => {
 	return (
-		<div className="flex flex-col w-full gap-1 sm:w-fit">
+		<div className={`flex flex-col gap-1 ${parentClassName ?? "w-full sm:w-fit"}`}>
 			<label
 				htmlFor={id}
 				className={`text-xs ${error ? "text-red-600" : "text-black-300"} font-medium ml-1`}
@@ -46,6 +54,7 @@ TextInputComponent.propTypes = {
 	id: propTypes.string.isRequired,
 	label: propTypes.string.isRequired,
 	error: propTypes.bool,
+	parentClassName: propTypes.string,
 };
 
 export const TextInput = memo(TextInputComponent);

@@ -34,6 +34,15 @@ button {
 	@apply my-1;
 }
 
+.ProseMirror a,
+.prose a {
+	@apply text-primary-700;
+}
+
+.prose hr {
+	@apply my-1;
+}
+
 .rnc__notification-container--bottom-right {
 	min-width: 325px;
 	pointer-events: all;

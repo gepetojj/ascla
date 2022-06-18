@@ -1,12 +1,10 @@
-import Link from "@tiptap/extension-link";
-import TextAlign from "@tiptap/extension-text-align";
-import Underline from "@tiptap/extension-underline";
 import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 
+import { editorExtensions } from "helpers/editorExtensions";
 import propTypes from "prop-types";
 import React, { FC, memo } from "react";
 
+import { EditorProvider } from "./Context";
 import { EditorMenu } from "./Menu";
 
 export interface EditorProps {
@@ -26,14 +24,7 @@ export interface EditorProps {
  */
 const EditorComponent: FC<EditorProps> = ({ initialValue, onChange }) => {
 	const editor = useEditor({
-		extensions: [
-			StarterKit,
-			TextAlign.configure({
-				types: ["heading", "paragraph"],
-			}),
-			Link,
-			Underline,
-		],
+		extensions: editorExtensions,
 		content: initialValue,
 		onUpdate({ editor }) {
 			const content = editor.getJSON();
@@ -42,10 +33,12 @@ const EditorComponent: FC<EditorProps> = ({ initialValue, onChange }) => {
 	});
 
 	return (
-		<div className="bg-gray-100 border border-black-200/10 pt-4 rounded">
-			<EditorMenu editor={editor} />
-			<EditorContent editor={editor} className="prose max-w-full" />
-		</div>
+		<EditorProvider editor={editor}>
+			<div className="bg-gray-100 border border-black-200/10 pt-4 rounded">
+				<EditorMenu />
+				<EditorContent editor={editor} className="prose max-w-full" />
+			</div>
+		</EditorProvider>
 	);
 };
 

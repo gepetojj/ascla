@@ -38,7 +38,7 @@ const SelectComponent: FC<SelectProps> = ({ label, options, selected, onChange }
 			<Listbox.Button className="w-full text-left px-2 py-1 bg-cream-100 border border-black-200/10 rounded outline-none duration-200 focus:border-black-200/20 sm:w-80">
 				{selected?.name || "Escolha uma opção"}
 			</Listbox.Button>
-			<Listbox.Options className="flex flex-col absolute w-full top-16 p-2 gap-1 bg-gray-100 border border-black-200/10 rounded z-10">
+			<Listbox.Options className="flex flex-col absolute w-full max-h-xl top-16 p-2 gap-1 bg-gray-100 border border-black-200/10 rounded z-10 overflow-y-auto">
 				{options.length > 0 ? (
 					options.map(option => (
 						<Listbox.Option key={option.id} value={option}>
