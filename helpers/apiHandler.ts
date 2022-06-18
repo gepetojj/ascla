@@ -43,7 +43,7 @@ export interface ApiHandlerOptions {
  *
  * @see {@link ApiHandlerOptions}
  * @see {@link ApiHandlerCallback}
- * 
+ *
  * @param {NextApiRequest} req Objeto do pedido
  * @param {NextApiResponse} res Objeto da resposta
  * @param {ApiHandlerOptions} ...options Opções desestruturadas

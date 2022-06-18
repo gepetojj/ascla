@@ -31,8 +31,10 @@ const TextInputComponent: FC<TextInputProps> = ({ id, label, error, ...props }) 
 				{...props}
 				placeholder={label}
 				className={`px-2 py-1 border ${
-					error ? "border-red-400/50 text-red-500" : "border-black-200/10"
-				} rounded outline-none duration-200 focus:shadow-sm disabled:brightness-95 disabled:cursor-not-allowed read-only:cursor-default ${
+					error
+						? "border-red-400/50 text-red-500 focus:border-red-400/60"
+						: "border-black-200/10 focus:border-black-200/20"
+				} rounded outline-none duration-200 disabled:brightness-95 disabled:cursor-not-allowed read-only:cursor-default ${
 					props.className || ""
 				}`}
 			/>

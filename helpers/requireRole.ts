@@ -17,11 +17,11 @@ export interface RequireRoleResult<I> {
 /**
  * Verifica a sessão do usuário e determina se está autorizado a acessar uma API
  * dependendo de seu cargo.
- * 
+ *
  * @see {@link RequireRoleResult}
- * 
- * @param {NextApiRequest} req Objeto do pedido 
- * @param {NextApiResponse} res Objeto da resposta 
+ *
+ * @param {NextApiRequest} req Objeto do pedido
+ * @param {NextApiResponse} res Objeto da resposta
  * @param {UserRole} role Cargo necessário para acessar a API
  * @returns {Promise<RequireRoleResult>} Resultado da verificação
  */
