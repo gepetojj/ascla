@@ -32,7 +32,7 @@ const EditorMenuComponent: FC = () => {
 	const toggleHeading = useCallback(
 		(level: Level) => {
 			if (!editor) return;
-			editor.chain().focus().toggleHeading({ level: level }).run();
+			editor.chain().focus().toggleHeading({ level }).run();
 		},
 		[editor]
 	);
