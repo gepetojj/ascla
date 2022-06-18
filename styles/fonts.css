@@ -1,0 +1,114 @@
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-light.eot");
+	src: url("../public/fonts/mt-light.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-light.woff2") format("woff2"), url("../public/fonts/mt-light.woff") format("woff"),
+		url("../public/fonts/mt-light.ttf") format("truetype");
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-regular.eot");
+	src: url("../public/fonts/mt-regular.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-regular.woff2") format("woff2"), url("../public/fonts/mt-regular.woff") format("woff"),
+		url("../public/fonts/mt-regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-medium-italic.eot");
+	src: url("../public/fonts/mt-medium-italic.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-medium-italic.woff2") format("woff2"),
+		url("../public/fonts/mt-medium-italic.woff") format("woff"),
+		url("../public/fonts/mt-medium-italic.ttf") format("truetype");
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-medium.eot");
+	src: url("../public/fonts/mt-medium.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-medium.woff2") format("woff2"), url("../public/fonts/mt-medium.woff") format("woff"),
+		url("../public/fonts/mt-medium.ttf") format("truetype");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-bold-italic.eot");
+	src: url("../public/fonts/mt-bold-italic.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-bold-italic.woff2") format("woff2"),
+		url("../public/fonts/mt-bold-italic.woff") format("woff"),
+		url("../public/fonts/mt-bold-italic.ttf") format("truetype");
+	font-weight: bold;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-light-italic.eot");
+	src: url("../public/fonts/mt-light-italic.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-light-italic.woff2") format("woff2"),
+		url("../public/fonts/mt-light-italic.woff") format("woff"),
+		url("../public/fonts/mt-light-italic.ttf") format("truetype");
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-bold.eot");
+	src: url("../public/fonts/mt-bold.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-bold.woff2") format("woff2"), url("../public/fonts/mt-bold.woff") format("woff"),
+		url("../public/fonts/mt-bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-semibold-italic.eot");
+	src: url("../public/fonts/mt-semibold-italic.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-semibold-italic.woff2") format("woff2"),
+		url("../public/fonts/mt-semibold-italic.woff") format("woff"),
+		url("../public/fonts/mt-semibold-italic.ttf") format("truetype");
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-regular-italic.eot");
+	src: url("../public/fonts/mt-regular-italic.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-regular-italic.woff2") format("woff2"),
+		url("../public/fonts/mt-regular-italic.woff") format("woff"),
+		url("/fonts/mt-regular-italic.ttf") format("truetype");
+	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Montserrat";
+	src: url("../public/fonts/mt-semibold.eot");
+	src: url("../public/fonts/mt-semibold.eot?#iefix") format("embedded-opentype"),
+		url("../public/fonts/mt-semibold.woff2") format("woff2"), url("../public/fonts/mt-semibold.woff") format("woff"),
+		url("../public/fonts/mt-semibold.ttf") format("truetype");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}

@@ -6,6 +6,7 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { ReactNotifications } from "react-notifications-component";
+import "styles/fonts.css";
 import "styles/globals.css";
 
 import SEO from "../next-seo.config";
