@@ -1,13 +1,26 @@
+import propTypes from "prop-types";
 import React, { ButtonHTMLAttributes, FC, memo, ReactNode, useMemo } from "react";
 import { CgSpinner } from "react-icons/cg";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	/** Filhos do componente. */
 	children: ReactNode;
+	/** Determina se o estado de carregamento está ativado. */
 	loading?: boolean;
+	/** Determina se o componente deve ser renderizado como uma tag `a`. */
 	asAnchor?: boolean;
+	/** Determina se o componente deve ser renderizado em todo o espaço horizontal disponível. */
 	fullWidth?: boolean;
 }
 
+/**
+ * Renderiza um botão.
+ *
+ * @see {@link ButtonProps}
+ *
+ * @param {ButtonProps} ...props Props do componente, desestruturados
+ * @returns {FC<ButtonProps>} Componente
+ */
 const ButtonComponent: FC<ButtonProps> = ({
 	children,
 	loading,
@@ -52,6 +65,15 @@ const ButtonComponent: FC<ButtonProps> = ({
 	}, [children, loading, asAnchor, fullWidth, type, props]);
 
 	return <>{ButtonOrAnchor}</>;
+};
+
+ButtonComponent.propTypes = {
+	children: propTypes.node.isRequired,
+	loading: propTypes.bool,
+	asAnchor: propTypes.bool,
+	fullWidth: propTypes.bool,
+	disabled: propTypes.bool,
+	className: propTypes.string,
 };
 
 export const Button = memo(ButtonComponent);

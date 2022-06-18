@@ -16,12 +16,22 @@ import {
 
 import { EditorMenuOption } from "./MenuOption";
 
+/** Nível de parágrafo. */
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface EditorMenuProps {
+	/** Referência do editor. */
 	editor: Editor | null;
 }
 
+/**
+ * Renderiza o menu do editor.
+ *
+ * @see {@link EditorMenuProps}
+ *
+ * @param {EditorMenuProps} ...props Props do componente, desestruturadas
+ * @returns {FC<EditorMenuProps>} Componente
+ */
 const EditorMenuComponent: FC<EditorMenuProps> = ({ editor }) => {
 	const toggleHeading = useCallback(
 		(level: Level) => {

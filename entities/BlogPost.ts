@@ -2,26 +2,45 @@ import type { JSONContent } from "@tiptap/react";
 
 import type { User } from "entities/User";
 
+/**
+ * Metadados de uma postagem.
+ *
+ * @see {@link BlogPost}
+ */
 export interface BlogPostMetadata {
-	urlId: string; // custom (user chooses) or uuid
-	createdAt: number; // timestamp
-	updatedAt: number; // timestamp
+	/** Url personalizada da postagem. */
+	urlId: string;
+	/** Timestamp de criação da postagem. */
+	createdAt: number;
+	/** Timestamp de atualização da postagem. */
+	updatedAt: number;
+	/** ID do usuário autor da postagem. */
 	authorId: User["id"];
 }
 
+/**
+ * Estrutura dos dados de uma postagem.
+ */
 export interface BlogPost {
-	id: string; // uuid
+	/** ID da postagem. */
+	id: string;
+	/** Metadados da postagem. */
 	metadata: BlogPostMetadata;
+	/** Título da postagem. */
 	title: string;
+	/** Descrição da postagem. */
 	description: string;
-	thumbnailUrl?: string; // Thumbnail image
+	/** Link da imagem da postagem. */
+	thumbnailUrl?: string;
+	/** Conteúdo da postagem. */
 	content: JSONContent;
 }
 
+/** Estrutura dos dados que podem ser atualizados em uma postagem. */
 export interface UpdatableBlogPost {
-	metadata: BlogPostMetadata;
-	title?: string;
-	description?: string;
-	thumbnailUrl?: string;
-	content?: JSONContent;
+	metadata: BlogPost["metadata"];
+	title?: BlogPost["title"];
+	description?: BlogPost["description"];
+	thumbnailUrl?: BlogPost["thumbnailUrl"];
+	content?: BlogPost["content"];
 }

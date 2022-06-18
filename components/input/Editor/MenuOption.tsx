@@ -1,11 +1,22 @@
 import React, { ButtonHTMLAttributes, FC, memo, ReactNode } from "react";
 
 export interface EditorMenuOptionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	/** Filhos do componente. */
 	children: ReactNode;
+	/** Texto do tooltip do botão. */
 	tooltip: string;
+	/** Determina se o botão está ativo. */
 	isActive?: boolean;
 }
 
+/**
+ * Renderiza um botão para o menu do editor.
+ *
+ * @see {@link EditorMenuOptionProps}
+ *
+ * @param {EditorMenuOptionProps} ...props Props do componente, desestruturados
+ * @returns {FC<EditorMenuOptionProps>} Componente
+ */
 const EditorMenuOptionComponent: FC<EditorMenuOptionProps> = ({
 	children,
 	tooltip,

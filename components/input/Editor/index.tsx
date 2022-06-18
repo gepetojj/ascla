@@ -4,15 +4,26 @@ import Underline from "@tiptap/extension-underline";
 import { EditorContent, JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
+import propTypes from "prop-types";
 import React, { FC, memo } from "react";
 
 import { EditorMenu } from "./Menu";
 
 export interface EditorProps {
+	/** Valor inicial do editor. */
 	initialValue?: JSONContent;
+	/** Callback para alterar o valor do editor. */
 	onChange?: (newContent: JSONContent) => void;
 }
 
+/**
+ * Renderiza um editor de texto.
+ *
+ * @see {@link EditorProps}
+ *
+ * @param {EditorProps} ...props Props do componente, desestruturadas
+ * @returns {FC<EditorProps>} Componente
+ */
 const EditorComponent: FC<EditorProps> = ({ initialValue, onChange }) => {
 	const editor = useEditor({
 		extensions: [
@@ -36,6 +47,11 @@ const EditorComponent: FC<EditorProps> = ({ initialValue, onChange }) => {
 			<EditorContent editor={editor} className="prose max-w-full" />
 		</div>
 	);
+};
+
+EditorComponent.propTypes = {
+	initialValue: propTypes.object,
+	onChange: propTypes.func,
 };
 
 const Editor = memo(EditorComponent);

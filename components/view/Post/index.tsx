@@ -10,9 +10,18 @@ import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
 export interface PostViewProps extends Omit<BlogPost, "id"> {
+	/** @deprecated A função de avaliar postagens nesta versão está descontinuada. */
 	showUserInteractions?: boolean;
 }
 
+/**
+ * Renderiza a página de uma postagem.
+ *
+ * @see {@link PostViewProps}
+ *
+ * @param {PostViewProps} ...props Props do componente, desestruturados
+ * @returns {FC<PostViewProps>} Componente
+ */
 const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, description }) => {
 	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
 		fetch(...args).then(res => res.json())

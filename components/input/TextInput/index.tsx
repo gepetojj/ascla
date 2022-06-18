@@ -1,11 +1,23 @@
+import propTypes from "prop-types";
 import React, { FC, InputHTMLAttributes, memo } from "react";
 
 export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+	/** Identificador único do componente. */
 	id: string;
+	/** Texto que ficará acima do componente. */
 	label: string;
+	/** Determina se o estado de erro está ativo. */
 	error?: boolean;
 }
 
+/**
+ * Renderiza um input de texto.
+ *
+ * @see {@link TextInputProps}
+ *
+ * @param {TextInputProps} ...props Props do componente, desestruturados
+ * @returns {FC<TextInputProps>} Componente
+ */
 const TextInputComponent: FC<TextInputProps> = ({ id, label, error, ...props }) => {
 	return (
 		<div className="flex flex-col w-full gap-1 sm:w-fit">
@@ -26,6 +38,12 @@ const TextInputComponent: FC<TextInputProps> = ({ id, label, error, ...props }) 
 			/>
 		</div>
 	);
+};
+
+TextInputComponent.propTypes = {
+	id: propTypes.string.isRequired,
+	label: propTypes.string.isRequired,
+	error: propTypes.bool,
 };
 
 export const TextInput = memo(TextInputComponent);

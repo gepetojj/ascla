@@ -1,17 +1,36 @@
 import Image from "next/image";
 import Link from "next/link";
+import propTypes from "prop-types";
 import React, { FC, memo } from "react";
 
 export interface ChairOccupantViewProps {
+	/** Nome do ocupante. */
 	name: string;
+	/** Cadeira do ocupante. */
 	chair: number;
+	/** Avatar do ocupante. */
 	avatarUrl?: string;
+	/** Biografia do ocupante, em HTML. */
 	bioHTML: string;
+	/**
+	 * Tipo do oposto do ocupante, podendo ser `academic` ou `patron`.
+	 * Exemplo: o ocupante é um acadêmico, então seu oposto será um patrono, e vice-versa.
+	 */
 	oppositeType: "academic" | "patron";
+	/** Nome do oposto do ocupante. */
 	oppositeName?: string;
+	/** Link para a página do oposto do ocupante. */
 	oppositeUrlId?: string;
 }
 
+/**
+ * Renderiza a página de um ocupante.
+ *
+ * @see {@link ChairOccupantViewProps}
+ *
+ * @param {ChairOccupantViewProps} ...props Props do componente, desestruturadas
+ * @returns {FC<ChairOccupantViewProps>} Componente
+ */
 const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 	name,
 	chair,
@@ -60,6 +79,16 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 			</article>
 		</section>
 	);
+};
+
+ChairOccupantViewComponent.propTypes = {
+	name: propTypes.string.isRequired,
+	chair: propTypes.number.isRequired,
+	avatarUrl: propTypes.string,
+	bioHTML: propTypes.string.isRequired,
+	oppositeType: propTypes.oneOf<"academic" | "patron">(["academic", "patron"]).isRequired,
+	oppositeName: propTypes.string,
+	oppositeUrlId: propTypes.string,
 };
 
 export const ChairOccupantView = memo(ChairOccupantViewComponent);

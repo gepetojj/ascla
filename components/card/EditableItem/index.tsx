@@ -1,17 +1,31 @@
 import { Button } from "components/input/Button";
 import Link from "next/link";
+import propTypes from "prop-types";
 import React, { FC, memo } from "react";
 import { MdMode, MdDelete } from "react-icons/md";
 
 export interface EditableItemProps {
+	/** Título do item. */
 	title: string;
+	/** Link para a página de edição do item. */
 	editUrl: string;
+	/** Callback para deletar o item. */
 	deleteAction: () => void;
 
+	/** Determina se o estado de carregamento está ativado. */
 	loading?: boolean;
+	/** Texto no tooltip de deletar o item. */
 	deleteLabel?: string;
 }
 
+/**
+ * Renderiza uma "chamada" para editar ou deletar um item.
+ *
+ * @see {@link EditableItemProps}
+ *
+ * @param {EditableItemProps} ...props Props do componente, desestruturados
+ * @returns {FC<EditableItemProps>} Componente
+ */
 const EditableItemComponent: FC<EditableItemProps> = ({
 	title,
 	editUrl,
@@ -35,6 +49,14 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 			</div>
 		</div>
 	);
+};
+
+EditableItemComponent.propTypes = {
+	title: propTypes.string.isRequired,
+	editUrl: propTypes.string.isRequired,
+	deleteAction: propTypes.func.isRequired,
+	loading: propTypes.bool,
+	deleteLabel: propTypes.string,
 };
 
 export const EditableItem = memo(EditableItemComponent);

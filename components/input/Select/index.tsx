@@ -2,15 +2,28 @@ import { Listbox } from "@headlessui/react";
 
 import type { Academic } from "entities/Academic";
 import type { Patron } from "entities/Patron";
+import propTypes from "prop-types";
 import React, { FC, memo } from "react";
 
 export interface SelectProps<I = { id: string; name: string } | Academic | Patron> {
+	/** Texto que aparecerá acima do componente. */
 	label: string;
+	/** Opções do componente. */
 	options: I[];
+	/** Opção atualmente escolhida no componente. */
 	selected: I | undefined;
+	/** Callback para alterar a opção escolhida. */
 	onChange: (selected: I) => void;
 }
 
+/**
+ * Renderiza um select.
+ *
+ * @see {@link SelectProps}
+ *
+ * @param {SelectProps} ...props Props do componente, desestruturadas
+ * @returns {FC<SelectProps>} Componente
+ */
 const SelectComponent: FC<SelectProps> = ({ label, options, selected, onChange }) => {
 	return (
 		<Listbox
@@ -48,6 +61,13 @@ const SelectComponent: FC<SelectProps> = ({ label, options, selected, onChange }
 			</Listbox.Options>
 		</Listbox>
 	);
+};
+
+SelectComponent.propTypes = {
+	label: propTypes.string.isRequired,
+	options: propTypes.array.isRequired,
+	selected: propTypes.any,
+	onChange: propTypes.func.isRequired,
 };
 
 export const Select = memo(SelectComponent);

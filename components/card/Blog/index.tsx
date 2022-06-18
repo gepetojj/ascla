@@ -2,15 +2,28 @@ import type { BlogPost } from "entities/BlogPost";
 import type { User } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
+import propTypes from "prop-types";
 import React, { FC, memo, useState, useEffect } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 import useSWR from "swr";
 
 export interface CardBlogProps extends BlogPost {
+	/**
+	 * Tipo da postagem, pode variar entre `blog` e `noticias`.
+	 * Será usado para definir a url da postagem.
+	 */
 	type: "blog" | "noticias";
 }
 
+/**
+ * Renderiza uma "chamada" para uma postagem, podendo variar em dois tipos.
+ *
+ * @see {@link CardBlogProps}
+ *
+ * @param {CardBlogProps} ...props Props do componente, desestruturados
+ * @returns {FC<CardBlogProps>} Componente
+ */
 const CardBlogComponent: FC<CardBlogProps> = ({
 	title,
 	description,
@@ -70,6 +83,19 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 			</div>
 		</article>
 	);
+};
+
+CardBlogComponent.propTypes = {
+	title: propTypes.string.isRequired,
+	description: propTypes.string.isRequired,
+	thumbnailUrl: propTypes.string.isRequired,
+	metadata: propTypes.shape({
+		urlId: propTypes.string.isRequired,
+		createdAt: propTypes.number.isRequired,
+		updatedAt: propTypes.number.isRequired,
+		authorId: propTypes.string.isRequired,
+	}).isRequired,
+	type: propTypes.oneOf<"blog" | "noticias">(["blog", "noticias"]).isRequired,
 };
 
 export const CardBlog = memo(CardBlogComponent);
