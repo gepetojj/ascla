@@ -15,7 +15,7 @@ const ImageComponent: FC<ImageProps> = ({ src, ...props }) => {
 		<NextImage
 			{...props}
 			loader={willUseCustomLoader ? customLoader : undefined}
-			src={willUseCustomLoader ? src : `/images/${src}`}
+			src={willUseCustomLoader || src.toString().startsWith("https") ? src : `/images/${src}`}
 		/>
 	);
 };
