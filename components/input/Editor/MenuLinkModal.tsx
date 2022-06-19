@@ -69,6 +69,7 @@ const MenuLinkModalComponent: FC<MenuLinkModalProps> = ({ open, onClose }) => {
 						<TextInput
 							id="url"
 							label="Link:"
+							type="url"
 							parentClassName="w-full"
 							value={link}
 							onChange={event => setLink(event.target.value)}

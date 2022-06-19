@@ -31,9 +31,9 @@ export interface UseFetcherReturn<I> {
 
 /**
  * Hook para facilitar fetching e submit de dados. Usa o web fetch por baixo dos panos.
- * 
+ *
  * @see {@link UseFetcherReturn}
- * 
+ *
  * @param {string} url Endpoint que os dados serão enviados e/ou recebidos
  * @param {"get" | "post" | "put" | "delete"} method Método HTTP dos pedidos
  * @returns {UseFetcherReturn} Dados retornados pelo hook

@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
+import { CgInstagram } from "react-icons/cg";
 import { MdMap, MdCall, MdEmail } from "react-icons/md";
 
 const Contact: NextPage = () => {
@@ -11,7 +12,7 @@ const Contact: NextPage = () => {
 			<NextSeo title="Contato" />
 
 			<Main title="Contato" className="flex flex-col justify-center items-center p-6 pb-10">
-				<div className="flex flex-col max-w-5xl gap-3 text-black-100">
+				<div className="flex flex-col max-w-2xl gap-3 text-black-100">
 					<div className="flex flex-col gap-1">
 						<h3 className="text-xl font-semibold">Endereço</h3>
 						<span className="flex items-center gap-2">
@@ -19,7 +20,8 @@ const Contact: NextPage = () => {
 								<MdMap className="text-xl" />
 							</div>
 							<p>
-								Rua Lorem ipsum dolor, número, bairro, CEP - Santana do Ipanema/AL
+								Rua Coronel Lucena, 196, Centro - Casa da Cultura de Santana do
+								Ipanema, 57500-000 - Santana do Ipanema/AL
 							</p>
 						</span>
 					</div>
@@ -38,7 +40,23 @@ const Contact: NextPage = () => {
 							<div>
 								<MdCall className="text-xl" />
 							</div>
-							<p>(82) 90000-0000</p>
+							<p>(82) 99928-2075</p>
+						</span>
+					</div>
+					<div className="flex flex-col gap-1">
+						<h3 className="text-xl font-semibold">Instagram</h3>
+						<span className="flex items-center gap-2">
+							<div>
+								<CgInstagram className="text-xl" />
+							</div>
+							<a
+								href="https://www.instagram.com/asclasi"
+								target="_blank"
+								rel="noreferrer"
+								className="hover:underline"
+							>
+								@asclasi
+							</a>
 						</span>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -49,8 +67,8 @@ const Contact: NextPage = () => {
 							</div>
 							<p>
 								Presidente -{" "}
-								<a className="hover:underline" href="mailto:email@provedor.com">
-									email@provedor.com
+								<a className="hover:underline" href="mailto:maltafneto@gmail.com">
+									maltafneto@gmail.com
 								</a>
 							</p>
 						</span>
@@ -59,9 +77,12 @@ const Contact: NextPage = () => {
 								<MdEmail className="text-xl" />
 							</div>
 							<p>
-								Outra pessoa -{" "}
-								<a className="hover:underline" href="mailto:email@provedor.com">
-									email@provedor.com
+								Administrador -{" "}
+								<a
+									className="hover:underline"
+									href="mailto:asclasi.contato@gmail.com"
+								>
+									asclasi.contato@gmail.com
 								</a>
 							</p>
 						</span>

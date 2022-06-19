@@ -143,15 +143,7 @@ const FooterComponent: FC = () => {
 				</FooterTopic>
 			</div>
 			<span className="text-center text-sm font-medium mt-2">
-				ASCLA - {new Date().getFullYear()} - Código aberto no{" "}
-				<a
-					href="https://github.com/gepetojj/ascla"
-					target="_blank"
-					rel="noreferrer"
-					className="hover:underline"
-				>
-					Github
-				</a>
+				ASCLA - {new Date().getFullYear()} - Todos os direitos reservados.
 			</span>
 		</footer>
 	);

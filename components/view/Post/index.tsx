@@ -1,10 +1,12 @@
 import type { BlogPost } from "entities/BlogPost";
 import type { User } from "entities/User";
 import { useJSON } from "hooks/useJSON";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, memo, useEffect, useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
-import { MdShare, MdUpdate } from "react-icons/md";
+import { MdEdit, MdShare, MdUpdate } from "react-icons/md";
 import { Store } from "react-notifications-component";
 import useSWR from "swr";
 
@@ -24,6 +26,7 @@ export interface PostViewProps extends Omit<BlogPost, "id"> {
  * @returns {FC<PostViewProps>} Componente
  */
 const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, description }) => {
+	const session = useSession();
 	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
 		fetch(...args).then(res => res.json())
 	);
@@ -104,6 +107,17 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 							<MdShare className="text-xl" />
 							<span>Compartilhar</span>
 						</button>
+						{session.data?.user?.role === "admin" && (
+							<Link
+								href={`/admin/${pathname.split("/")[1]}/${metadata.urlId}`}
+								shallow
+							>
+								<a className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95">
+									<MdEdit className="text-xl" />
+									<span>Editar</span>
+								</a>
+							</Link>
+						)}
 					</div>
 				</div>
 			</aside>
