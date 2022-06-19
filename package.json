@@ -2,7 +2,7 @@
 	"name": "ascla",
 	"description": "",
 	"author": "Gepetojj <contato.gepetojj@gmail.com>",
-	"version": "0.20.6",
+	"version": "0.21.0",
 	"license": "MIT",
 	"scripts": {
 		"dev": "next dev",

@@ -1,12 +1,12 @@
 import { Button } from "components/input/Button";
 import { TextInput } from "components/input/TextInput";
 import { Main } from "components/layout/Main";
+import { Image } from "components/view/Image";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { useFetcher } from "hooks/useFetcher";
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
@@ -99,7 +99,7 @@ const AccountData: NextPage = () => {
 					<div className="flex flex-col items-center gap-4">
 						<div>
 							<Image
-								src={avatarUrl || "/usuario-padrao.webp"}
+								src={avatarUrl || "/images/usuario-padrao.webp"}
 								alt="Avatar do usuário"
 								width={86}
 								height={86}

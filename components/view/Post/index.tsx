@@ -1,13 +1,14 @@
 import type { BlogPost } from "entities/BlogPost";
 import type { User } from "entities/User";
 import { useJSON } from "hooks/useJSON";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { FC, memo, useEffect, useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdShare, MdUpdate } from "react-icons/md";
 import { Store } from "react-notifications-component";
 import useSWR from "swr";
+
+import { Image } from "../Image";
 
 export interface PostViewProps extends Omit<BlogPost, "id"> {
 	/** @deprecated A função de avaliar postagens nesta versão está descontinuada. */
@@ -46,7 +47,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 			<aside className="flex flex-row justify-center items-center gap-4 md:flex-col md:justify-start md:gap-0">
 				<div>
 					<Image
-						src={author?.avatarUrl || "/usuario-padrao.webp"}
+						src={author?.avatarUrl || "/images/usuario-padrao.webp"}
 						alt="Avatar do usuário"
 						width={74}
 						height={74}
