@@ -17,13 +17,14 @@ const Home: NextPage = () => {
 								<GoQuote className="text-2xl" />
 							</div>
 							<p className="max-w-md">
-								Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque
-								magnam sit porro illo quasi soluta libero velit, sequi modi
-								doloremque quia voluptatibus cum eos totam iste esse! Sint, pariatur
-								neque!
+								Um povo sem memória é um povo sem história. Um povo sem história
+								está fadado a cometer, no presente e no futuro, os mesmos erros do
+								passado.
 							</p>
 						</div>
-						<p className="text-right font-bold pt-2">Autor/a</p>
+						<p className="text-right font-bold pt-2">
+							Emilia Viotti da Costa, historiadora.
+						</p>
 					</blockquote>
 				</div>
 			</Main>
