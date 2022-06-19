@@ -1,6 +1,6 @@
 import { Button } from "components/input/Button";
+import { Image } from "components/view/Image";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { memo, FC, useCallback } from "react";

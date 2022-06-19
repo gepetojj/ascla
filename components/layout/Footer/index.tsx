@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "components/view/Image";
 import React, { memo, FC } from "react";
 import { MdSearch } from "react-icons/md";
 
