@@ -28,7 +28,10 @@ const Academic: NextPage<Props> = ({ academic }) => {
 
 	return (
 		<>
-			<NextSeo title={`Acadêmicos - ${academic.name || "Não encontrado"}`} />
+			<NextSeo
+				title={`Acadêmicos - ${academic.name || "Não encontrado"}`}
+				description={`Conheça mais sobre o acadêmico ${academic.name} da ASCLA.`}
+			/>
 
 			<Main title={academic.name} className="p-6 pb-12">
 				<ChairOccupantView

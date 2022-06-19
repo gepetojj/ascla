@@ -6,7 +6,7 @@ import React from "react";
 const Members: NextPage = () => {
 	return (
 		<>
-			<NextSeo title="Sócios" />
+			<NextSeo title="Sócios" description="Veja a lista de sócios da ASCLA." />
 
 			<Main title="Sócios" className="p-6 pb-10">
 				<div className="flex justify-center">

@@ -28,7 +28,10 @@ const Patron: NextPage<Props> = ({ patron }) => {
 
 	return (
 		<>
-			<NextSeo title={`Patronos - ${patron.name || "Não encontrado"}`} />
+			<NextSeo
+				title={`Patronos - ${patron.name || "Não encontrado"}`}
+				description={`Conheça mais sobre o patrono ${patron.name} da ASCLA.`}
+			/>
 
 			<Main title={patron.name} className="p-6 pb-12">
 				<ChairOccupantView

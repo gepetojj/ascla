@@ -13,7 +13,7 @@ interface Props {
 const News: NextPage<Props> = ({ news }) => {
 	return (
 		<>
-			<NextSeo title="Notícias" />
+			<NextSeo title="Notícias" description="Fique por dentro das notícias da academia!" />
 
 			<Main title="Notícias" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex flex-col gap-4 max-w-5xl w-full">

@@ -13,7 +13,10 @@ interface Props {
 const Blog: NextPage<Props> = ({ posts }) => {
 	return (
 		<>
-			<NextSeo title="Blog" />
+			<NextSeo
+				title="Blog"
+				description="Veja as postagens feitas pelos acadêmicos da ASCLA."
+			/>
 
 			<Main title="Blog" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex flex-col gap-4 max-w-5xl w-full">

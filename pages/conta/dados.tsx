@@ -92,7 +92,7 @@ const AccountData: NextPage = () => {
 
 	return (
 		<>
-			<NextSeo title="Sua conta" />
+			<NextSeo title="Sua conta" description="Gerencie sua conta da ASCLA" />
 
 			<Main title="Sua conta">
 				<div className="flex flex-col justify-center gap-10 md:flex-row md:gap-32">

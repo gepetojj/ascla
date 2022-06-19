@@ -13,7 +13,7 @@ interface Props {
 const Patrons: NextPage<Props> = ({ patrons }) => {
 	return (
 		<>
-			<NextSeo title="Patronos" />
+			<NextSeo title="Patronos" description="Veja a lista de patronos da ASCLA." />
 
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex justify-center items-center flex-wrap max-w-5xl">

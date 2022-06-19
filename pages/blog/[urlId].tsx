@@ -3,7 +3,7 @@ import { PostView } from "components/view/Post";
 import type { BlogPost as EBlogPost } from "entities/BlogPost";
 import { Collections } from "myFirebase/enums";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { NextSeo } from "next-seo";
+import { ArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -13,7 +13,30 @@ interface Props {
 const BlogPost: NextPage<Props> = ({ post }) => {
 	return (
 		<>
-			<NextSeo title={`Blog - ${post.title || "Não encontrado"}`} />
+			<NextSeo
+				title={`Blog - ${post.title || "Não encontrado"}`}
+				description={post.description}
+				openGraph={{
+					title: post.title,
+					description: post.description,
+					url: `https://www.asclasi.com/blog/${post.metadata.urlId}`,
+					article: {
+						publishedTime: new Date(post.metadata.createdAt).toISOString(),
+						modifiedTime: new Date(post.metadata.updatedAt).toDateString(),
+						section: "blog",
+					},
+				}}
+			/>
+			<ArticleJsonLd
+				type="Blog"
+				url={`https://www.asclasi.com/blog/${post.metadata.urlId}`}
+				title={post.title}
+				description={post.description}
+				datePublished={new Date(post.metadata.createdAt).toISOString()}
+				dateModified={new Date(post.metadata.updatedAt).toISOString()}
+				images={[]}
+				authorName={post.metadata.authorId}
+			/>
 
 			<Main title={post.title} className="p-6 pb-12">
 				<PostView {...post} />

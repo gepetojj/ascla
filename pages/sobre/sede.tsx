@@ -6,7 +6,10 @@ import React from "react";
 const AboutOffice: NextPage = () => {
 	return (
 		<>
-			<NextSeo title="Sobre - Sede" />
+			<NextSeo
+				title="Sobre - Sede"
+				description="Conheça a sede da Academia Santanense de Ciências, Letras e Artes."
+			/>
 
 			<Main
 				title="Sede da ASCLA"

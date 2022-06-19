@@ -6,7 +6,10 @@ import React from "react";
 const AboutStatute: NextPage = () => {
 	return (
 		<>
-			<NextSeo title="Sobre - Estatuto" />
+			<NextSeo
+				title="Sobre - Estatuto"
+				description="Conheça o estatuto da Academia Santanense de Ciências, Letras e Artes."
+			/>
 
 			<Main
 				title="Estatuto da ASCLA"

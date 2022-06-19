@@ -9,7 +9,10 @@ import { MdMap, MdCall, MdEmail } from "react-icons/md";
 const Contact: NextPage = () => {
 	return (
 		<>
-			<NextSeo title="Contato" />
+			<NextSeo
+				title="Contato"
+				description="Entre em contato com a ASCLA a partir dos meios informados nesta página."
+			/>
 
 			<Main title="Contato" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex flex-col max-w-2xl gap-3 text-black-100">

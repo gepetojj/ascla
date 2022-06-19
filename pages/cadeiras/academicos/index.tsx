@@ -13,7 +13,7 @@ interface Props {
 const Patrons: NextPage<Props> = ({ academics }) => {
 	return (
 		<>
-			<NextSeo title="Acadêmicos" />
+			<NextSeo title="Acadêmicos" description="Veja a lista de acadêmicos da ASCLA." />
 
 			<Main
 				title="Acadêmicos"

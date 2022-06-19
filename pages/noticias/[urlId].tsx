@@ -1,9 +1,10 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
 import type { BlogPost as EBlogPost } from "entities/BlogPost";
+import { useJSON } from "hooks/useJSON";
 import { Collections } from "myFirebase/enums";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { NextSeo } from "next-seo";
+import { NewsArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
@@ -11,9 +12,39 @@ interface Props {
 }
 
 const NewsPost: NextPage<Props> = ({ news }) => {
+	const htmlString = useJSON(news.content);
+
 	return (
 		<>
-			<NextSeo title={`Notícias - ${news.title || "Não encontrado"}`} />
+			<NextSeo
+				title={`Notícias - ${news.title || "Não encontrado"}`}
+				description={news.description}
+				openGraph={{
+					title: news.title,
+					description: news.description,
+					url: `https://www.asclasi.com/noticias/${news.metadata.urlId}`,
+					article: {
+						publishedTime: new Date(news.metadata.createdAt).toISOString(),
+						modifiedTime: new Date(news.metadata.updatedAt).toISOString(),
+						section: "notícias",
+					},
+				}}
+			/>
+			<NewsArticleJsonLd
+				url={`https://www.asclasi.com/noticias/${news.metadata.urlId}`}
+				title={news.title}
+				description={news.description}
+				dateCreated={new Date(news.metadata.createdAt).toISOString()}
+				datePublished={new Date(news.metadata.createdAt).toISOString()}
+				dateModified={new Date(news.metadata.updatedAt).toISOString()}
+				images={[]}
+				authorName={news.metadata.authorId}
+				section="culture"
+				keywords={news.title.replaceAll(" ", ",").toLowerCase()}
+				body={htmlString}
+				publisherName="Notícias da Academia Santanense de Ciências, Letras e Artes"
+				publisherLogo="https://www.asclasi.com/images/logo-ascla.webp"
+			/>
 
 			<Main title={news.title} className="p-6 pb-12">
 				<PostView {...news} />

@@ -6,7 +6,10 @@ import React from "react";
 const AboutHistory: NextPage = () => {
 	return (
 		<>
-			<NextSeo title="Sobre - História" />
+			<NextSeo
+				title="Sobre - História"
+				description="Conheça a história da Academia Santanense de Ciências, Letras e Artes."
+			/>
 
 			<Main
 				title="História da ASCLA"

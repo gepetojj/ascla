@@ -20,7 +20,10 @@ const Account: NextPage = () => {
 
 	return (
 		<>
-			<NextSeo title="Faça login" />
+			<NextSeo
+				title="Faça login"
+				description="Faça login com uma conta Google para acessar funções especiais!"
+			/>
 
 			<main className="flex flex-col justify-center items-center h-screen bg-primary-200">
 				<div className="max-w-sm mx-6">
