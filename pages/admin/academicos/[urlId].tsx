@@ -30,6 +30,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 
 	const [name, setName] = useState(academic.name);
 	const [selectedPatron, setSelectedPatron] = useState<Patron | undefined>(undefined);
+	const [chair, setChair] = useState(academic.metadata.chair || 0);
 	const [editorContent, setEditorContent] = useState<JSONContent>(academic.bio);
 
 	// Lista os patronos para mostrar na seleção
@@ -83,7 +84,13 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !selectedPatron?.id || !editorContent.content?.length) {
+			if (
+				!name ||
+				!selectedPatron?.id ||
+				chair < 1 ||
+				chair > 1000 ||
+				!editorContent.content?.length
+			) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -101,10 +108,11 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 				id: academic.id,
 				name,
 				patronId: selectedPatron.id,
+				chair,
 				bio: editorContent,
 			});
 		},
-		[fetcher, academic.id, name, selectedPatron, editorContent]
+		[fetcher, academic.id, name, selectedPatron, chair, editorContent]
 	);
 
 	return (
@@ -133,6 +141,17 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 						options={patrons}
 						selected={selectedPatron}
 						onChange={selected => setSelectedPatron(selected as Patron)}
+					/>
+					<TextInput
+						id="chair"
+						label="Cadeira *"
+						className="w-full sm:w-32"
+						type="number"
+						min={1}
+						max={1000}
+						value={chair}
+						onChange={({ target }) => setChair(Number(target.value))}
+						required
 					/>
 				</>
 			</AdminForm>

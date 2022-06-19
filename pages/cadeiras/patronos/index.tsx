@@ -18,10 +18,10 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex justify-center items-center flex-wrap max-w-5xl">
 					{patrons?.length ? (
-						patrons.map((patron, index) => (
+						patrons.map(patron => (
 							<CardChairOccupant
 								key={patron.id}
-								number={index + 1 > 9 ? String(index + 1) : `0${index + 1}`}
+								number={patron.metadata.chair}
 								name={patron.name}
 								href={`/cadeiras/patronos/${patron.metadata.urlId}`}
 							/>

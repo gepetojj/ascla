@@ -10,7 +10,8 @@ import { v4 as uuid } from "uuid";
 interface NewAcademic {
 	name: string;
 	patronId: string;
-	thumbnailUrl?: string;
+	chair: number;
+	avatarUrl?: string;
 	bio: JSONContent;
 }
 
@@ -20,11 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		res,
 		{ method: "post", col: "academics", role: "admin" },
 		async col => {
-			const { name, patronId, bio }: NewAcademic = req.body;
+			const { name, patronId, chair, bio }: NewAcademic = req.body;
 			const customUrl = getIdFromText(name);
 
 			// TODO: Adicionar validação aos dados
-			if (!name || !patronId || !bio.content?.length) {
+			if (!name || !patronId || !chair || !bio.content?.length) {
 				res.status(400).json({
 					message: "Informe os dados do acadêmico corretamente.",
 				});
@@ -45,6 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						createdAt: Date.now(),
 						updatedAt: 0,
 						patronId,
+						chair,
 					},
 					name,
 					bio,

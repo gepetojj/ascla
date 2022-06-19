@@ -9,12 +9,14 @@ interface UpdateAcademic {
 	id?: string;
 	name?: string;
 	patronId?: string;
+	chair?: number;
 	bio?: JSONContent;
+	avatarUrl?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(req, res, { method: "put", col: "academics", role: "admin" }, async col => {
-		const { id, name, patronId, bio }: UpdateAcademic = req.body;
+		const { id, name, patronId, chair, bio }: UpdateAcademic = req.body;
 
 		// TODO: Adicionar validação aos dados
 		if (!id) {
@@ -40,6 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			if (name && typeof name === "string") academic.name = name;
 			if (patronId && typeof patronId === "string") academic.metadata.patronId = patronId;
+			if (chair && typeof chair === "number") academic.metadata.chair = chair;
 			if (bio && bio.content?.length) academic.bio = bio;
 
 			await col.doc(id).update(academic);

@@ -10,17 +10,18 @@ import { v4 as uuid } from "uuid";
 interface NewPatron {
 	name: string;
 	academicId: string;
-	thumbnailUrl?: string;
+	chair: number;
+	avatarUrl?: string;
 	bio: JSONContent;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(req, res, { method: "post", col: "patrons", role: "admin" }, async col => {
-		const { name, academicId, bio }: NewPatron = req.body;
+		const { name, academicId, chair, bio }: NewPatron = req.body;
 		const customUrl = getIdFromText(name);
 
 		// TODO: Adicionar validação aos dados
-		if (!name || !academicId || !bio.content?.length) {
+		if (!name || !academicId || !chair || !bio.content?.length) {
 			res.status(400).json({ message: "Informe os dados do patrono corretamente." });
 			return res;
 		}
@@ -39,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					createdAt: Date.now(),
 					updatedAt: 0,
 					academicId,
+					chair,
 				},
 				name,
 				bio,

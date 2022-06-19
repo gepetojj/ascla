@@ -16,6 +16,8 @@ export interface AcademicMetadata {
 	updatedAt: number;
 	/** ID do patrono desse acadêmico. */
 	patronId: Patron["id"];
+	/** Cadeira do acadêmico. */
+	chair: number;
 }
 
 /**

@@ -20,6 +20,7 @@ const AdminPatronsNew: NextPage = () => {
 
 	const [name, setName] = useState("");
 	const [selectedAcademic, setSelectedAcademic] = useState(academics.find(() => false));
+	const [chair, setChair] = useState(0);
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 		content: [{ type: "paragraph" }],
@@ -71,7 +72,13 @@ const AdminPatronsNew: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || !selectedAcademic || !editorContent.content?.length) {
+			if (
+				!name ||
+				!selectedAcademic ||
+				chair < 1 ||
+				chair > 1000 ||
+				!editorContent.content?.length
+			) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -85,7 +92,7 @@ const AdminPatronsNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ name, academicId: selectedAcademic.id, bio: editorContent });
+			fetcher({ name, academicId: selectedAcademic.id, chair, bio: editorContent });
 		},
 		[fetcher, name, selectedAcademic, editorContent]
 	);
@@ -116,6 +123,17 @@ const AdminPatronsNew: NextPage = () => {
 						options={academics}
 						selected={selectedAcademic}
 						onChange={selected => setSelectedAcademic(selected as Academic)}
+					/>
+					<TextInput
+						id="chair"
+						label="Cadeira *"
+						className="w-full sm:w-32"
+						type="number"
+						min={1}
+						max={1000}
+						value={chair}
+						onChange={({ target }) => setChair(Number(target.value))}
+						required
 					/>
 				</>
 			</AdminForm>

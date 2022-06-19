@@ -33,7 +33,7 @@ const Academic: NextPage<Props> = ({ academic }) => {
 			<Main title={academic.name} className="p-6 pb-12">
 				<ChairOccupantView
 					{...academic}
-					chair={1}
+					chair={academic.metadata.chair}
 					bioHTML={bioHTML}
 					oppositeType="patron"
 					oppositeName={patron?.name}
