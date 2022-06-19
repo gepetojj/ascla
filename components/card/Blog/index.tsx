@@ -1,6 +1,6 @@
+import { Image } from "components/view/Image";
 import type { BlogPost } from "entities/BlogPost";
 import type { User } from "next-auth";
-import Image from "next/image";
 import Link from "next/link";
 import propTypes from "prop-types";
 import React, { FC, memo, useState, useEffect } from "react";

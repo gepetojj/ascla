@@ -47,7 +47,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 			<aside className="flex flex-row justify-center items-center gap-4 md:flex-col md:justify-start md:gap-0">
 				<div>
 					<Image
-						src={author?.avatarUrl || "/images/usuario-padrao.webp"}
+						src={author?.avatarUrl || "usuario-padrao.webp"}
 						alt="Avatar do usuário"
 						width={74}
 						height={74}

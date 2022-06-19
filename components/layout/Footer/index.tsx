@@ -10,7 +10,7 @@ const FooterComponent: FC = () => {
 			<div className="flex items-center gap-4">
 				<div>
 					<Image
-						src="/images/logo-ascla.webp"
+						src="logo-ascla.webp"
 						alt="Logo da ASCLA"
 						layout="fixed"
 						width={68}

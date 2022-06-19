@@ -46,7 +46,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 			<aside className="flex flex-col items-center gap-2">
 				<div>
 					<Image
-						src={avatarUrl || "/images/usuario-padrao.webp"}
+						src={avatarUrl || "usuario-padrao.webp"}
 						alt="Avatar do participante"
 						width={86}
 						height={86}

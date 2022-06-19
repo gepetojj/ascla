@@ -1,8 +1,8 @@
 import { Button } from "components/input/Button";
+import { Image } from "components/view/Image";
 import { NextPage } from "next";
 import { useSession, signIn } from "next-auth/react";
 import { NextSeo } from "next-seo";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -27,7 +27,7 @@ const Account: NextPage = () => {
 					<div className="flex items-center mb-8">
 						<div className="flex items-center">
 							<Image
-								src="/logo-ascla.webp"
+								src="logo-ascla.webp"
 								alt="Logo da ASCLA"
 								layout="fixed"
 								width={52}
