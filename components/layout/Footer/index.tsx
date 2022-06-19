@@ -26,17 +26,21 @@ const FooterComponent: FC = () => {
 				<FooterTopic title="Pesquisar:">
 					<div className="relative w-60">
 						<input
-							className="w-full px-2 py-1 bg-cream-300 text-black-500 rounded-sm outline-none placeholder:text-black-500/70 focus:shadow-md"
+							className="w-full px-2 py-1 bg-cream-300 text-black-600 rounded-sm outline-none placeholder:text-black-500 focus:shadow-md"
 							type="text"
 							placeholder="Procure por notícias:"
 						/>
-						<button className="flex justify-center items-center absolute h-full top-0 right-0 p-2 backdrop-blur-[1px] rounded-sm bg-cream-500/30 duration-200 hover:brightness-90">
+						<button
+							type="button"
+							aria-label="Clique para pesquisar"
+							className="flex justify-center items-center absolute h-full top-0 right-0 p-2 backdrop-blur-[1px] rounded-sm bg-cream-500/30 duration-200 hover:brightness-90"
+						>
 							<MdSearch className="text-xl" />
 						</button>
 					</div>
 				</FooterTopic>
 				<FooterTopic title="Academias" onCenter>
-					<ul>
+					<ul className="flex flex-col gap-1 sm:gap-0">
 						<li>
 							<a
 								href="https://www.academia.org.br/"
@@ -80,7 +84,7 @@ const FooterComponent: FC = () => {
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Blogs" onCenter>
-					<ul>
+					<ul className="flex flex-col gap-1 sm:gap-0">
 						<li>
 							<a
 								href="https://www.apensocomgrifo.com/"
@@ -94,7 +98,7 @@ const FooterComponent: FC = () => {
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Jornais da Região" onCenter>
-					<ul>
+					<ul className="flex flex-col gap-1 sm:gap-0">
 						<li>
 							<a
 								href="https://www.maltanet.com.br/v2/"
@@ -141,7 +145,7 @@ const FooterComponent: FC = () => {
 			<span className="text-center text-sm font-medium mt-2">
 				ASCLA - {new Date().getFullYear()} - Código aberto no{" "}
 				<a
-					href="http://github.com/gepetojj/ascla"
+					href="https://github.com/gepetojj/ascla"
 					target="_blank"
 					rel="noreferrer"
 					className="hover:underline"

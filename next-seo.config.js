@@ -5,13 +5,21 @@ export default {
 	description:
 		"Acesse o site oficial da Academia Santanense de Ciências, Letras e Artes e familiarize-se com a cultura de Santana do Ipanema/AL",
 	canonical:
-		process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://ascla.com.br/",
+		process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://asclasi.com/",
 
 	additionalLinkTags: [
 		{
 			rel: "icon",
 			href: "/favicon.ico",
 		},
+	],
+	additionalMetaTags: [
+		{
+			name: "viewport",
+			content: "initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
+		},
+		{ name: "format-detection", content: "telephone=no" },
+		{ name: "theme-color", content: "#83CB89" },
 	],
 
 	openGraph: {
@@ -22,6 +30,6 @@ export default {
 	},
 	twitter: {
 		cardType: "summary_large_image",
-		site: "https://ascla.com.br",
+		site: "https://asclasi.com",
 	},
 };

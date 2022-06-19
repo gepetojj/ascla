@@ -33,7 +33,10 @@ const HeaderComponent: FC = () => {
 					<h2 className="text-sm font-medium">10 anos</h2>
 				</div>
 			</div>
-			<nav className="flex justify-center items-center flex-wrap w-full my-3 md:flex-nowrap md:my-0">
+			<nav
+				title="Páginas"
+				className="flex justify-center items-center flex-wrap w-full my-3 md:flex-nowrap md:my-0"
+			>
 				<HeaderLink href="/" isActive={pathname === "/"}>
 					Início
 				</HeaderLink>
