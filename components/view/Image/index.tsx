@@ -7,15 +7,15 @@ const customLoader: ImageLoader = ({ src, width, quality }) => {
 	}/${src}`;
 };
 
-const ImageComponent: FC<ImageProps> = ({ ...props }) => {
+const ImageComponent: FC<ImageProps> = ({ src, ...props }) => {
+	const willUseCustomLoader =
+		process.env.NODE_ENV === "production" && !src.toString().startsWith("https");
+
 	return (
 		<NextImage
 			{...props}
-			loader={
-				process.env.NODE_ENV === "production" && !props.src.toString().startsWith("https")
-					? customLoader
-					: undefined
-			}
+			loader={willUseCustomLoader ? customLoader : undefined}
+			src={willUseCustomLoader ? src : `/images/${src}`}
 		/>
 	);
 };

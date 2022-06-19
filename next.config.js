@@ -1,4 +1,5 @@
 const withBA = require("@next/bundle-analyzer")({ enabled: process.env.ANALYZE === "true" });
+const { createSecureHeaders } = require("next-secure-headers");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = withBA({
@@ -15,20 +16,13 @@ const nextConfig = withBA({
 		return [
 			{
 				source: "/(.*)",
-				headers: [
-					{
-						key: "X-Content-Type-Options",
-						value: "nosniff",
-					},
-					{
-						key: "X-Frame-Options",
-						value: "SAMEORIGIN",
-					},
-					{
-						key: "X-XSS-Protection",
-						value: "1; mode=block",
-					},
-				],
+				headers: createSecureHeaders({
+					forceHTTPSRedirect: [
+						true,
+						{ maxAge: 60 * 60 * 24 * 4, includeSubDomains: true, preload: true },
+					],
+					referrerPolicy: "strict-origin-when-cross-origin",
+				}),
 			},
 		];
 	},
