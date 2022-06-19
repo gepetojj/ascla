@@ -11,7 +11,11 @@ const ImageComponent: FC<ImageProps> = ({ ...props }) => {
 	return (
 		<NextImage
 			{...props}
-			loader={process.env.NODE_ENV === "production" ? customLoader : undefined}
+			loader={
+				process.env.NODE_ENV === "production" || !props.src.toString().startsWith("https")
+					? customLoader
+					: undefined
+			}
 		/>
 	);
 };
