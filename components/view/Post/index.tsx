@@ -73,7 +73,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 							</div>
 						)}
 					</div>
-					<div className="flex justify-center mt-4">
+					<div className="flex flex-col justify-center mt-4 gap-1">
 						<button
 							className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95"
 							onClick={() => {

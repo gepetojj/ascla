@@ -6,11 +6,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 interface UpdateUser {
 	id: string;
 	role?: UserRole;
+	academicId?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(req, res, { method: "put", col: "users", role: "admin" }, async col => {
-		const { id, role }: UpdateUser = req.body;
+		const { id, role, academicId }: UpdateUser = req.body;
 
 		// TODO: Adicionar validação aos dados
 		if (!id) {
@@ -27,11 +28,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			if (role && typeof role === "string") {
-				user.metadata.role = role;
-				await col.doc(id).update(user);
-			}
+			if (role && typeof role === "string") user.metadata.role = role;
+			if (academicId && typeof academicId === "string" && role !== "common")
+				user.metadata.academicId = academicId;
 
+			await col.doc(id).update(user);
 			res.json({ message: "Usuário atualizado com sucesso." });
 		} catch (err) {
 			console.error(err);

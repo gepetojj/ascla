@@ -4,27 +4,27 @@
 
 ## Sumário
 
--   [ascla](#ascla)
-    -   [Sumário](#sumário)
-    -   [Objetivo](#objetivo)
-    -   [Tecnologias](#tecnologias)
-    -   [Contato](#contato)
-    -   [Licença e Créditos](#licença-e-créditos)
-    -   [Documentação](#documentação)
-        -   [Editor](#editor)
-            -   [Menu](#menu)
-                -   [Desfazer e Refazer](#desfazer-e-refazer)
-                -   [Títulos e parágrafo](#títulos-e-parágrafo)
-                -   [Negrito, sublinhado e itálico](#negrito-sublinhado-e-itálico)
-                -   [Link](#link)
-                -   [Alinhamento do texto](#alinhamento-do-texto)
-                -   [Limpar formatação](#limpar-formatação)
-            -   [Comandos](#comandos)
-                -   [Títulos](#títulos)
-                -   [Negrito e itálico](#negrito-e-itálico)
-                -   [Citações (exclusiva)](#citações-exclusiva)
-                -   [Listas desordenadas (exclusiva)](#listas-desordenadas-exclusiva)
-                -   [Listas ordenadas (exclusiva)](#listas-ordenadas-exclusiva)
+- [ascla](#ascla)
+	- [Sumário](#sumário)
+	- [Objetivo](#objetivo)
+	- [Tecnologias](#tecnologias)
+	- [Contato](#contato)
+	- [Licença e Créditos](#licença-e-créditos)
+	- [Documentação](#documentação)
+		- [Editor](#editor)
+			- [Menu](#menu)
+				- [Desfazer e Refazer](#desfazer-e-refazer)
+				- [Títulos e parágrafo](#títulos-e-parágrafo)
+				- [Negrito, sublinhado e itálico](#negrito-sublinhado-e-itálico)
+				- [Link](#link)
+				- [Alinhamento do texto](#alinhamento-do-texto)
+				- [Limpar formatação](#limpar-formatação)
+			- [Comandos](#comandos)
+				- [Títulos](#títulos)
+				- [Negrito e itálico](#negrito-e-itálico)
+				- [Citações (exclusiva)](#citações-exclusiva)
+				- [Listas desordenadas (exclusiva)](#listas-desordenadas-exclusiva)
+				- [Listas ordenadas (exclusiva)](#listas-ordenadas-exclusiva)
 
 ## Objetivo
 
@@ -67,7 +67,7 @@ Abaixo está a explicação de como utilizar todas as funções do menu do edito
 
 ##### Desfazer e Refazer
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/ROosbjT.png)
 
 Seguindo a imagem acima, o primeiro ícone representa a função _desfazer_, e quando clicada desfaz a última alteração feita na área do texto.
 
@@ -75,7 +75,7 @@ O segundo ícone representa a função _refazer_, que quando clicada refaz uma a
 
 ##### Títulos e parágrafo
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/I2WLSeX.png)
 
 **Detalhe: estes títulos não têm relação com o título da postagem/notícia, são apenas marcações do texto, para dar destaque.**
 
@@ -87,31 +87,31 @@ A função parágrafo formata o texto selecionado para um parágrafo comum. Note
 
 ##### Negrito, sublinhado e itálico
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/tpweYm5.png)
 
 Os ícones, seguindo a imagem, representam respectivamente: negrito, sublinhado e itálico. Estas funções certamente são bem conhecidas e seu uso é simples, basta selecionar o texto e clicar no ícone, assim como as outras funções.
 
 ##### Link
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/sgKYafe.png)
 
 **Detalhe: apenas links que possuem o protocolo _https_ podem ser inseridos, para garantir a segurança do usuário. Links para o próprio website também são possíveis.**
 
 Ao clicar no ícone da imagem, outro menu aparecerá na tela. A partir dele, você é capaz de atribuir ao texto selecionado um link, que ao clicado será aberto em outra aba do navegador.
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/yQxIUBl.png)
 
 Como mostrado na imagem, basta colocar o link na caixa de texto correspondente e clicar em "Adicionar". Quando um link for escrito na caixa de texto "Link:", o botão "Remover" aparecerá. Ao ser clicado, removerá um link do texto selecionado.
 
 ##### Alinhamento do texto
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/3NVUKrt.png)
 
 Seguindo a imagem acima, as funções são, respectivamente: alinhar à esquerda, centralizar, alinhar à direita e justificar. Quando uma dessas funções for clicada, fazem exatamente o que sujerem, mas lembre-se que ela é executada apenas no texto selecionado. Se não houver texto selecionado, a função vai ser executada na linha onde seu mouse estiver ou na última que esteve.
 
 ##### Limpar formatação
 
-![Imagem de exemplo]()
+![Imagem de exemplo](https://i.imgur.com/HvB2uVL.png)
 
 A última função do menu é chamada de limpar formatação. Esta função irá tirar qualquer formatação feita no texto selecionado, é boa quando houverem várias formatações feitas em um mesmo texto, economizando tempo para retirar todas.
 

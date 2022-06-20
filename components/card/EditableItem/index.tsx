@@ -10,7 +10,7 @@ export interface EditableItemProps {
 	/** Link para a página de edição do item. */
 	editUrl: string;
 	/** Callback para deletar o item. */
-	deleteAction: () => void;
+	deleteAction?: () => void;
 
 	/** Determina se o estado de carregamento está ativado. */
 	loading?: boolean;
@@ -37,15 +37,19 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 		<div className="flex justify-between items-center w-full bg-secondary-400 px-2 py-1 gap-3 rounded-sm">
 			<span className="max-w-full break-words">{title}</span>
 			<div className="flex items-center gap-2">
-				<Link href={editUrl} shallow>
-					<a>
-						<MdMode className="text-xl cursor-pointer" />
-					</a>
-				</Link>
-
-				<Button title={deleteLabel} onDoubleClick={deleteAction} loading={loading}>
-					<MdDelete className="text-xl" />
+				<Button title="Clique para editar o item">
+					<Link href={editUrl} shallow>
+						<a>
+							<MdMode className="text-xl cursor-pointer" />
+						</a>
+					</Link>
 				</Button>
+
+				{deleteAction && (
+					<Button title={deleteLabel} onDoubleClick={deleteAction} loading={loading}>
+						<MdDelete className="text-xl" />
+					</Button>
+				)}
 			</div>
 		</div>
 	);
@@ -54,7 +58,7 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 EditableItemComponent.propTypes = {
 	title: propTypes.string.isRequired,
 	editUrl: propTypes.string.isRequired,
-	deleteAction: propTypes.func.isRequired,
+	deleteAction: propTypes.func,
 	loading: propTypes.bool,
 	deleteLabel: propTypes.string,
 };

@@ -1,3 +1,5 @@
+import type { Academic } from "./Academic";
+
 /** Cargos existentes para um usuário. */
 export type UserRole = "common" | "academic" | "admin";
 
@@ -15,6 +17,8 @@ export interface UserMetadata {
 	 * @see {@link UserRole}
 	 */
 	role: UserRole;
+	/** Define o ID de acadêmico caso o usuário seja do cargo academic ou admin. */
+	academicId?: Academic["id"];
 	/** @deprecated URLs personalizadas para usuários estão descontinuadas nesta versão. */
 	urlId: string;
 }

@@ -17,6 +17,7 @@ export interface AdminFormProps {
 	loading?: boolean;
 	editorContent?: JSONContent;
 	onEditorChange?: (newContent: JSONContent) => void;
+	noEditor?: boolean;
 }
 
 const DynamicEditor = dynamic(() => import("components/input/Editor"));
@@ -29,6 +30,7 @@ const AdminFormComponent: FC<AdminFormProps> = ({
 	loading,
 	editorContent,
 	onEditorChange,
+	noEditor,
 }) => {
 	return (
 		<Main title={title}>
@@ -42,14 +44,17 @@ const AdminFormComponent: FC<AdminFormProps> = ({
 					</Button>
 				</div>
 
-				{/* Tab com preview */}
-				<DynamicEditor initialValue={editorContent} onChange={onEditorChange} />
-				{/* <PostView
+				{
+					!noEditor && (
+						<DynamicEditor initialValue={editorContent} onChange={onEditorChange} />
+					)
+					/* <PostView
 						title={title || post.title}
 						description={description || post.description}
 						metadata={{ ...post.metadata, updatedAt: Date.now() }}
 						content={editorContent}
-					/> */}
+					/> */
+				}
 			</form>
 		</Main>
 	);
