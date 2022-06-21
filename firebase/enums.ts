@@ -1,7 +1,7 @@
 import { firestore } from "./server";
 
 /** Nomes das coleções do banco de dados em tipo. */
-export type CollectionName = "blogPosts" | "news" | "patrons" | "academics" | "users";
+export type CollectionName = "blogPosts" | "news" | "patrons" | "academics" | "users" | "images";
 
 /** Nomes das coleções do banco de dados em enum. */
 export enum CollectionsNames {
@@ -10,6 +10,7 @@ export enum CollectionsNames {
 	patrons = "patrons",
 	academics = "academics",
 	users = "users",
+	images = "images",
 }
 
 /**
@@ -28,4 +29,6 @@ export const Collections = {
 	academics: firestore.collection(CollectionsNames.academics),
 	/** Coleção dos usuários. */
 	users: firestore.collection(CollectionsNames.users),
-};
+	/** Coleção de logs de upload de imagens */
+	images: firestore.collection(CollectionsNames.images),
+} as const;

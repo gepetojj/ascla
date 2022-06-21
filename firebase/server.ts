@@ -10,6 +10,7 @@ if (!firebase.apps.length) {
 	firebase.initializeApp({
 		credential: credential.cert(credentials),
 		databaseURL: `https://${credentials.projectId}.firebaseio.com`,
+		storageBucket: "asclasi.appspot.com",
 	});
 }
 
