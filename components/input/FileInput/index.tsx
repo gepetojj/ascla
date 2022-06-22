@@ -96,6 +96,7 @@ const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar }
 								<span className="text-xs">Pré-visualização:</span>
 								<Image
 									src={preview || "/images/usuario-padrao.webp"}
+									alt="Pré-visualização do avatar"
 									width={124}
 									height={124}
 									layout="fixed"
