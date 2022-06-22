@@ -36,6 +36,7 @@ export const requireRole = async <I>(
 	};
 
 	const session = await getSession({ req });
+	console.error(session);
 	const acceptedRoles = role === "academic" ? ["academic", "admin"] : ["admin"];
 	return {
 		authorized:

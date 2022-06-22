@@ -6,7 +6,6 @@ import GoogleProvider from "next-auth/providers/google";
 export default NextAuth({
 	providers: [
 		GoogleProvider({
-			checks: "both",
 			clientId: String(process.env.GOOGLE_CLIENT_ID),
 			clientSecret: String(process.env.GOOGLE_CLIENT_SECRET),
 			profile: profile => {
