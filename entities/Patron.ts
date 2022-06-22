@@ -30,8 +30,10 @@ export interface Patron {
 	name: string;
 	/** Biografia do patrono. */
 	bio: JSONContent;
-	/** Link do avatar do patrono. */
+	/** @deprecated As imagens dos patronos agora são guardadas em base64. Use a propriedade `avatar`. */
 	avatarUrl?: string;
+	/** Avatar do patrono, em base64. */
+	avatar: string;
 	/**
 	 * Metadados do patrono.
 	 *
@@ -44,6 +46,8 @@ export interface Patron {
 export interface UpdatablePatron {
 	name?: Patron["name"];
 	bio?: Patron["bio"];
-	avatarUrl?: Patron["avatarUrl"];
+	/** @deprecated As imagens dos patronos agora são guardadas em base64. Use a propriedade `avatar`. */
+	avatarUrl?: string;
+	avatar?: string;
 	metadata: Patron["metadata"];
 }

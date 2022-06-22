@@ -40,7 +40,7 @@ const AdminUsersEdit: NextPage<Props> = ({ user }) => {
 			setAcademic(academics.find(({ id }) => id === user.metadata.academicId));
 		}
 		!data && error && console.error(error);
-	}, [academics, data, error]);
+	}, [user.metadata.academicId, academics, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {

@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/react";
 
+import { FileInput } from "components/input/FileInput";
 import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
@@ -31,6 +32,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [name, setName] = useState(academic.name);
 	const [selectedPatron, setSelectedPatron] = useState<Patron | undefined>(undefined);
 	const [chair, setChair] = useState(academic.metadata.chair || 0);
+	const [avatar, setAvatar] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>(academic.bio);
 
 	// Lista os patronos para mostrar na seleção
@@ -89,6 +91,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 				!selectedPatron?.id ||
 				chair < 1 ||
 				chair > 1000 ||
+				!avatar ||
 				!editorContent.content?.length
 			) {
 				Store.addNotification({
@@ -109,10 +112,11 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 				name,
 				patronId: selectedPatron.id,
 				chair,
+				avatar,
 				bio: editorContent,
 			});
 		},
-		[fetcher, academic.id, name, selectedPatron, chair, editorContent]
+		[fetcher, academic.id, name, selectedPatron, chair, avatar, editorContent]
 	);
 
 	return (
@@ -152,6 +156,12 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 						value={chair}
 						onChange={({ target }) => setChair(Number(target.value))}
 						required
+					/>
+					<FileInput
+						id="avatar"
+						label="Insira uma imagem *"
+						avatar={avatar}
+						setAvatar={setAvatar}
 					/>
 				</>
 			</AdminForm>

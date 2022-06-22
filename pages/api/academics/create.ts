@@ -11,7 +11,7 @@ interface NewAcademic {
 	name: string;
 	patronId: string;
 	chair: number;
-	avatarUrl?: string;
+	avatar: string;
 	bio: JSONContent;
 }
 
@@ -21,11 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		res,
 		{ method: "post", col: "academics", role: "admin" },
 		async col => {
-			const { name, patronId, chair, bio }: NewAcademic = req.body;
+			const { name, patronId, chair, avatar, bio }: NewAcademic = req.body;
 			const customUrl = getIdFromText(name);
 
 			// TODO: Adicionar validação aos dados
-			if (!name || !patronId || !chair || !bio.content?.length) {
+			if (!name || !patronId || !chair || !avatar || !bio.content?.length) {
 				res.status(400).json({
 					message: "Informe os dados do acadêmico corretamente.",
 				});
@@ -50,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					},
 					name,
 					bio,
+					avatar,
 				};
 
 				await col.doc(academic.id).create(academic);

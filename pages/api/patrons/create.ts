@@ -11,17 +11,17 @@ interface NewPatron {
 	name: string;
 	academicId: string;
 	chair: number;
-	avatarUrl?: string;
+	avatar: string;
 	bio: JSONContent;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(req, res, { method: "post", col: "patrons", role: "admin" }, async col => {
-		const { name, academicId, chair, bio }: NewPatron = req.body;
+		const { name, academicId, chair, avatar, bio }: NewPatron = req.body;
 		const customUrl = getIdFromText(name);
 
 		// TODO: Adicionar validação aos dados
-		if (!name || !academicId || !chair || !bio.content?.length) {
+		if (!name || !academicId || !chair || !avatar || !bio.content?.length) {
 			res.status(400).json({ message: "Informe os dados do patrono corretamente." });
 			return res;
 		}
@@ -44,6 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				},
 				name,
 				bio,
+				avatar,
 			};
 
 			await col.doc(patron.id).create(patron);

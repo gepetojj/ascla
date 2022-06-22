@@ -11,12 +11,12 @@ interface UpdatePatron {
 	academicId?: string;
 	chair?: number;
 	bio?: JSONContent;
-	avatarUrl?: string;
+	avatar?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(req, res, { method: "put", col: "patrons", role: "admin" }, async col => {
-		const { id, name, academicId, chair, bio }: UpdatePatron = req.body;
+		const { id, name, academicId, chair, avatar, bio }: UpdatePatron = req.body;
 
 		// TODO: Adicionar validação aos dados
 		if (!id) {
@@ -44,6 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (academicId && typeof academicId === "string")
 				patron.metadata.academicId = academicId;
 			if (chair && typeof chair === "number") patron.metadata.chair = chair;
+			if (avatar && typeof avatar === "string") patron.avatar = avatar;
 			if (bio && bio.content?.length) patron.bio = bio;
 
 			// Verificar a diferença entre patron e originalPatron; não havendo mudanças,

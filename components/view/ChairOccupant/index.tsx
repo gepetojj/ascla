@@ -1,8 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import propTypes from "prop-types";
 import React, { FC, memo } from "react";
-
-import { Image } from "../Image";
 
 export interface ChairOccupantViewProps {
 	/** Nome do ocupante. */
@@ -46,10 +45,10 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 			<aside className="flex flex-col items-center gap-2">
 				<div>
 					<Image
-						src={avatarUrl || "usuario-padrao.webp"}
+						src={avatarUrl || "/images/usuario-padrao.webp"}
 						alt="Avatar do participante"
-						width={86}
-						height={86}
+						width={100}
+						height={100}
 						className="rounded-full"
 					/>
 				</div>

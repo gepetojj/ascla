@@ -1,4 +1,5 @@
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Upload } from "entities/Upload";
 import { File, Files, IncomingForm } from "formidable";
 import { apiHandler } from "helpers/apiHandler";
 import { storage } from "myFirebase/server";
@@ -16,8 +17,6 @@ export const config = {
 	},
 };
 
-// TODO: Registrar no banco de dados os logs do upload
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
 	return apiHandler(
 		req,
@@ -34,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				maxFields: 1,
 				maxFiles: 1,
 				maxFileSize: 5 * 1024 * 1024, // 5 MB
-				hashAlgorithm: "sha256",
+				hashAlgorithm: "md5",
 				filter: ({ mimetype }) => !!mimetype && mimetype.includes("image"),
 			});
 
@@ -70,13 +69,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 					const upload = await storage.bucket().upload(`${image.filepath}.webp`, {
 						public: true,
-						destination: `/uploads/${session.user?.id}/${imageName}.webp`,
+						destination: `/uploads/${session.user.id}/${imageName}.webp`,
 						metadata: { firebaseStorageDownloadTokens: imageName },
 					});
 
+					const uploadLog: Upload = {
+						id: imageName,
+						link: upload[0].metadata.mediaLink,
+						metadata: {
+							uploadedAt: Date.now(),
+							uploader: session.user.id,
+							size: image.size,
+							hash: String(image.hash),
+							mimetype: String(image.mimetype),
+						},
+						uploadMetadata: upload[0],
+					};
+					await col.doc(imageName).create(uploadLog);
+
 					res.status(200).json({
 						message: "Upload concluído com sucesso.",
-						link: upload[0].metadata.mediaLink,
+						link: uploadLog.link,
 					});
 					return res;
 				} catch (err) {
