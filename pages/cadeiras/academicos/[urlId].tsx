@@ -1,19 +1,19 @@
 import { Main } from "components/layout/Main";
 import { ChairOccupantView } from "components/view/ChairOccupant";
-import type { Academic as EAcademic } from "entities/Academic";
+import type { Academic } from "entities/Academic";
 import type { Patron } from "entities/Patron";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useJSON } from "hooks/useJSON";
-import { Collections } from "myFirebase/enums";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 interface Props {
-	academic: EAcademic;
+	academic: Academic;
 }
 
-const Academic: NextPage<Props> = ({ academic }) => {
+const ViewAcademic: NextPage<Props> = ({ academic }) => {
 	const { data, error } = useSWR(
 		`/api/patrons/read?id=${academic.metadata.patronId}`,
 		(...args) => fetch(...args).then(res => res.json())
@@ -48,44 +48,19 @@ const Academic: NextPage<Props> = ({ academic }) => {
 	);
 };
 
-export default Academic;
+export default ViewAcademic;
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = Collections.academics;
-	const urlId = params?.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "academics", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col
+				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
+				.get();
+			if (query.empty || !query.docs) return { notFound: true };
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
-
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const academic = query.docs[0];
-		if (query.empty || !academic) return { notFound: true };
-
-		return { props: { academic: academic.data() as EAcademic } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-	const col = Collections.academics;
-	const paths: { params: { urlId: string } }[] = [];
-
-	try {
-		const { empty, docs } = await col.get();
-		if (!empty && docs.length) {
-			docs.forEach(doc => {
-				const { metadata } = doc.data() as EAcademic;
-				paths.push({ params: { urlId: metadata.urlId } });
-			});
+			const academic = query.docs[0].data() as Academic;
+			return { props: { academic } };
 		}
-	} catch (err) {
-		console.error(err);
-	}
-
-	return {
-		paths,
-		fallback: "blocking",
-	};
-};
+	);

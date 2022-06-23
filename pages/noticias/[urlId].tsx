@@ -1,14 +1,14 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
-import type { BlogPost as EBlogPost } from "entities/BlogPost";
+import type { BlogPost } from "entities/BlogPost";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useJSON } from "hooks/useJSON";
-import { Collections } from "myFirebase/enums";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { NewsArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	news: EBlogPost;
+	news: BlogPost;
 }
 
 const NewsPost: NextPage<Props> = ({ news }) => {
@@ -55,42 +55,17 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 
 export default NewsPost;
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = Collections.news;
-	const urlId = params?.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "news", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col
+				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
+				.get();
+			if (query.empty || !query.docs) return { notFound: true };
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
-
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const news = query.docs[0];
-		if (query.empty || !news.exists) return { notFound: true };
-
-		return { props: { news: news.data() as EBlogPost } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-	const col = Collections.news;
-	const paths: { params: { urlId: string } }[] = [];
-
-	try {
-		const { empty, docs } = await col.get();
-		if (!empty && docs.length) {
-			docs.forEach(doc => {
-				const { metadata } = doc.data() as EBlogPost;
-				paths.push({ params: { urlId: metadata.urlId } });
-			});
+			const news = query.docs[0].data() as BlogPost;
+			return { props: { news } };
 		}
-	} catch (err) {
-		console.error(err);
-	}
-
-	return {
-		paths,
-		fallback: "blocking",
-	};
-};
+	);

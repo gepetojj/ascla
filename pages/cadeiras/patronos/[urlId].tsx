@@ -1,19 +1,19 @@
 import { Main } from "components/layout/Main";
 import { ChairOccupantView } from "components/view/ChairOccupant";
 import type { Academic } from "entities/Academic";
-import type { Patron as EPatron } from "entities/Patron";
+import type { Patron } from "entities/Patron";
+import { gSSPHandler } from "helpers/gSSPHandler";
 import { useJSON } from "hooks/useJSON";
-import { Collections } from "myFirebase/enums";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
 interface Props {
-	patron: EPatron;
+	patron: Patron;
 }
 
-const Patron: NextPage<Props> = ({ patron }) => {
+const ViewPatron: NextPage<Props> = ({ patron }) => {
 	const { data, error } = useSWR(
 		`/api/academics/read?id=${patron.metadata.academicId}`,
 		(...args) => fetch(...args).then(res => res.json())
@@ -48,44 +48,19 @@ const Patron: NextPage<Props> = ({ patron }) => {
 	);
 };
 
-export default Patron;
+export default ViewPatron;
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = Collections.patrons;
-	const urlId = params?.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "patrons", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col
+				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
+				.get();
+			if (query.empty || !query.docs) return { notFound: true };
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
-
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const patron = query.docs[0];
-		if (query.empty || !patron) return { notFound: true };
-
-		return { props: { patron: patron.data() as EPatron } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-	const col = Collections.patrons;
-	const paths: { params: { urlId: string } }[] = [];
-
-	try {
-		const { empty, docs } = await col.get();
-		if (!empty && docs.length) {
-			docs.forEach(doc => {
-				const { metadata } = doc.data() as EPatron;
-				paths.push({ params: { urlId: metadata.urlId } });
-			});
+			const patron = query.docs[0].data() as Patron;
+			return { props: { patron } };
 		}
-	} catch (err) {
-		console.error(err);
-	}
-
-	return {
-		paths,
-		fallback: "blocking",
-	};
-};
+	);

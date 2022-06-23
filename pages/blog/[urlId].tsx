@@ -1,16 +1,16 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
-import type { BlogPost as EBlogPost } from "entities/BlogPost";
-import { Collections } from "myFirebase/enums";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import type { BlogPost } from "entities/BlogPost";
+import { gSSPHandler } from "helpers/gSSPHandler";
+import { GetServerSideProps, NextPage } from "next";
 import { ArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	post: EBlogPost;
+	post: BlogPost;
 }
 
-const BlogPost: NextPage<Props> = ({ post }) => {
+const ViewBlogPost: NextPage<Props> = ({ post }) => {
 	return (
 		<>
 			<NextSeo
@@ -45,44 +45,19 @@ const BlogPost: NextPage<Props> = ({ post }) => {
 	);
 };
 
-export default BlogPost;
+export default ViewBlogPost;
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-	const col = Collections.blogPosts;
-	const urlId = params?.urlId;
+export const getServerSideProps: GetServerSideProps<Props> = ctx =>
+	gSSPHandler<Props>(
+		ctx,
+		{ col: "blogPosts", ensure: { query: ["urlId"] }, autoTry: true },
+		async col => {
+			const query = await col
+				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
+				.get();
+			if (query.empty || !query.docs) return { notFound: true };
 
-	if (!urlId || typeof urlId !== "string") return { notFound: true };
-
-	try {
-		const query = await col.where("metadata.urlId", "==", urlId).get();
-		const post = query.docs[0];
-		if (query.empty || !post.exists) return { notFound: true };
-
-		return { props: { post: post.data() as EBlogPost } };
-	} catch (err) {
-		console.error(err);
-		return { notFound: true };
-	}
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-	const col = Collections.blogPosts;
-	const paths: { params: { urlId: string } }[] = [];
-
-	try {
-		const { empty, docs } = await col.get();
-		if (!empty && docs.length) {
-			docs.forEach(doc => {
-				const { metadata } = doc.data() as EBlogPost;
-				paths.push({ params: { urlId: metadata.urlId } });
-			});
+			const post = query.docs[0].data() as BlogPost;
+			return { props: { post } };
 		}
-	} catch (err) {
-		console.error(err);
-	}
-
-	return {
-		paths,
-		fallback: "blocking",
-	};
-};
+	);
