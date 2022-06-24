@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			const user = query.data() as User;
 
-			if (user.metadata.role !== "common" || session?.user?.role === "admin") {
+			if (user.metadata.role !== "common" || session?.role === "admin") {
 				res.json({ message: "Usuário listado com sucesso.", user });
 				return res;
 			}
