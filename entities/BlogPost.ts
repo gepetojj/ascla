@@ -1,19 +1,14 @@
 import type { JSONContent } from "@tiptap/react";
 
-import type { User } from "entities/User";
+import type { DefaultMetadata } from "./DefaultMetadata";
+import type { User } from "./User";
 
 /**
  * Metadados de uma postagem.
  *
  * @see {@link BlogPost}
  */
-export interface BlogPostMetadata {
-	/** Url personalizada da postagem. */
-	urlId: string;
-	/** Timestamp de criação da postagem. */
-	createdAt: number;
-	/** Timestamp de atualização da postagem. */
-	updatedAt: number;
+export interface BlogPostMetadata extends DefaultMetadata {
 	/** ID do usuário autor da postagem. */
 	authorId: User["id"];
 }
@@ -37,10 +32,6 @@ export interface BlogPost {
 }
 
 /** Estrutura dos dados que podem ser atualizados em uma postagem. */
-export interface UpdatableBlogPost {
-	metadata: BlogPost["metadata"];
-	title?: BlogPost["title"];
-	description?: BlogPost["description"];
-	thumbnailUrl?: BlogPost["thumbnailUrl"];
-	content?: BlogPost["content"];
-}
+export type UpdatableBlogPost = Partial<Omit<BlogPost, "id">> & {
+	metadata: BlogPostMetadata;
+};

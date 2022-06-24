@@ -1,19 +1,14 @@
 import type { JSONContent } from "@tiptap/react";
 
 import type { Academic } from "./Academic";
+import type { DefaultMetadata } from "./DefaultMetadata";
 
 /**
  * Metadados de um patrono.
  *
  * @see {@link Patron}
  */
-export interface PatronMetadata {
-	/** Url personalizada para o patrono. */
-	urlId: string;
-	/** Timestamp de criação do patrono. */
-	createdAt: number;
-	/** Timestamp de atualização do patrono. */
-	updatedAt: number;
+export interface PatronMetadata extends DefaultMetadata {
 	/** ID do acadêmico desse patrono. */
 	academicId: Academic["id"];
 	/** Cadeira do patrono. */
@@ -43,11 +38,6 @@ export interface Patron {
 }
 
 /** Estrutura dos dados que podem ser atualizados em um patrono. */
-export interface UpdatablePatron {
-	name?: Patron["name"];
-	bio?: Patron["bio"];
-	/** @deprecated As imagens dos patronos agora são guardadas em base64. Use a propriedade `avatar`. */
-	avatarUrl?: string;
-	avatar?: string;
-	metadata: Patron["metadata"];
-}
+export type UpdatablePatron = Partial<Omit<Patron, "id">> & {
+	metadata: PatronMetadata;
+};
