@@ -4,27 +4,27 @@
 
 ## Sumário
 
--   [ascla](#ascla)
-    -   [Sumário](#sumário)
-    -   [Objetivo](#objetivo)
-    -   [Tecnologias](#tecnologias)
-    -   [Contato](#contato)
-    -   [Licença e Créditos](#licença-e-créditos)
-    -   [Documentação](#documentação)
-        -   [Editor](#editor)
-            -   [Menu](#menu)
-                -   [Desfazer e Refazer](#desfazer-e-refazer)
-                -   [Títulos e parágrafo](#títulos-e-parágrafo)
-                -   [Negrito, sublinhado e itálico](#negrito-sublinhado-e-itálico)
-                -   [Link](#link)
-                -   [Alinhamento do texto](#alinhamento-do-texto)
-                -   [Limpar formatação](#limpar-formatação)
-            -   [Comandos](#comandos)
-                -   [Títulos](#títulos)
-                -   [Negrito e itálico](#negrito-e-itálico)
-                -   [Citações (exclusiva)](#citações-exclusiva)
-                -   [Listas desordenadas (exclusiva)](#listas-desordenadas-exclusiva)
-                -   [Listas ordenadas (exclusiva)](#listas-ordenadas-exclusiva)
+- [ascla](#ascla)
+	- [Sumário](#sumário)
+	- [Objetivo](#objetivo)
+	- [Tecnologias](#tecnologias)
+	- [Contato](#contato)
+	- [Licença e Créditos](#licença-e-créditos)
+	- [Documentação](#documentação)
+		- [Editor](#editor)
+			- [Menu](#menu)
+				- [Desfazer e Refazer](#desfazer-e-refazer)
+				- [Títulos e parágrafo](#títulos-e-parágrafo)
+				- [Negrito, sublinhado e itálico](#negrito-sublinhado-e-itálico)
+				- [Link](#link)
+				- [Alinhamento do texto](#alinhamento-do-texto)
+				- [Limpar formatação](#limpar-formatação)
+			- [Comandos](#comandos)
+				- [Títulos](#títulos)
+				- [Negrito e itálico](#negrito-e-itálico)
+				- [Citações (exclusiva)](#citações-exclusiva)
+				- [Listas desordenadas (exclusiva)](#listas-desordenadas-exclusiva)
+				- [Listas ordenadas (exclusiva)](#listas-ordenadas-exclusiva)
 
 ## Objetivo
 
@@ -48,7 +48,7 @@ A ASCLA pode ser contatada a partir dos seguintes meios:
 
 ## Licença e Créditos
 
-O projeto está protegido pela licença Apache 2.0, e todas suas definições se aplicam a este software. A fonte Montserrat e suas variações estão licensiadas usando a Licensa Aberta de Fontes, permitindo seu uso em produtos e projetos, comerciais ou não.
+O projeto está protegido pela licença GPL-3.0, e todas suas definições se aplicam a este software. A fonte Montserrat e suas variações estão licensiadas usando a Licensa Aberta de Fontes, permitindo seu uso em produtos e projetos, comerciais ou não.
 
 ## Documentação
 
