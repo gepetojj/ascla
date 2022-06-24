@@ -37,8 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 
 				if (
-					session?.user?.role === "academic" &&
-					originalPost.metadata.authorId !== session?.user?.id
+					session?.role === "academic" &&
+					originalPost.metadata.authorId !== session?.sub
 				) {
 					res.status(401).json({ message: "Esta postagem não é sua." });
 					return res;

@@ -18,6 +18,8 @@ export interface FileInputProps {
 	avatar?: string;
 	/** Determina o avatar. */
 	setAvatar: (avatar: string) => void;
+	/** Avatar anterior. */
+	previous?: string;
 }
 
 const DynamicAvatar = dynamic(() => import("react-avatar-edit"), { ssr: false });
@@ -30,7 +32,7 @@ const DynamicAvatar = dynamic(() => import("react-avatar-edit"), { ssr: false })
  * @param {FileInputProps} ...props Props do componente, desestruturadas
  * @returns {FC<FileInputProps>} Componente
  */
-const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar }) => {
+const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar, previous }) => {
 	const [isOpen, setOpen] = useState(false);
 	const [preview, setPreview] = useState<string | null>(avatar || null);
 
@@ -83,6 +85,7 @@ const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar }
 						</div>
 						<div className="flex flex-col justify-center items-center gap-10 sm:flex-row">
 							<DynamicAvatar
+								src={previous}
 								width={150}
 								height={150}
 								imageWidth={124}
@@ -143,8 +146,8 @@ const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar }
 					onClick={() => setOpen(true)}
 					fullWidth
 				>
-					{avatar ? "Alterar imagem" : "Insira uma imagem"}
-					{avatar && <MdDone className="absolute right-2 text-xl" />}
+					{!!preview || !!avatar ? "Alterar imagem" : "Insira uma imagem"}
+					{(!!preview || !!avatar) && <MdDone className="absolute right-2 text-xl" />}
 				</Button>
 			</div>
 		</>

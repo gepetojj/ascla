@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		res,
 		{ method: "post", col: "images", role: "academic" },
 		async (col, session) => {
-			if (!session?.user?.id) {
+			if (!session?.sub) {
 				res.status(401).json({ message: "Houve um erro com sua sessão." });
 				return res;
 			}
@@ -47,6 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				let image: File;
 				const imageName = uuid();
+				const location = `uploads/${session.sub}/${imageName}.webp`;
 
 				if (!files || !files.image) {
 					res.status(400).json({ message: "Imagem não encontrada." });
@@ -69,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 					const upload = await storage.bucket().upload(`${image.filepath}.webp`, {
 						public: true,
-						destination: `/uploads/${session.user.id}/${imageName}.webp`,
+						destination: location,
 						metadata: { firebaseStorageDownloadTokens: imageName },
 					});
 
@@ -78,12 +79,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						link: upload[0].metadata.mediaLink,
 						metadata: {
 							uploadedAt: Date.now(),
-							uploader: session.user.id,
+							uploader: session.sub,
 							size: image.size,
 							hash: String(image.hash),
 							mimetype: String(image.mimetype),
+							location,
 						},
-						uploadMetadata: upload[0],
+						uploadMetadata: upload[0].metadata,
 					};
 					await col.doc(imageName).create(uploadLog);
 

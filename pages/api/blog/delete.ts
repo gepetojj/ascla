@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			if (session?.user?.role === "academic") {
+			if (session?.role === "academic") {
 				const query = await col.doc(id).get();
 				if (!query.exists) {
 					res.status(400).json({ message: "Post não encontrado." });
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 
 				const post = query.data() as BlogPost;
-				if (post.metadata.authorId !== session.user.id) {
+				if (post.metadata.authorId !== session.sub) {
 					res.status(401).json({ message: "Esta postagem não é sua." });
 					return res;
 				}

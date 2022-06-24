@@ -25,10 +25,10 @@ export interface Patron {
 	name: string;
 	/** Biografia do patrono. */
 	bio: JSONContent;
-	/** @deprecated As imagens dos patronos agora são guardadas em base64. Use a propriedade `avatar`. */
-	avatarUrl?: string;
-	/** Avatar do patrono, em base64. */
-	avatar: string;
+	/** Link para o avatar do acadêmico. */
+	avatarUrl: string;
+	/** @deprecated Avatares não são mais armazenados em base64, use a propriedade `avatarUrl`. */
+	avatar?: string;
 	/**
 	 * Metadados do patrono.
 	 *

@@ -17,7 +17,7 @@ const ImageComponent: FC<ImageProps> = ({ src, ...props }) => {
 			src={
 				willUseCustomLoader
 					? src
-					: src.toString().startsWith("https")
+					: src.toString().startsWith("http")
 					? src
 					: `/images/${src}`
 			}

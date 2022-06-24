@@ -10,7 +10,11 @@ const nextConfig = withBA({
 	},
 	poweredByHeader: false,
 	images: {
-		domains: ["lh3.googleusercontent.com"],
+		domains: [
+			"lh3.googleusercontent.com",
+			"firebasestorage.googleapis.com",
+			process.env.NODE_ENV === "development" && "localhost",
+		],
 	},
 	headers: async () => {
 		return [

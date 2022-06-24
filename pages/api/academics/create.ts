@@ -4,6 +4,7 @@ import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { getIdFromText } from "helpers/getIdFromText";
+import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuid } from "uuid";
 
@@ -20,9 +21,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		req,
 		res,
 		{ method: "post", col: "academics", role: "admin" },
-		async col => {
+		async (col, session) => {
+			if (!session?.sub) {
+				res.status(401).json({ message: "Houve um erro com sua sessão." });
+				return res;
+			}
+
 			const { name, patronId, chair, avatar, bio }: NewAcademic = req.body;
-			const customUrl = getIdFromText(name);
 
 			// TODO: Adicionar validação aos dados
 			if (!name || !patronId || !chair || !avatar || !bio.content?.length) {
@@ -32,6 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
+			const customUrl = getIdFromText(name);
+
 			try {
 				const query = await col.where("metadata.urlId", "==", customUrl).get();
 				if (!query.empty || query.docs.length) {
@@ -39,8 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					return res;
 				}
 
+				const academicId = uuid();
+				const upload = await uploadAvatar(avatar, session.sub, academicId);
+
 				const academic: Academic = {
-					id: uuid(),
+					id: academicId,
 					metadata: {
 						urlId: customUrl,
 						createdAt: Date.now(),
@@ -50,7 +60,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					},
 					name,
 					bio,
-					avatar,
+					avatarUrl: upload.link,
 				};
 
 				await col.doc(academic.id).create(academic);

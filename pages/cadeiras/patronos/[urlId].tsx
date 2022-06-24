@@ -36,7 +36,6 @@ const ViewPatron: NextPage<Props> = ({ patron }) => {
 			<Main title={patron.name} className="p-6 pb-12">
 				<ChairOccupantView
 					{...patron}
-					avatarUrl={patron.avatar}
 					chair={patron.metadata.chair}
 					bioHTML={bioHTML}
 					oppositeType="academic"

@@ -25,10 +25,10 @@ export interface Academic {
 	name: string;
 	/** Biografia do acadêmico. */
 	bio: JSONContent;
-	/** @deprecated As imagens dos acadêmicos agora são guardadas em base64. Use a propriedade `avatar`. */
-	avatarUrl?: string;
-	/** Avatar do acadêmico, em base64. */
-	avatar: string;
+	/** Link para o avatar do acadêmico. */
+	avatarUrl: string;
+	/** @deprecated Avatares não são mais armazenados em base64, use a propriedade `avatarUrl`. */
+	avatar?: string;
 	/**
 	 * Metadados do acadêmico.
 	 *

@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		res,
 		{ method: "post", col: "blogPosts", role: "academic" },
 		async (col, session) => {
-			if (!session?.user?.id) {
+			if (!session?.sub) {
 				res.status(401).json({ message: "Houve um erro com sua sessão." });
 				return res;
 			}
@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					urlId: customUrl || uuid(),
 					createdAt: Date.now(),
 					updatedAt: 0,
-					authorId: session.user.id,
+					authorId: session.sub,
 				},
 				title,
 				description,

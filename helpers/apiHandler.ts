@@ -2,14 +2,14 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import type { UserRole } from "entities/User";
 import { CollectionName, Collections } from "myFirebase/enums";
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 
 import { requireRole } from "./requireRole";
 
 /** Definição do callback executado pelo apiHandler. */
 export type ApiHandlerCallback<I> = (
 	col: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
-	session: Session | null
+	session: JWT | null
 ) => Promise<NextApiResponse<I | DefaultResponse>>;
 
 /** Métodos HTTP suportados pelo apiHandler. */

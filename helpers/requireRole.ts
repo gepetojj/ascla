@@ -1,8 +1,7 @@
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { UserRole } from "entities/User";
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { getToken, JWT } from "next-auth/jwt";
 
 /** Resultado retornado pelo requireRole. */
 export interface RequireRoleResult<I> {
@@ -11,7 +10,7 @@ export interface RequireRoleResult<I> {
 	/** Função executada quando o usuário não estiver autorizado. */
 	unauthorized: () => NextApiResponse<I | DefaultResponse>;
 	/** Sessão do usuário. */
-	session: Session | null;
+	session: JWT | null;
 }
 
 /**
@@ -35,11 +34,10 @@ export const requireRole = async <I>(
 		return res;
 	};
 
-	const session = await getSession({ req });
+	const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 	const acceptedRoles = role === "academic" ? ["academic", "admin"] : ["admin"];
 	return {
-		authorized:
-			!!session?.user && !!session.user.role && acceptedRoles.includes(session.user.role),
+		authorized: !!session && !!session.role && acceptedRoles.includes(session.role),
 		unauthorized,
 		session,
 	};

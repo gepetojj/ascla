@@ -16,6 +16,8 @@ export interface UploadMetadata {
 	hash: string;
 	/** Mimetype do arquivo antes da compressão. */
 	mimetype: string;
+	/** Localização do arquivo no Storage. */
+	location: string;
 }
 
 /**

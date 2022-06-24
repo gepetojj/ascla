@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "components/view/Image";
 import Link from "next/link";
 import propTypes from "prop-types";
 import React, { FC, memo } from "react";
@@ -45,7 +45,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 			<aside className="flex flex-col items-center gap-2">
 				<div>
 					<Image
-						src={avatarUrl || "/images/usuario-padrao.webp"}
+						src={avatarUrl || "usuario-padrao.webp"}
 						alt="Avatar do participante"
 						width={100}
 						height={100}

@@ -32,7 +32,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [name, setName] = useState(academic.name);
 	const [selectedPatron, setSelectedPatron] = useState<Patron | undefined>(undefined);
 	const [chair, setChair] = useState(academic.metadata.chair || 0);
-	const [avatar, setAvatar] = useState(academic.avatar);
+	const [avatar, setAvatar] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>(academic.bio);
 
 	// Lista os patronos para mostrar na seleção
@@ -160,6 +160,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 					<FileInput
 						id="avatar"
 						label="Insira uma imagem *"
+						previous={academic.avatarUrl}
 						avatar={avatar}
 						setAvatar={setAvatar}
 					/>
