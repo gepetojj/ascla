@@ -13,7 +13,7 @@ const nextConfig = withBA({
 		domains: [
 			"lh3.googleusercontent.com",
 			"firebasestorage.googleapis.com",
-			process.env.NODE_ENV === "development" && "localhost",
+			process.env.NODE_ENV === "development" ? "localhost" : "",
 		],
 	},
 	headers: async () => {
