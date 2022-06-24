@@ -21,12 +21,16 @@ export const uploadAvatar = async (
 	const upload = await storage.bucket().upload(path, {
 		public: true,
 		destination: location,
-		metadata: { firebaseStorageDownloadTokens: imageId },
 	});
 
 	const uploadLog: Upload = {
 		id: imageId,
-		link: upload[0].metadata.mediaLink,
+		link:
+			process.env.NODE_ENV === "production"
+				? `https://firebasestorage.googleapis.com/v0/b/${
+						storage.app.options.storageBucket
+				  }/o/${location.replaceAll(/\//g, "%2F")}?alt=media`
+				: upload[0].metadata.mediaLink,
 		metadata: {
 			uploadedAt: Date.now(),
 			uploader: uploaderId,

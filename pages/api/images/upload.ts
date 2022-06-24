@@ -76,7 +76,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 					const uploadLog: Upload = {
 						id: imageName,
-						link: upload[0].metadata.mediaLink,
+						link:
+							process.env.NODE_ENV === "production"
+								? `https://firebasestorage.googleapis.com/v0/b/${
+										storage.app.options.storageBucket
+								  }/o/${location.replaceAll(/\//g, "%2F")}?alt=media`
+								: upload[0].metadata.mediaLink,
 						metadata: {
 							uploadedAt: Date.now(),
 							uploader: session.sub,
