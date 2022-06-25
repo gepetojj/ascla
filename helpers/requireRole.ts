@@ -1,4 +1,3 @@
-import type { DefaultResponse } from "entities/DefaultResponse";
 import type { UserRole } from "entities/User";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken, JWT } from "next-auth/jwt";
@@ -8,7 +7,7 @@ export interface RequireRoleResult<I> {
 	/** Define se o usuário está autorizado ou não. */
 	authorized: boolean;
 	/** Função executada quando o usuário não estiver autorizado. */
-	unauthorized: () => NextApiResponse<I | DefaultResponse>;
+	unauthorized: () => NextApiResponse<I>;
 	/** Sessão do usuário. */
 	session: JWT | null;
 }
@@ -26,11 +25,11 @@ export interface RequireRoleResult<I> {
  */
 export const requireRole = async <I>(
 	req: NextApiRequest,
-	res: NextApiResponse<I | DefaultResponse>,
+	res: NextApiResponse<I>,
 	role: UserRole = "admin"
 ): Promise<RequireRoleResult<I>> => {
 	const unauthorized = () => {
-		res.status(401).json({ message: "Você não está autorizado." });
+		res.status(401);
 		return res;
 	};
 

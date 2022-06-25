@@ -1,4 +1,3 @@
-import type { DefaultResponse } from "entities/DefaultResponse";
 import type { UserRole } from "entities/User";
 import { CollectionName, Collections } from "myFirebase/enums";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -10,7 +9,7 @@ import { requireRole } from "./requireRole";
 export type ApiHandlerCallback<I> = (
 	col: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
 	session: JWT | null
-) => Promise<NextApiResponse<I | DefaultResponse>>;
+) => Promise<NextApiResponse<I>>;
 
 /** Métodos HTTP suportados pelo apiHandler. */
 export type ApiHandlerMethods = "get" | "post" | "put" | "delete";
@@ -52,12 +51,12 @@ export interface ApiHandlerOptions {
  */
 export const apiHandler = async <I>(
 	req: NextApiRequest,
-	res: NextApiResponse,
+	res: NextApiResponse<I>,
 	{ method, col, role }: ApiHandlerOptions,
 	callback: ApiHandlerCallback<I>
-): Promise<NextApiResponse<I | DefaultResponse>> => {
+): Promise<NextApiResponse<I>> => {
 	if (req.method !== method.toLocaleUpperCase()) {
-		res.status(405).json({ message: "Método não aceito." });
+		res.status(405);
 		return res;
 	}
 

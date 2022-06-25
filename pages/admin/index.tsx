@@ -11,7 +11,7 @@ const Admin: NextPage = () => {
 
 	return (
 		<>
-			<NextSeo title="Administração" />
+			<NextSeo title="Administração" noindex nofollow />
 
 			<Main title="Administração">
 				<div className="flex justify-center">
@@ -21,8 +21,8 @@ const Admin: NextPage = () => {
 						</Link>
 						{data?.user?.role === "admin" && (
 							<>
-								<Link href="/admin/destaques" passHref>
-									<Button className="bg-primary-main">Destaques</Button>
+								<Link href="/admin/destaque" passHref>
+									<Button className="bg-primary-main">Destaque</Button>
 								</Link>
 								<Link href="/admin/noticias" passHref>
 									<Button className="bg-primary-main">Notícias</Button>

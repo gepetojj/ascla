@@ -2,7 +2,7 @@
 	"name": "ascla",
 	"description": "Website oficial da Academia Santanense de Ciências, Letras e Artes.",
 	"author": "Gepetojj <contato.gepetojj@gmail.com>",
-	"version": "0.31.0",
+	"version": "0.32.0",
 	"license": "GPL-3.0",
 	"scripts": {
 		"dev": "next dev",
@@ -14,6 +14,7 @@
 		"analyze": "cross-env ANALYZE=true next build"
 	},
 	"dependencies": {
+		"@dropzone-ui/react": "^6.7.2",
 		"@headlessui/react": "^1.6.4",
 		"@next/bundle-analyzer": "^12.1.6",
 		"@tiptap/extension-link": "^2.0.0-beta.41",
@@ -21,6 +22,7 @@
 		"@tiptap/extension-underline": "^2.0.0-beta.25",
 		"@tiptap/react": "^2.0.0-beta.112",
 		"@tiptap/starter-kit": "2.0.0-beta.185",
+		"axios": "^0.27.2",
 		"firebase-admin": "10.3.0",
 		"formidable": "v3",
 		"next": "^12.1.6",

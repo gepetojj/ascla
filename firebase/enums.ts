@@ -29,6 +29,6 @@ export const Collections = {
 	academics: firestore.collection(CollectionsNames.academics),
 	/** Coleção dos usuários. */
 	users: firestore.collection(CollectionsNames.users),
-	/** Coleção de logs de upload de imagens */
+	/** Coleção de logs de upload de imagens. */
 	images: firestore.collection(CollectionsNames.images),
 } as const;

@@ -8,7 +8,8 @@ import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 
 interface Response extends DefaultResponse {
-	link?: string;
+	status: boolean;
+	payload?: { link: string };
 }
 
 export const config = {
@@ -24,7 +25,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		{ method: "post", col: "images", role: "academic" },
 		async (col, session) => {
 			if (!session?.sub) {
-				res.status(401).json({ message: "Houve um erro com sua sessão." });
+				res.status(401).json({ status: false, message: "Houve um erro com sua sessão." });
+				return res;
+			}
+
+			const destinations = ["hl", "generic"];
+			const destination = req.query.dest as string;
+			if (
+				!destination ||
+				typeof destination !== "string" ||
+				!destinations.includes(destination)
+			) {
+				res.status(400).json({ status: false, message: "Informe o destino do upload." });
 				return res;
 			}
 
@@ -47,17 +59,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				let image: File;
 				const imageName = uuid();
-				const location = `uploads/${session.sub}/${imageName}.webp`;
+				const location =
+					destination === "hl"
+						? "uploads/highlight.webp"
+						: `uploads/${session.sub}/${imageName}.webp`;
 
-				if (!files || !files.image) {
-					res.status(400).json({ message: "Imagem não encontrada." });
+				if (!files || !files.file) {
+					res.status(400).json({ status: false, message: "Imagem não encontrada." });
 					return res;
 				}
 
-				if ((files.image as File[]).length) image = (files.image as File[])[0];
-				else if ((files.image as File).filepath) image = files.image as File;
+				if ((files.file as File[]).length) image = (files.file as File[])[0];
+				else if ((files.file as File).filepath) image = files.file as File;
 				else {
 					res.status(500).json({
+						status: false,
 						message: "Não foi possível manipular a imagem. Tente novamente.",
 					});
 					return res;
@@ -65,7 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				try {
 					await sharp(image.filepath)
-						.webp({ nearLossless: true })
+						.webp({ quality: 60 })
 						.toFile(`${image.filepath}.webp`);
 
 					const upload = await storage.bucket().upload(`${image.filepath}.webp`, {
@@ -92,17 +108,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						},
 						uploadMetadata: upload[0].metadata,
 					};
-					await col.doc(imageName).create(uploadLog);
+					await col.doc(destination === "hl" ? "highlight" : imageName).set(uploadLog);
 
 					res.status(200).json({
+						status: true,
 						message: "Upload concluído com sucesso.",
-						link: uploadLog.link,
+						payload: { link: uploadLog.link },
 					});
 					return res;
 				} catch (err) {
 					console.error(err);
 
 					res.status(500).json({
+						status: false,
 						message: "Não foi possível fazer o upload da imagem. Tente novamente.",
 					});
 					return res;
@@ -110,6 +128,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			} catch (err) {
 				console.error(err);
 				res.status(500).json({
+					status: false,
 					message: "Não foi possível processar a imagem. Tente novamente.",
 				});
 				return res;
