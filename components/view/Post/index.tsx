@@ -81,16 +81,10 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 									navigator.share({
 										title: `ASCLA - ${title}`,
 										text: description,
-										url: `https://asclasi.com/${pathname.split("/")[1]}/${
-											metadata.urlId
-										}`,
+										url: window.location.href,
 									});
 								} catch {
-									navigator.clipboard.writeText(
-										`https://asclasi.com/${pathname.split("/")[1]}/${
-											metadata.urlId
-										}`
-									);
+									navigator.clipboard.writeText(window.location.href);
 									Store.addNotification({
 										title: "Sucesso",
 										message: "Link copiado para a área de transferência.",

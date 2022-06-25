@@ -38,6 +38,7 @@ const ViewPatron: NextPage<Props> = ({ patron }) => {
 					{...patron}
 					chair={patron.metadata.chair}
 					bioHTML={bioHTML}
+					urlId={patron.metadata.urlId}
 					oppositeType="academic"
 					oppositeName={academic?.name}
 					oppositeUrlId={academic?.metadata.urlId}

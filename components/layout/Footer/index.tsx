@@ -18,9 +18,12 @@ const FooterComponent: FC = () => {
 						priority
 					/>
 				</div>
-				<h3 className="text-xl font-semibold">
-					Academia Santanense de Ciências, Letras e Artes
-				</h3>
+				<div className="flex flex-col gap-1 sm:gap-0">
+					<h3 className="text-xl font-semibold">
+						Academia Santanense de Ciências, Letras e Artes
+					</h3>
+					<h4 className="font-light text-black-100">Santana do Ipanema, Alagoas</h4>
+				</div>
 			</div>
 			<div className="flex justify-center items-center flex-wrap gap-x-8 gap-y-4 px-2 sm:justify-between sm:items-start">
 				<FooterTopic title="Pesquisar:">
