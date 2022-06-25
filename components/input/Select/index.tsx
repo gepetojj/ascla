@@ -11,7 +11,7 @@ export interface SelectProps<I = { id: string; name: string } | Academic | Patro
 	/** Opções do componente. */
 	options: I[];
 	/** Opção atualmente escolhida no componente. */
-	selected: I | undefined;
+	selected?: I;
 	/** Callback para alterar a opção escolhida. */
 	onChange: (selected: I) => void;
 }

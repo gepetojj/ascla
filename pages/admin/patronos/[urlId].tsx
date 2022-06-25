@@ -38,7 +38,6 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 			setAcademics(data.academics);
 			setSelectedAcademic(academics.find(({ id }) => id === patron.metadata.academicId));
 		}
-		!data && error && console.error(error);
 	}, [academics, patron, data, error]);
 
 	useEffect(() => {
@@ -68,7 +67,6 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

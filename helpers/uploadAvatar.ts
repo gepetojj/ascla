@@ -6,6 +6,14 @@ import { resolve } from "path";
 import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 
+/**
+ * Faz upload de uma imagem base64 para o Storage.
+ *
+ * @param {string} avatar String de uma imagem em base64
+ * @param {string} uploaderId ID do usuário fazendo o upload
+ * @param {string} subjectId ID de quem pertence o avatar
+ * @returns {Promise<Upload>} Dados do upload
+ */
 export const uploadAvatar = async (
 	avatar: string,
 	uploaderId: string,

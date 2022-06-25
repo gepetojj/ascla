@@ -5,7 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useCallback } from "react";
 import { useEffect } from "react";
 import { ImGoogle } from "react-icons/im";
 
@@ -17,6 +17,10 @@ const Account: NextPage = () => {
 		if (!data?.user) return;
 		push("/conta/dados", undefined, { shallow: true });
 	}, [data, push]);
+
+	const signInWithGoogle = useCallback(() => {
+		signIn("google");
+	}, []);
 
 	return (
 		<>
@@ -49,11 +53,11 @@ const Account: NextPage = () => {
 							className="bg-primary-main"
 							disabled={status === "authenticated"}
 							loading={status === "loading"}
-							onClick={() => signIn("google")}
+							onClick={signInWithGoogle}
 							fullWidth
 						>
 							{status !== "loading" && <ImGoogle className="mr-3" />}
-							{!!data ? "Já logado" : "Entre com Google"}
+							{data ? "Já logado" : "Entre com Google"}
 						</Button>
 					</div>
 					<div className="flex justify-center items-center w-full mt-8">

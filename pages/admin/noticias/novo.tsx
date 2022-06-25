@@ -48,7 +48,6 @@ const AdminNewsNewPost: NextPage = () => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

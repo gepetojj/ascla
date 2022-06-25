@@ -53,7 +53,7 @@ const ButtonComponent: FC<ButtonProps> = ({
 				</a>
 			);
 		return (
-			<button {...attributes}>
+			<button {...attributes} type={attributes.type || "button"}>
 				{loading && (
 					<div>
 						<CgSpinner className="text-xl text-current mr-2 animate-spin" />
@@ -64,7 +64,7 @@ const ButtonComponent: FC<ButtonProps> = ({
 		);
 	}, [children, loading, asAnchor, fullWidth, type, props]);
 
-	return <>{ButtonOrAnchor}</>;
+	return ButtonOrAnchor;
 };
 
 ButtonComponent.propTypes = {

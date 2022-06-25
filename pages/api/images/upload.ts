@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			try {
 				const files = await new Promise<Files>((resolve, reject) => {
-					form.parse(req, async (err, _, files) => {
+					form.parse(req, (err, _, files) => {
 						if (err) return reject(err);
 						return resolve(files);
 					});

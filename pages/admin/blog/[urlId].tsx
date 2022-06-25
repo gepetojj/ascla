@@ -49,7 +49,6 @@ const AdminPostEdit: NextPage<Props> = ({ post }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

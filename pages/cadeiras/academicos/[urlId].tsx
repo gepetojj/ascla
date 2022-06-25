@@ -23,7 +23,6 @@ const ViewAcademic: NextPage<Props> = ({ academic }) => {
 
 	useEffect(() => {
 		data && !error && setPatron(data.patron);
-		!data && error && console.error(error);
 	}, [data, error]);
 
 	return (

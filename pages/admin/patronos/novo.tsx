@@ -31,7 +31,6 @@ const AdminPatronsNew: NextPage = () => {
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
 		data && !error && setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
-		!data && error && console.error(error);
 	}, [data, error]);
 
 	useEffect(() => {
@@ -48,7 +47,7 @@ const AdminPatronsNew: NextPage = () => {
 			});
 		};
 
-		const onError = (err: unknown) => {
+		const onError = () => {
 			Store.addNotification({
 				title: "Erro",
 				message: "Não foi possível criar o patrono.",
@@ -59,7 +58,6 @@ const AdminPatronsNew: NextPage = () => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

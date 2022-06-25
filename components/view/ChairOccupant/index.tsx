@@ -82,6 +82,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 				</div>
 				<div className="flex flex-col justify-center mt-4 gap-1">
 					<button
+						type="button"
 						className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95"
 						onClick={() => {
 							try {
@@ -122,7 +123,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 				<div
 					className="prose max-w-full w-full"
 					dangerouslySetInnerHTML={{ __html: bioHTML }}
-				></div>
+				/>
 			</article>
 		</section>
 	);

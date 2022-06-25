@@ -39,7 +39,6 @@ const AdminUsersEdit: NextPage<Props> = ({ user }) => {
 			setAcademics(data.academics);
 			setAcademic(academics.find(({ id }) => id === user.metadata.academicId));
 		}
-		!data && error && console.error(error);
 	}, [user.metadata.academicId, academics, data, error]);
 
 	useEffect(() => {
@@ -69,7 +68,6 @@ const AdminUsersEdit: NextPage<Props> = ({ user }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

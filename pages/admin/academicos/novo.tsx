@@ -35,7 +35,6 @@ const AdminAcademicsNew: NextPage = () => {
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
 		data && !error && setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
-		!data && error && console.error(error);
 	}, [data, error]);
 
 	useEffect(() => {
@@ -65,7 +64,6 @@ const AdminAcademicsNew: NextPage = () => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

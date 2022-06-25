@@ -49,7 +49,6 @@ const AdminNewsEdit: NextPage<Props> = ({ news }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

@@ -43,6 +43,10 @@ const AccountData: NextPage = () => {
 		fetcher(data);
 	}, [fetcher, name, avatarUrl]);
 
+	const signOutCallback = useCallback(() => {
+		signOut({ callbackUrl: "/conta" });
+	}, []);
+
 	useEffect(() => {
 		setName(String(data?.user?.name || ""));
 		setAvatarUrl(String(data?.user?.image || ""));
@@ -76,7 +80,6 @@ const AccountData: NextPage = () => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);
@@ -118,7 +121,7 @@ const AccountData: NextPage = () => {
 							<Button
 								title="Encerrar conexão com sua conta"
 								className="bg-red-500 text-cream-100 py-1.5"
-								onClick={() => signOut({ callbackUrl: "/conta" })}
+								onClick={signOutCallback}
 								fullWidth
 							>
 								Sair

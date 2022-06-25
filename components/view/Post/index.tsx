@@ -12,10 +12,7 @@ import useSWR from "swr";
 
 import { Image } from "../Image";
 
-export interface PostViewProps extends Omit<BlogPost, "id"> {
-	/** @deprecated A função de avaliar postagens nesta versão está descontinuada. */
-	showUserInteractions?: boolean;
-}
+export type PostViewProps = Omit<BlogPost, "id">;
 
 /**
  * Renderiza a página de uma postagem.
@@ -45,7 +42,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 				<div
 					className="prose max-w-full"
 					dangerouslySetInnerHTML={{ __html: contentHTML }}
-				></div>
+				/>
 			</article>
 			<aside className="flex flex-row justify-center items-center gap-4 md:flex-col md:justify-start md:gap-0">
 				<div>
@@ -75,6 +72,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 					</div>
 					<div className="flex flex-col justify-center mt-4 gap-1">
 						<button
+							type="button"
 							className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95"
 							onClick={() => {
 								try {

@@ -60,7 +60,7 @@ export default NextAuth({
 			token.picture = data.avatarUrl || user.image;
 			return token;
 		},
-		async session({ session, token }) {
+		session({ session, token }) {
 			if (session.user) {
 				session.user.role = token.role;
 				session.user.id = token.sub;
