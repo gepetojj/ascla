@@ -8,7 +8,11 @@ const customLoader: ImageLoader = ({ src, width, quality }) => {
 };
 
 const ImageComponent: FC<ImageProps> = ({ src, ...props }) => {
-	const willUseCustomLoader = process.env.NODE_ENV === "production";
+	// ! Um erro desconhecido está ocorrendo com o Imagekit e o Firebase Storage.
+	// ! Enquanto tal problema não é resolvido, imagens vindas do seu domínio devem passar direto.
+	const temp_domainSkip = "https://firebasestorage.googleapis.com";
+	const willUseCustomLoader =
+		process.env.NODE_ENV === "production" && !src.toString().startsWith(temp_domainSkip);
 
 	return (
 		<NextImage
