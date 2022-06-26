@@ -7,13 +7,7 @@ import { GoQuote } from "react-icons/go";
 const Home: NextPage = () => {
 	return (
 		<Main title="Academia Santanense de Ciências, Letras e Artes">
-			<HighlightView
-				src={
-					process.env.NODE_ENV === "development"
-						? "http://localhost:3000/api/images/highlight"
-						: "https://www.asclasi.com/api/images/highlight"
-				}
-			/>
+			<HighlightView />
 			<div className="flex flex-col justify-center items-center px-6 py-20">
 				<blockquote className="px-8 pt-6">
 					<div className="flex">

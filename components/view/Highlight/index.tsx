@@ -1,22 +1,33 @@
+import { useLocalStorage } from "hooks/useLocalStorage";
 import { useScreenSize } from "hooks/useScreenSize";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useEffect } from "react";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
 
 import { Image } from "../Image";
 
-export interface HighlightViewProps {
-	src: string;
-}
-
-const HighlightViewComponent: FC<HighlightViewProps> = ({ src }) => {
+const HighlightViewComponent: FC = () => {
+	const [hlCache, setHlCache] = useLocalStorage("hlCache");
 	const { width } = useScreenSize();
+
+	useEffect(() => {
+		if (!hlCache) setHlCache(String(performance.now()));
+		const interval = setInterval(() => {
+			setHlCache(String(performance.now()));
+		}, 2 * 60 * 1000);
+
+		return () => clearInterval(interval);
+	}, [hlCache, setHlCache]);
 
 	return (
 		<>
 			<div className="w-full h-60 px-4">
 				<div className="w-full h-60 bg-primary-main relative overflow-x-auto overflow-y-hidden">
 					<Image
-						src={src}
+						src={
+							process.env.NODE_ENV === "development"
+								? `http://localhost:9199/download/storage/v1/b/asclasi.appspot.com/o/uploads%2Fhighlight.webp?alt=media&reset=${hlCache}`
+								: `https://firebasestorage.googleapis.com/v0/b/asclasi.appspot.com/o/uploads%2Fhighlight.webp?alt=media&reset=${hlCache}`
+						}
 						alt="Coletânea de imagens da história de Santana do Ipanema"
 						layout={width >= 1130 ? "fill" : "fixed"}
 						width={width >= 1130 ? undefined : 1050}

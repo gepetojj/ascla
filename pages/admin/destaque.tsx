@@ -20,24 +20,18 @@ const AdminHighlight: NextPage = () => {
 			<Main title="Destaque">
 				<h3 className="text-center text-sm italic">
 					Destaque é o banner apresentado na página inicial, uma imagem de dimensões
-					1050x240 px.
+					1050x240px. Pode demorar até 2 minutos para atualizar após uma alteração.
 				</h3>
 				<div className="flex flex-col mt-4 gap-2">
 					<h2 className="text-center text-xl font-medium">Destaque atual:</h2>
-					<HighlightView
-						src={
-							process.env.NODE_ENV === "development"
-								? "http://localhost:3000/api/images/highlight"
-								: "https://www.asclasi.com/api/images/highlight"
-						}
-					/>
+					<HighlightView />
 				</div>
 				<div className="flex flex-col mt-4 gap-2">
 					<h2 className="text-center text-xl font-medium">Altere o destaque:</h2>
 					<Dropzone
 						value={files}
 						onChange={onUpdateFiles}
-						accept={"image/*"}
+						accept="image/*"
 						maxFiles={1}
 						maxFileSize={5 * 1024 * 1024}
 						label="Solte um arquivo aqui ou clique para escolher"

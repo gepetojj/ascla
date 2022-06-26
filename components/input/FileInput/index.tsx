@@ -37,15 +37,28 @@ const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar, 
 	const [preview, setPreview] = useState<string | null>(avatar || null);
 
 	const beforeLoad = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-		if (
-			!event.target.files ||
-			event.target.files[0].size > 5 * 1024 * 1024 ||
-			event.target.files[0].size < 10
-		) {
+		event.preventDefault();
+		try {
+			const file = event.target.files ? event.target.files[0] : null;
+			if (!file || !file.type.startsWith("image") || file.size > 5 * 1024 * 1024) {
+				Store.addNotification({
+					title: "Erro",
+					message:
+						"Não foi possível carregar sua imagem. Possíveis motivos: imagem não identificada, maior que o tamanho máximo ou nula.",
+					type: "danger",
+					container: "bottom-right",
+					dismiss: {
+						duration: 7000,
+						onScreen: true,
+					},
+				});
+				event.target.value = "";
+			}
+		} catch (err) {
 			Store.addNotification({
 				title: "Erro",
 				message:
-					"Não foi possível carregar sua imagem. Possíveis motivos: imagem não identificada, imagem maior que o tamanho máximo ou imagem nula.",
+					"Houve um erro desconhecido. Caso interfira na sua experiência, contate o administrador.",
 				type: "danger",
 				container: "bottom-right",
 				dismiss: {
@@ -53,7 +66,7 @@ const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar, 
 					onScreen: true,
 				},
 			});
-			event.target.value = "";
+			console.trace(err);
 		}
 	}, []);
 
@@ -91,7 +104,7 @@ const FileInputComponent: FC<FileInputProps> = ({ id, label, avatar, setAvatar, 
 								imageWidth={124}
 								exportSize={124}
 								exportQuality={0.5}
-								mimeTypes="image/png,image/jpg,image/jpeg,image/webp"
+								mimeTypes="image/*"
 								label="Clique aqui"
 								onBeforeFileLoad={beforeLoad}
 								onCrop={onCrop}
