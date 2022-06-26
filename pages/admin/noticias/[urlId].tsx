@@ -40,7 +40,7 @@ const AdminNewsEdit: NextPage<Props> = ({ news }) => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível editar a notícia. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",

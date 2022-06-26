@@ -39,7 +39,7 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível deletar a postagem. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",
@@ -48,7 +48,6 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

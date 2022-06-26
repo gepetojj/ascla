@@ -44,6 +44,7 @@ const SelectComponent: FC<SelectProps> = ({ label, options, selected, onChange }
 						<Listbox.Option key={option.id} value={option}>
 							{({ selected }) => (
 								<button
+									type="button"
 									className={`w-full p-1 bg-cream-100 duration-200 ${
 										selected
 											? "brightness-95 hover:brightness-90"

@@ -38,7 +38,6 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 
 	useEffect(() => {
 		data && !error && setAuthor(data.user);
-		!data && error && console.error(error);
 	}, [data, error]);
 
 	return (

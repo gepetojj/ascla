@@ -40,7 +40,7 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível deletar o acadêmico. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",
@@ -49,7 +49,6 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

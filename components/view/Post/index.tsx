@@ -33,7 +33,6 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 
 	useEffect(() => {
 		data && !error && setAuthor(data.user);
-		!data && error && console.error(error);
 	}, [data, error]);
 
 	const share = useCallback(() => {
@@ -63,6 +62,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 			<article className="flex justify-center max-w-2xl w-full">
 				<div
 					className="prose max-w-full"
+					/* # skipcq: JS-0440 */
 					dangerouslySetInnerHTML={{ __html: contentHTML }}
 				/>
 			</article>

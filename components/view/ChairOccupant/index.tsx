@@ -124,6 +124,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 			<article className="flex justify-center max-w-xl w-full">
 				<div
 					className="prose max-w-full w-full"
+					/* # skipcq: JS-0440 */
 					dangerouslySetInnerHTML={{ __html: bioHTML }}
 				/>
 			</article>

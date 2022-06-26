@@ -71,7 +71,7 @@ const AccountData: NextPage = () => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível editar os dados. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",

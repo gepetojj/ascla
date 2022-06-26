@@ -61,7 +61,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível editar o acadêmico. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",

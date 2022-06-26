@@ -40,7 +40,7 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível deletar o patrono. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",
@@ -49,7 +49,6 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);

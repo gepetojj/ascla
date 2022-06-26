@@ -37,7 +37,7 @@ const AdminNews: NextPage<Props> = ({ news }) => {
 			Store.addNotification({
 				title: "Erro",
 				message: `Não foi possível deletar a notícia. ${
-					err?.message && `Motivo: ${err.message}`
+					err?.message ? `Motivo: ${err.message}` : ""
 				}`,
 				type: "danger",
 				container: "bottom-right",
@@ -46,7 +46,6 @@ const AdminNews: NextPage<Props> = ({ news }) => {
 					onScreen: true,
 				},
 			});
-			console.error(err);
 		};
 
 		events.on("success", onSuccess);
