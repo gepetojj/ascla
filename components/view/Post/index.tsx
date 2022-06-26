@@ -4,7 +4,7 @@ import { useJSON } from "hooks/useJSON";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FC, memo, useEffect, useState } from "react";
+import React, { FC, memo, useCallback, useEffect, useState } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdEdit, MdShare, MdUpdate } from "react-icons/md";
 import { Store } from "react-notifications-component";
@@ -35,6 +35,28 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 		data && !error && setAuthor(data.user);
 		!data && error && console.error(error);
 	}, [data, error]);
+
+	const share = useCallback(() => {
+		try {
+			navigator.share({
+				title: `ASCLA - ${title}`,
+				text: description,
+				url: window.location.href,
+			});
+		} catch {
+			navigator.clipboard.writeText(window.location.href);
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Link copiado para a área de transferência.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		}
+	}, [title, description]);
 
 	return (
 		<section className="flex flex-col-reverse justify-center w-full h-full gap-10 md:flex-row">
@@ -74,27 +96,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 						<button
 							type="button"
 							className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95"
-							onClick={() => {
-								try {
-									navigator.share({
-										title: `ASCLA - ${title}`,
-										text: description,
-										url: window.location.href,
-									});
-								} catch {
-									navigator.clipboard.writeText(window.location.href);
-									Store.addNotification({
-										title: "Sucesso",
-										message: "Link copiado para a área de transferência.",
-										type: "success",
-										container: "bottom-right",
-										dismiss: {
-											duration: 5000,
-											onScreen: true,
-										},
-									});
-								}
-							}}
+							onClick={share}
 						>
 							<MdShare className="text-xl" />
 							<span>Compartilhar</span>

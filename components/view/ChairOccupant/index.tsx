@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import propTypes from "prop-types";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useCallback } from "react";
 import { MdEdit, MdShare } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
@@ -50,6 +50,28 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 	const session = useSession();
 	const { pathname } = useRouter();
 
+	const share = useCallback(() => {
+		try {
+			navigator.share({
+				title: `ASCLA - ${name}`,
+				text: `Conheça a história de ${name} agora, no website oficial da Academia Santanense de Ciências, Letras e Artes.`,
+				url: window.location.href,
+			});
+		} catch {
+			navigator.clipboard.writeText(window.location.href);
+			Store.addNotification({
+				title: "Sucesso",
+				message: "Link copiado para a área de transferência.",
+				type: "success",
+				container: "bottom-right",
+				dismiss: {
+					duration: 5000,
+					onScreen: true,
+				},
+			});
+		}
+	}, [name]);
+
 	return (
 		<section className="flex flex-col justify-center items-center w-full h-full gap-10 md:px-10 md:flex-row md:items-start">
 			<aside className="flex flex-col items-center gap-2">
@@ -84,27 +106,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 					<button
 						type="button"
 						className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95"
-						onClick={() => {
-							try {
-								navigator.share({
-									title: `ASCLA - ${name}`,
-									text: `Conheça a história de ${name} agora, no website oficial da Academia Santanense de Ciências, Letras e Artes.`,
-									url: window.location.href,
-								});
-							} catch {
-								navigator.clipboard.writeText(window.location.href);
-								Store.addNotification({
-									title: "Sucesso",
-									message: "Link copiado para a área de transferência.",
-									type: "success",
-									container: "bottom-right",
-									dismiss: {
-										duration: 5000,
-										onScreen: true,
-									},
-								});
-							}
-						}}
+						onClick={share}
 					>
 						<MdShare className="text-xl" />
 						<span>Compartilhar</span>
