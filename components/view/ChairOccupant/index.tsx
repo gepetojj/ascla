@@ -1,4 +1,5 @@
 import { Image } from "components/view/Image";
+import { config } from "config";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -53,8 +54,8 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 	const share = useCallback(() => {
 		try {
 			navigator.share({
-				title: `ASCLA - ${name}`,
-				text: `Conheça a história de ${name} agora, no website oficial da Academia Santanense de Ciências, Letras e Artes.`,
+				title: `${config.shortName} - ${name}`,
+				text: `Conheça a história de ${name} agora, no website oficial da ${config.fullName}.`,
 				url: window.location.href,
 			});
 		} catch {

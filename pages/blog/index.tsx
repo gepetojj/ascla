@@ -1,5 +1,6 @@
 import { CardBlog } from "components/card/Blog";
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { BlogPost } from "entities/BlogPost";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
@@ -15,7 +16,7 @@ const Blog: NextPage<Props> = ({ posts }) => {
 		<>
 			<NextSeo
 				title="Blog"
-				description="Veja as postagens feitas pelos acadêmicos da ASCLA."
+				description={`Veja as postagens feitas pelos acadêmicos da ${config.shortName}.`}
 			/>
 
 			<Main title="Blog" className="flex flex-col justify-center items-center p-6 pb-10">

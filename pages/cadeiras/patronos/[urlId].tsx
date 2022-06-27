@@ -1,5 +1,6 @@
 import { Main } from "components/layout/Main";
 import { ChairOccupantView } from "components/view/ChairOccupant";
+import { config } from "config";
 import type { Academic } from "entities/Academic";
 import type { Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
@@ -29,7 +30,7 @@ const ViewPatron: NextPage<Props> = ({ patron }) => {
 		<>
 			<NextSeo
 				title={`Patronos - ${patron.name || "Não encontrado"}`}
-				description={`Conheça mais sobre o patrono ${patron.name} da ASCLA.`}
+				description={`Conheça mais sobre o patrono ${patron.name} da ${config.shortName}.`}
 			/>
 
 			<Main title={patron.name} className="p-6 pb-12">

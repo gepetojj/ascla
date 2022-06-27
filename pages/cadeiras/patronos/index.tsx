@@ -1,5 +1,6 @@
 import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
@@ -13,7 +14,10 @@ interface Props {
 const Patrons: NextPage<Props> = ({ patrons }) => {
 	return (
 		<>
-			<NextSeo title="Patronos" description="Veja a lista de patronos da ASCLA." />
+			<NextSeo
+				title="Patronos"
+				description={`Veja a lista de patronos da ${config.shortName}.`}
+			/>
 
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex justify-center items-center flex-wrap max-w-5xl">

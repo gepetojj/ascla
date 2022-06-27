@@ -1,4 +1,5 @@
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
@@ -6,7 +7,10 @@ import React from "react";
 const Members: NextPage = () => {
 	return (
 		<>
-			<NextSeo title="Sócios" description="Veja a lista de sócios da ASCLA." />
+			<NextSeo
+				title="Sócios"
+				description={`Veja a lista de sócios da ${config.shortName}.`}
+			/>
 
 			<Main title="Sócios" className="p-6 pb-10">
 				<div className="flex justify-center">

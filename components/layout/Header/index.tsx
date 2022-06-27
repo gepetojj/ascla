@@ -1,5 +1,6 @@
 import { Button } from "components/input/Button";
 import { Image } from "components/view/Image";
+import { config } from "config";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -21,7 +22,7 @@ const HeaderComponent: FC = () => {
 				<div className="flex items-center">
 					<Image
 						src="logo-ascla.webp"
-						alt="Logo da ASCLA"
+						alt={`Logo da ${config.shortName}`}
 						layout="fixed"
 						width={94}
 						height={94}
@@ -29,7 +30,7 @@ const HeaderComponent: FC = () => {
 					/>
 				</div>
 				<div className="flex flex-col justify-center ml-5">
-					<h1 className="text-2xl font-medium">ASCLA</h1>
+					<h1 className="text-2xl font-medium">{config.shortName}</h1>
 					<h2 className="text-sm font-medium">10 anos</h2>
 				</div>
 			</div>

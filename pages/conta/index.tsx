@@ -1,5 +1,6 @@
 import { Button } from "components/input/Button";
 import { Image } from "components/view/Image";
+import { config } from "config";
 import { NextPage } from "next";
 import { useSession, signIn } from "next-auth/react";
 import { NextSeo } from "next-seo";
@@ -35,14 +36,16 @@ const Account: NextPage = () => {
 						<div className="flex items-center">
 							<Image
 								src="logo-ascla.webp"
-								alt="Logo da ASCLA"
+								alt={`Logo da ${config.shortName}`}
 								layout="fixed"
 								width={52}
 								height={52}
 								priority
 							/>
 						</div>
-						<h1 className="text-2xl font-medium text-black-100 ml-4">ASCLA</h1>
+						<h1 className="text-2xl font-medium text-black-100 ml-4">
+							{config.shortName}
+						</h1>
 					</div>
 					<h2 className="text-2xl font-bold">Faça login</h2>
 					<p className="mt-1 text-black-200">

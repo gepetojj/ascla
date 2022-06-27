@@ -1,5 +1,6 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
+import { config } from "config";
 import type { BlogPost } from "entities/BlogPost";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { GetServerSideProps, NextPage } from "next";
@@ -19,7 +20,7 @@ const ViewBlogPost: NextPage<Props> = ({ post }) => {
 				openGraph={{
 					title: post.title,
 					description: post.description,
-					url: `https://www.asclasi.com/blog/${post.metadata.urlId}`,
+					url: `${config.basePath}/blog/${post.metadata.urlId}`,
 					article: {
 						publishedTime: new Date(post.metadata.createdAt).toISOString(),
 						modifiedTime: new Date(post.metadata.updatedAt).toDateString(),
@@ -29,7 +30,7 @@ const ViewBlogPost: NextPage<Props> = ({ post }) => {
 			/>
 			<ArticleJsonLd
 				type="Blog"
-				url={`https://www.asclasi.com/blog/${post.metadata.urlId}`}
+				url={`${config.basePath}/blog/${post.metadata.urlId}`}
 				title={post.title}
 				description={post.description}
 				datePublished={new Date(post.metadata.createdAt).toISOString()}

@@ -1,5 +1,6 @@
 import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { Academic } from "entities/Academic";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
@@ -13,7 +14,10 @@ interface Props {
 const Patrons: NextPage<Props> = ({ academics }) => {
 	return (
 		<>
-			<NextSeo title="Acadêmicos" description="Veja a lista de acadêmicos da ASCLA." />
+			<NextSeo
+				title="Acadêmicos"
+				description={`Veja a lista de acadêmicos da ${config.shortName}.`}
+			/>
 
 			<Main
 				title="Acadêmicos"

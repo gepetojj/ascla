@@ -1,4 +1,5 @@
 import { Image } from "components/view/Image";
+import { config } from "config";
 import React, { memo, FC } from "react";
 import { MdSearch } from "react-icons/md";
 
@@ -11,7 +12,7 @@ const FooterComponent: FC = () => {
 				<div>
 					<Image
 						src="logo-ascla.webp"
-						alt="Logo da ASCLA"
+						alt={`Logo da ${config.shortName}`}
 						layout="fixed"
 						width={68}
 						height={68}
@@ -19,9 +20,7 @@ const FooterComponent: FC = () => {
 					/>
 				</div>
 				<div className="flex flex-col gap-1 sm:gap-0">
-					<h3 className="text-xl font-semibold">
-						Academia Santanense de Ciências, Letras e Artes
-					</h3>
+					<h3 className="text-xl font-semibold">{config.fullName}</h3>
 					<h4 className="font-light text-black-100">Santana do Ipanema, Alagoas</h4>
 				</div>
 			</div>
@@ -146,7 +145,7 @@ const FooterComponent: FC = () => {
 				</FooterTopic>
 			</div>
 			<span className="text-center text-sm font-medium mt-2">
-				ASCLA - {new Date().getFullYear()} - Todos os direitos reservados.
+				{config.shortName} - {new Date().getFullYear()} - Todos os direitos reservados.
 			</span>
 		</footer>
 	);

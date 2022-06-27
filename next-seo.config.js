@@ -1,11 +1,11 @@
+import { config } from "config";
+
 /** @type {import("next-seo").NextSeoProps} */
 export default {
-	titleTemplate: "ASCLA - %s",
-	title: "Academia Santanense de Ciências, Letras e Artes",
-	description:
-		"Acesse o site oficial da Academia Santanense de Ciências, Letras e Artes e familiarize-se com a cultura de Santana do Ipanema/AL",
-	canonical:
-		process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://asclasi.com/",
+	titleTemplate: `${config.shortName} - %s`,
+	title: config.fullName,
+	description: `Acesse o site oficial da ${config.fullName} e familiarize-se com a cultura de Santana do Ipanema/AL`,
+	canonical: config.basePath,
 
 	additionalLinkTags: [
 		{
@@ -24,12 +24,11 @@ export default {
 
 	openGraph: {
 		type: "website",
-		title: "Academia Santanense de Ciências, Letras e Artes",
-		description:
-			"Acesse o site oficial da Academia Santanense de Ciências, Letras e Artes e familiarize-se com a cultura de Santana do Ipanema/AL",
+		title: config.fullName,
+		description: `Acesse o site oficial da ${config.fullName} e familiarize-se com a cultura de Santana do Ipanema/AL`,
 	},
 	twitter: {
 		cardType: "summary_large_image",
-		site: "https://asclasi.com",
+		site: config.basePath,
 	},
 };

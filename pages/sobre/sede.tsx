@@ -1,4 +1,5 @@
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
@@ -6,13 +7,10 @@ import React from "react";
 const AboutOffice: NextPage = () => {
 	return (
 		<>
-			<NextSeo
-				title="Sobre - Sede"
-				description="Conheça a sede da Academia Santanense de Ciências, Letras e Artes."
-			/>
+			<NextSeo title="Sobre - Sede" description={`Conheça a sede da ${config.fullName}.`} />
 
 			<Main
-				title="Sede da ASCLA"
+				title={`Sede da ${config.shortName}`}
 				className="flex flex-col justify-center items-center p-6 pb-10"
 			>
 				<div className="prose max-w-5xl text-justify">

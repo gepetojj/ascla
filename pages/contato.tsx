@@ -1,4 +1,5 @@
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React from "react";
@@ -11,7 +12,7 @@ const Contact: NextPage = () => {
 		<>
 			<NextSeo
 				title="Contato"
-				description="Entre em contato com a ASCLA a partir dos meios informados nesta página."
+				description={`Entre em contato com a ${config.shortName} a partir dos meios informados nesta página.`}
 			/>
 
 			<Main title="Contato" className="flex flex-col justify-center items-center p-6 pb-10">

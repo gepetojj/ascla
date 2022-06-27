@@ -2,6 +2,7 @@ import { Button } from "components/input/Button";
 import { TextInput } from "components/input/TextInput";
 import { Main } from "components/layout/Main";
 import { Image } from "components/view/Image";
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { useFetcher } from "hooks/useFetcher";
 import { NextPage } from "next";
@@ -95,7 +96,7 @@ const AccountData: NextPage = () => {
 
 	return (
 		<>
-			<NextSeo title="Sua conta" description="Gerencie sua conta da ASCLA" />
+			<NextSeo title="Sua conta" description={`Gerencie sua conta da ${config.shortName}`} />
 
 			<Main title="Sua conta">
 				<div className="flex flex-col justify-center gap-10 md:flex-row md:gap-32">

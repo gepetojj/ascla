@@ -1,5 +1,6 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
+import { config } from "config";
 import type { BlogPost } from "entities/BlogPost";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useJSON } from "hooks/useJSON";
@@ -22,7 +23,7 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 				openGraph={{
 					title: news.title,
 					description: news.description,
-					url: `https://www.asclasi.com/noticias/${news.metadata.urlId}`,
+					url: `${config.basePath}/noticias/${news.metadata.urlId}`,
 					article: {
 						publishedTime: new Date(news.metadata.createdAt).toISOString(),
 						modifiedTime: new Date(news.metadata.updatedAt).toISOString(),
@@ -31,7 +32,7 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 				}}
 			/>
 			<NewsArticleJsonLd
-				url={`https://www.asclasi.com/noticias/${news.metadata.urlId}`}
+				url={`${config.basePath}/noticias/${news.metadata.urlId}`}
 				title={news.title}
 				description={news.description}
 				dateCreated={new Date(news.metadata.createdAt).toISOString()}
@@ -42,8 +43,8 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 				section="culture"
 				keywords={news.title.replaceAll(" ", ",").toLowerCase()}
 				body={htmlString}
-				publisherName="Notícias da Academia Santanense de Ciências, Letras e Artes"
-				publisherLogo="https://www.asclasi.com/images/logo-ascla.webp"
+				publisherName={`Notícias da ${config.fullName}`}
+				publisherLogo={`${config.basePath}/images/logo-ascla.webp`}
 			/>
 
 			<Main title={news.title} className="p-6 pb-12">

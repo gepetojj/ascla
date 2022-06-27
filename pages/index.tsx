@@ -1,12 +1,13 @@
 import { Main } from "components/layout/Main";
 import { HighlightView } from "components/view/Highlight";
+import { config } from "config";
 import type { NextPage } from "next";
 import React from "react";
 import { GoQuote } from "react-icons/go";
 
 const Home: NextPage = () => {
 	return (
-		<Main title="Academia Santanense de Ciências, Letras e Artes">
+		<Main title={config.fullName}>
 			<HighlightView />
 			<div className="flex flex-col justify-center items-center px-6 py-20">
 				<blockquote className="px-8 pt-6">

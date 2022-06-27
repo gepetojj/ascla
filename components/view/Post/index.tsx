@@ -1,3 +1,4 @@
+import { config } from "config";
 import type { BlogPost } from "entities/BlogPost";
 import type { User } from "entities/User";
 import { useJSON } from "hooks/useJSON";
@@ -38,7 +39,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 	const share = useCallback(() => {
 		try {
 			navigator.share({
-				title: `ASCLA - ${title}`,
+				title: `${config.shortName} - ${title}`,
 				text: description,
 				url: window.location.href,
 			});
