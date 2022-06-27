@@ -34,7 +34,7 @@ const AdminHighlight: NextPage = () => {
 						accept="image/*"
 						maxFiles={1}
 						maxFileSize={5 * 1024 * 1024}
-						label="Solte um arquivo aqui ou clique para escolher"
+						label="Solte um arquivo aqui ou clique para escolher."
 						localization="PT-pt"
 						method="POST"
 						url="/api/images/upload?dest=hl"

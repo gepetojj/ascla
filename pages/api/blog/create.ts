@@ -10,7 +10,7 @@ interface NewPost {
 	title: string;
 	description: string;
 	customUrl: string;
-	thumbnailUrl?: string;
+	thumbnailUrl: string;
 	content: JSONContent;
 }
 
@@ -25,10 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			const { title, description, customUrl, content }: NewPost = req.body;
+			const { title, description, customUrl, thumbnailUrl, content }: NewPost = req.body;
 
 			// TODO: Adicionar validação aos dados
-			if (!title || !description || !content.content?.length) {
+			if (!title || !description || !thumbnailUrl || !content.content?.length) {
 				res.status(400).json({ message: "Informe os dados do post corretamente." });
 				return res;
 			}
@@ -52,6 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				title,
 				description,
 				content,
+				thumbnailUrl,
 			};
 
 			try {

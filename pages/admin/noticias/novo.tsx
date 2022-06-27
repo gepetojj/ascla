@@ -1,6 +1,7 @@
 import type { JSONContent } from "@tiptap/react";
 
 import { TextInput } from "components/input/TextInput";
+import { ThumbnailInput } from "components/input/ThumbnailInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { getIdFromText } from "helpers/getIdFromText";
@@ -16,6 +17,7 @@ const AdminNewsNewPost: NextPage = () => {
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [customUrl, setCustomUrl] = useState("");
+	const [thumbnailUrl, setThumbnailUrl] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 		content: [{ type: "paragraph" }],
@@ -67,7 +69,13 @@ const AdminNewsNewPost: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!title || !description || !customUrl || !editorContent.content?.length) {
+			if (
+				!title ||
+				!description ||
+				!thumbnailUrl ||
+				!customUrl ||
+				!editorContent.content?.length
+			) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -81,9 +89,9 @@ const AdminNewsNewPost: NextPage = () => {
 				return;
 			}
 
-			fetcher({ title, description, customUrl, content: editorContent });
+			fetcher({ title, description, thumbnailUrl, customUrl, content: editorContent });
 		},
-		[fetcher, title, description, customUrl, editorContent]
+		[fetcher, title, description, thumbnailUrl, customUrl, editorContent]
 	);
 
 	return (
@@ -122,6 +130,7 @@ const AdminNewsNewPost: NextPage = () => {
 						value={customUrl}
 						readOnly
 					/>
+					<ThumbnailInput id="thumbnail" setThumbnail={setThumbnailUrl} />
 				</>
 			</AdminForm>
 		</>

@@ -15,7 +15,7 @@ interface UpdateNews {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(req, res, { method: "put", col: "news", role: "admin" }, async col => {
-		const { id, title, description, content }: UpdateNews = req.body;
+		const { id, title, description, thumbnailUrl, content }: UpdateNews = req.body;
 
 		// TODO: Adicionar validação aos dados
 		if (!id) {
@@ -41,6 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			if (title && typeof title === "string") news.title = title;
 			if (description && typeof description === "string") news.description = description;
+			if (thumbnailUrl && typeof thumbnailUrl === "string") news.thumbnailUrl = thumbnailUrl;
 			if (content && content.content?.length) news.content = content;
 
 			await col.doc(id).update(news);

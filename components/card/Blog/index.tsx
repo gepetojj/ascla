@@ -44,13 +44,16 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-secondary-400 sm:flex-row sm:justify-start sm:items-start">
 			<div className="flex justify-center items-center max-w-[300px] w-full h-full rounded shadow">
 				{thumbnailUrl ? (
-					<Image
-						src={thumbnailUrl}
-						alt="Imagem do post"
-						layout="responsive"
-						width={300}
-						height={150}
-					/>
+					<div className="w-full h-full">
+						<Image
+							src={thumbnailUrl}
+							alt="Imagem do post"
+							layout="responsive"
+							width={300}
+							height={150}
+							className="rounded"
+						/>
+					</div>
 				) : (
 					<div className="flex justify-center items-center w-full h-[150px] rounded bg-cream-100">
 						<span className="font-bold">Imagem</span>

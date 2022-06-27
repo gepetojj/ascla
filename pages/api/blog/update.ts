@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		res,
 		{ method: "put", col: "blogPosts", role: "academic" },
 		async (col, session) => {
-			const { id, title, description, content }: UpdatePost = req.body;
+			const { id, title, description, thumbnailUrl, content }: UpdatePost = req.body;
 
 			// TODO: Adicionar validação aos dados
 			if (!id) {
@@ -53,6 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				if (title && typeof title === "string") post.title = title;
 				if (description && typeof description === "string") post.description = description;
+				if (thumbnailUrl && typeof thumbnailUrl === "string")
+					post.thumbnailUrl = thumbnailUrl;
 				if (content && content.content?.length) post.content = content;
 
 				await col.doc(id).update(post);

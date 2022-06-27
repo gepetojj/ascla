@@ -26,7 +26,7 @@ export interface BlogPost {
 	/** Descrição da postagem. */
 	description: string;
 	/** Link da imagem da postagem. */
-	thumbnailUrl?: string;
+	thumbnailUrl: string;
 	/** Conteúdo da postagem. */
 	content: JSONContent;
 }

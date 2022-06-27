@@ -8,12 +8,14 @@ import {
 	MdFormatClear,
 	MdFormatItalic,
 	MdFormatUnderlined,
+	MdImage,
 	MdLink,
 	MdRedo,
 	MdUndo,
 } from "react-icons/md";
 
 import { useEditor } from "./Context";
+import { MenuImageModal } from "./MenuImageModal";
 import { MenuLinkModal } from "./MenuLinkModal";
 import { EditorMenuOption } from "./MenuOption";
 
@@ -28,6 +30,7 @@ type Level = 1 | 2 | 3 | 4 | 5 | 6;
 const EditorMenuComponent: FC = () => {
 	const { editor } = useEditor();
 	const [isLinkModalOpen, setLinkModalOpen] = useState(false);
+	const [isImageModalOpen, setImageModalOpen] = useState(false);
 
 	const toggleHeading = useCallback(
 		(level: Level) => {
@@ -42,6 +45,7 @@ const EditorMenuComponent: FC = () => {
 	return (
 		<>
 			<MenuLinkModal open={isLinkModalOpen} onClose={() => setLinkModalOpen(false)} />
+			<MenuImageModal open={isImageModalOpen} onClose={() => setImageModalOpen(false)} />
 			<div className="flex flex-wrap p-2 mx-4 bg-slate-50 rounded-md gap-1">
 				<div className="flex items-center">
 					<EditorMenuOption
@@ -136,6 +140,13 @@ const EditorMenuComponent: FC = () => {
 						isActive={editor.isActive("link")}
 					>
 						<MdLink className="text-xl" />
+					</EditorMenuOption>
+					<EditorMenuOption
+						tooltip="Inserir imagem"
+						onClick={() => setImageModalOpen(isImageModalOpen => !isImageModalOpen)}
+						isActive={editor.isActive("image")}
+					>
+						<MdImage className="text-xl" />
 					</EditorMenuOption>
 				</div>
 				<div className="flex items-center">
