@@ -2,7 +2,7 @@ export const config = {
 	shortName: "ASLCA",
 	fullName: "Academia Santanense de Letras, Ciências e Artes",
 	basePath:
-		process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://aslca.org.br",
+		process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://www.aslca.org.br",
 } as const;
 
 export const academias = [
