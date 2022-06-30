@@ -83,6 +83,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 						width={100}
 						height={100}
 						className="rounded-full"
+						unoptimized
 					/>
 				</div>
 				<div className="w-full text-center">

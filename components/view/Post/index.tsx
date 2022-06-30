@@ -75,6 +75,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 						width={74}
 						height={74}
 						className="rounded-full"
+						unoptimized
 					/>
 				</div>
 				<div>

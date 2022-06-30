@@ -52,6 +52,7 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 							width={300}
 							height={150}
 							className="rounded"
+							unoptimized
 						/>
 					</div>
 				) : (
