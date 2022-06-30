@@ -15,6 +15,11 @@ export default {
 	],
 	additionalMetaTags: [
 		{
+			name: "keywords",
+			content:
+				"academia, literatura, cultura, santana do ipanema, santana, ascla, aslca, academia satanense de letras, alagoas",
+		},
+		{
 			name: "viewport",
 			content: "initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
 		},
