@@ -1,5 +1,5 @@
 import { Image } from "components/view/Image";
-import { config } from "config";
+import { academias, blogs, config } from "config";
 import React, { memo, FC } from "react";
 import { MdSearch } from "react-icons/md";
 
@@ -43,60 +43,34 @@ const FooterComponent: FC = () => {
 				</FooterTopic>
 				<FooterTopic title="Academias" onCenter>
 					<ul className="flex flex-col gap-1 sm:gap-0">
-						<li>
-							<a
-								href="https://www.academia.org.br/"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								ABL
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.aal.al.org.br/"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								AAL
-							</a>
-						</li>
-						<li>
-							<a
-								href="http://acala.org.br/"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								ACALA
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://apalca.com.br/"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								APALCA
-							</a>
-						</li>
+						{academias.map(academia => (
+							<li key={academia.label.toLocaleLowerCase()}>
+								<a
+									href={academia.url}
+									target="_blank"
+									rel="noreferrer"
+									className="hover:underline"
+								>
+									{academia.label}
+								</a>
+							</li>
+						))}
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Blogs" onCenter>
 					<ul className="flex flex-col gap-1 sm:gap-0">
-						<li>
-							<a
-								href="https://www.apensocomgrifo.com/"
-								target="_blank"
-								rel="noreferrer"
-								className="hover:underline"
-							>
-								Apenso com Grifo
-							</a>
-						</li>
+						{blogs.map(blog => (
+							<li key={blog.label.toLocaleLowerCase()}>
+								<a
+									href={blog.url}
+									target="_blank"
+									rel="noreferrer"
+									className="hover:underline"
+								>
+									{blog.label}
+								</a>
+							</li>
+						))}
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Jornais da Região" onCenter>
