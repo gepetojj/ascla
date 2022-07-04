@@ -1,6 +1,7 @@
 tests/coverage/
 emulator_data/
 node_modules/
+.netlify/
 .vercel/
 build/
 .next/
