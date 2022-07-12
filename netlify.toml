@@ -3,8 +3,4 @@ publish = ".next/"
 command = "next build"
 
 [functions]
-directory = "api/"
 node_bundler = "esbuild"
-
-[[plugins]]
-package = "./include_sharp"
