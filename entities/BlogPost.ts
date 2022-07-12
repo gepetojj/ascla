@@ -1,4 +1,4 @@
-import type { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
 
 import type { DefaultMetadata } from "./DefaultMetadata";
 import type { User } from "./User";

@@ -1,4 +1,4 @@
-import { Editor } from "@tiptap/react";
+import { Editor } from "@tiptap/core";
 
 import React, { createContext, FC, ReactNode, useContext } from "react";
 

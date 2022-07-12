@@ -1,4 +1,4 @@
-import type { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
 
 import { TextInput } from "components/input/TextInput";
 import { ThumbnailInput } from "components/input/ThumbnailInput";

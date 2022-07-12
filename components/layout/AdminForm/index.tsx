@@ -1,4 +1,4 @@
-import type { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
 
 import { Button } from "components/input/Button";
 import dynamic from "next/dynamic";

@@ -1,4 +1,4 @@
-import type { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
 
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron, UpdatablePatron } from "entities/Patron";

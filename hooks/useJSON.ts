@@ -1,4 +1,4 @@
-import { generateHTML, JSONContent } from "@tiptap/react";
+import { generateHTML, JSONContent } from "@tiptap/core";
 
 import { editorExtensions } from "helpers/editorExtensions";
 import { useEffect, useState } from "react";

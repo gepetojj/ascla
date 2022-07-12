@@ -1,5 +1,5 @@
-import { Image } from "components/view/Image";
 import type { BlogPost } from "entities/BlogPost";
+import { IKImage } from "imagekitio-react";
 import type { User } from "next-auth";
 import Link from "next/link";
 import propTypes from "prop-types";
@@ -43,23 +43,21 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 	return (
 		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-secondary-400 sm:flex-row sm:justify-start sm:items-start">
 			<div className="flex justify-center items-center max-w-[300px] w-full h-full rounded shadow">
-				{thumbnailUrl ? (
-					<div className="w-full h-full">
-						<Image
-							src={thumbnailUrl}
-							alt="Imagem do post"
-							layout="responsive"
-							width={300}
-							height={150}
-							className="rounded"
-							unoptimized
-						/>
-					</div>
-				) : (
-					<div className="flex justify-center items-center w-full h-[150px] rounded bg-cream-100">
-						<span className="font-bold">Imagem</span>
-					</div>
-				)}
+				<div className="w-full h-full">
+					<IKImage
+						urlEndpoint={process.env.NEXT_PUBLIC_IK_URL}
+						path={
+							thumbnailUrl || "https://dummyimage.com/300x150/000/fff.png&text=Imagem"
+						}
+						transformation={[{ width: 300, height: 150 }]}
+						lqip={{ active: true }}
+						loading="lazy"
+						width={300}
+						height={150}
+						alt="Imagem do post"
+						className="rounded"
+					/>
+				</div>
 			</div>
 			<div className="w-full h-full">
 				<div className="sm:min-h-[8rem]">

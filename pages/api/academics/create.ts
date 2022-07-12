@@ -1,4 +1,4 @@
-import type { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
 
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";

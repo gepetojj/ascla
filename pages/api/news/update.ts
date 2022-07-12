@@ -1,4 +1,4 @@
-import type { JSONContent } from "@tiptap/react";
+import type { JSONContent } from "@tiptap/core";
 
 import type { BlogPost, UpdatableBlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
