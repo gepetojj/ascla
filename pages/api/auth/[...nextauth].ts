@@ -62,7 +62,7 @@ export default NextAuth({
 		},
 		session({ session, token }) {
 			if (session.user) {
-				session.user.role = token.role;
+				session.user.role = token.role || "common";
 				session.user.id = token.sub;
 			}
 			return session;

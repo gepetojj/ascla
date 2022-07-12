@@ -75,7 +75,7 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 				<div className="flex flex-col justify-center items-center gap-4">
 					<div className="flex justify-between items-center max-w-xl w-full">
 						<h1 className="text-2xl font-semibold">Registro</h1>
-						<Link href="/admin/patronos/novo" shallow>
+						<Link href="/admin/patronos/novo">
 							<a>
 								<MdAdd className="text-3xl cursor-pointer" />
 							</a>

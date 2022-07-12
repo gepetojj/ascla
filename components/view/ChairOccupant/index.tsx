@@ -114,7 +114,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 						<span>Compartilhar</span>
 					</button>
 					{session.data?.user?.role === "admin" && (
-						<Link href={`/admin/${pathname.split("/")[2]}/${urlId}`} shallow>
+						<Link href={`/admin/${pathname.split("/")[2]}/${urlId}`}>
 							<a className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95">
 								<MdEdit className="text-xl" />
 								<span>Editar</span>

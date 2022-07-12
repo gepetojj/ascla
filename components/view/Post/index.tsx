@@ -104,10 +104,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 							<span>Compartilhar</span>
 						</button>
 						{session.data?.user?.role === "admin" && (
-							<Link
-								href={`/admin/${pathname.split("/")[1]}/${metadata.urlId}`}
-								shallow
-							>
+							<Link href={`/admin/${pathname.split("/")[1]}/${metadata.urlId}`}>
 								<a className="flex justify-center items-center gap-2 p-1 bg-cream-main rounded-sm duration-200 hover:brightness-95">
 									<MdEdit className="text-xl" />
 									<span>Editar</span>

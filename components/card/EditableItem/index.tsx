@@ -38,7 +38,7 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 			<span className="max-w-full break-words">{title}</span>
 			<div className="flex items-center gap-2">
 				<Button title="Clique para editar o item">
-					<Link href={editUrl} shallow>
+					<Link href={editUrl}>
 						<a>
 							<MdMode className="text-xl cursor-pointer" />
 						</a>

@@ -13,7 +13,7 @@ const HeaderComponent: FC = () => {
 	const { data } = useSession();
 
 	const accountLinkHandler = useCallback(() => {
-		push(!data ? "/conta" : "/conta/dados", undefined, { shallow: true });
+		push(!data ? "/conta" : "/conta/dados");
 	}, [push, data]);
 
 	return (
@@ -47,13 +47,13 @@ const HeaderComponent: FC = () => {
 					label="Sobre"
 					showOnHover
 				>
-					<Link href="/sobre/historia" shallow>
+					<Link href="/sobre/historia">
 						<a>História</a>
 					</Link>
-					<Link href="/sobre/estatuto" shallow>
+					<Link href="/sobre/estatuto">
 						<a>Estatuto</a>
 					</Link>
-					<Link href="/sobre/sede" shallow>
+					<Link href="/sobre/sede">
 						<a>Sede</a>
 					</Link>
 				</HeaderLink>
@@ -63,13 +63,13 @@ const HeaderComponent: FC = () => {
 					label="Cadeiras"
 					showOnHover
 				>
-					<Link href="/cadeiras/patronos" shallow>
+					<Link href="/cadeiras/patronos">
 						<a>Patronos</a>
 					</Link>
-					<Link href="/cadeiras/academicos" shallow>
+					<Link href="/cadeiras/academicos">
 						<a>Acadêmicos</a>
 					</Link>
-					<Link href="/cadeiras/socios" shallow>
+					<Link href="/cadeiras/socios">
 						<a>Sócios</a>
 					</Link>
 				</HeaderLink>

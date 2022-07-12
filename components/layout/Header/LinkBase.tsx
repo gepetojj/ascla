@@ -28,7 +28,7 @@ const HeaderLinkBaseComponent: FC<HeaderLinkBaseProps> = ({
 }) => {
 	if (as === "anchor" && href) {
 		return (
-			<Link href={href} shallow>
+			<Link href={href}>
 				<a
 					className={`m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
 						isActive

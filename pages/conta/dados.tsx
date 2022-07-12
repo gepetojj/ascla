@@ -173,7 +173,7 @@ const AccountData: NextPage = () => {
 											: "administrador(a)."}
 									</strong>
 								</h3>
-								<Link href="/admin" passHref shallow>
+								<Link href="/admin" passHref>
 									<Button
 										title="Vai para a página de administração"
 										className="bg-primary-main py-1.5 w-full sm:w-80"

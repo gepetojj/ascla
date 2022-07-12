@@ -16,7 +16,7 @@ const Account: NextPage = () => {
 
 	useEffect(() => {
 		if (!data?.user) return;
-		push("/conta/dados", undefined, { shallow: true });
+		push("/conta/dados");
 	}, [data, push]);
 
 	const signInWithGoogle = useCallback(() => {
@@ -64,7 +64,7 @@ const Account: NextPage = () => {
 						</Button>
 					</div>
 					<div className="flex justify-center items-center w-full mt-8">
-						<Link href="/" shallow>
+						<Link href="/">
 							<a className="text-secondary-800 text-sm hover:underline">
 								Voltar para o site
 							</a>
