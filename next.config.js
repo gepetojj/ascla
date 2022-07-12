@@ -13,6 +13,7 @@ const nextConfig = withBA({
 		domains: [
 			"lh3.googleusercontent.com",
 			"firebasestorage.googleapis.com",
+			"ik.imagekit.io",
 			process.env.NODE_ENV === "development" ? "localhost" : "",
 		],
 	},

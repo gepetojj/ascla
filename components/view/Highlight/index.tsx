@@ -23,17 +23,12 @@ const HighlightViewComponent: FC = () => {
 				<div className="w-full h-60 bg-primary-main relative overflow-x-auto overflow-y-hidden lg:hidden">
 					<div>
 						<Image
-							src={
-								process.env.NODE_ENV === "development"
-									? `http://localhost:9199/download/storage/v1/b/asclasi.appspot.com/o/uploads%2Fhighlight.webp?alt=media&reset=${hlCache}`
-									: `https://firebasestorage.googleapis.com/v0/b/asclasi.appspot.com/o/uploads%2Fhighlight.webp?alt=media&reset=${hlCache}`
-							}
+							src={`https://ik.imagekit.io/gepetojj/ascla/tr:w-1050,h-240/highlight?renew=${hlCache}`}
 							alt="Coletânea de imagens da história de Santana do Ipanema"
 							layout="fixed"
 							width={1050}
 							height={240}
 							priority
-							unoptimized
 						/>
 					</div>
 				</div>
@@ -41,17 +36,12 @@ const HighlightViewComponent: FC = () => {
 				<div className="w-full h-60 bg-primary-main relative overflow-x-auto overflow-y-hidden hidden lg:flex">
 					<div>
 						<Image
-							src={
-								process.env.NODE_ENV === "development"
-									? `http://localhost:9199/download/storage/v1/b/asclasi.appspot.com/o/uploads%2Fhighlight.webp?alt=media&reset=${hlCache}`
-									: `https://firebasestorage.googleapis.com/v0/b/asclasi.appspot.com/o/uploads%2Fhighlight.webp?alt=media&reset=${hlCache}`
-							}
+							src={`https://ik.imagekit.io/gepetojj/ascla/tr:w-1050,h-240/highlight?renew=${hlCache}`}
 							alt="Coletânea de imagens da história de Santana do Ipanema"
 							layout="fill"
 							objectFit="cover"
 							objectPosition="center"
 							priority
-							unoptimized
 						/>
 					</div>
 				</div>

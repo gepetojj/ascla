@@ -1,16 +1,36 @@
-import { Dropzone, FileItem, FullScreenPreview, FileValidated } from "@dropzone-ui/react";
-
 import { Main } from "components/layout/Main";
 import { HighlightView } from "components/view/Highlight";
+import { IKContext, IKUpload } from "imagekitio-react";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
+import { Store } from "react-notifications-component";
 
 const AdminHighlight: NextPage = () => {
-	const [files, setFiles] = useState<FileValidated[]>([]);
+	const onError = useCallback(() => {
+		Store.addNotification({
+			title: "Erro",
+			message: "A imagem não pôde ser enviada. Tente novamente.",
+			type: "danger",
+			container: "bottom-right",
+			dismiss: {
+				duration: 5000,
+				onScreen: true,
+			},
+		});
+	}, []);
 
-	const onUpdateFiles = useCallback((incomming: FileValidated[]) => {
-		setFiles(incomming);
+	const onSuccess = useCallback(() => {
+		Store.addNotification({
+			title: "Sucesso",
+			message: "Imagem enviada com sucesso.",
+			type: "success",
+			container: "bottom-right",
+			dismiss: {
+				duration: 5000,
+				onScreen: true,
+			},
+		});
 	}, []);
 
 	return (
@@ -26,37 +46,22 @@ const AdminHighlight: NextPage = () => {
 					<h2 className="text-center text-xl font-medium">Destaque atual:</h2>
 					<HighlightView />
 				</div>
-				<div className="flex flex-col mt-4 gap-2">
+				<div className="flex flex-col mt-4 gap-4">
 					<h2 className="text-center text-xl font-medium">Altere o destaque:</h2>
-					<Dropzone
-						value={files}
-						onChange={onUpdateFiles}
-						accept="image/*"
-						maxFiles={1}
-						maxFileSize={5 * 1024 * 1024}
-						label="Solte um arquivo aqui ou clique para escolher."
-						localization="PT-pt"
-						method="POST"
-						url="/api/images/upload?dest=hl"
-						behaviour="replace"
-						color="#83CB89"
-						disableScroll
-						footer={false}
-					>
-						{files.map(file => (
-							<FileItem
-								key={file.id}
-								{...file}
-								alwaysActive
-								localization="PT-pt"
-								preview
-								hd
-								elevation={2}
-								resultOnTooltip
+					<div className="flex justify-center items-center w-full">
+						<IKContext
+							urlEndpoint={process.env.NEXT_PUBLIC_IK_URL}
+							publicKey={process.env.NEXT_PUBLIC_IK_KEY}
+							authenticationEndpoint={`/api/images/auth`}
+						>
+							<IKUpload
+								fileName="highlight"
+								useUniqueFileName={false}
+								onError={onError}
+								onSuccess={onSuccess}
 							/>
-						))}
-						<FullScreenPreview />
-					</Dropzone>
+						</IKContext>
+					</div>
 				</div>
 			</Main>
 		</>
