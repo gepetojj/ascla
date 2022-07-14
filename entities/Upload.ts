@@ -1,5 +1,3 @@
-import type { File } from "@google-cloud/storage";
-
 /**
  * Metadados de um upload.
  *
@@ -34,10 +32,4 @@ export interface Upload {
 	 * @see {@link UploadMetadata}
 	 */
 	metadata: UploadMetadata;
-	/**
-	 * Metadados da resposta do upload.
-	 *
-	 * @see {@link File}
-	 */
-	uploadMetadata: File;
 }

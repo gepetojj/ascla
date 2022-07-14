@@ -1,10 +1,10 @@
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Upload } from "entities/Upload";
 import { File, Files, IncomingForm } from "formidable";
+import { readFileSync } from "fs";
 import { apiHandler } from "helpers/apiHandler";
-import { storage } from "myFirebase/server";
+import { imagekit } from "helpers/imagekit";
 import type { NextApiRequest, NextApiResponse } from "next";
-import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 
 interface Response extends DefaultResponse {
@@ -29,17 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			const destinations = ["hl", "generic"];
-			const destination = req.query.dest as string;
-			if (
-				!destination ||
-				typeof destination !== "string" ||
-				!destinations.includes(destination)
-			) {
-				res.status(400).json({ status: false, message: "Informe o destino do upload." });
-				return res;
-			}
-
 			const form = new IncomingForm({
 				allowEmptyFiles: false,
 				maxFields: 1,
@@ -59,10 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				let image: File;
 				const imageName = uuid();
-				const location =
-					destination === "hl"
-						? "uploads/highlight.webp"
-						: `uploads/${session.sub}/${imageName}.webp`;
+				const folder = `uploads/${session.sub}`;
 
 				if (!files || !files.file) {
 					res.status(400).json({ status: false, message: "Imagem não encontrada." });
@@ -80,35 +66,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 
 				try {
-					await sharp(image.filepath)
+					/* await sharp(image.filepath)
 						.webp({ quality: 60 })
-						.toFile(`${image.filepath}.webp`);
+						.toFile(`${image.filepath}.webp`); */
 
-					const upload = await storage.bucket().upload(`${image.filepath}.webp`, {
-						public: true,
-						destination: location,
-						metadata: { firebaseStorageDownloadTokens: imageName },
+					const upload = await imagekit.upload({
+						file: readFileSync(image.filepath),
+						fileName: imageName,
+						folder,
+						useUniqueFileName: false,
 					});
 
 					const uploadLog: Upload = {
 						id: imageName,
-						link:
-							process.env.NODE_ENV === "production"
-								? `https://firebasestorage.googleapis.com/v0/b/${
-										storage.app.options.storageBucket
-								  }/o/${location.replaceAll(/\//g, "%2F")}?alt=media`
-								: upload[0].metadata.mediaLink,
+						link: upload.url,
 						metadata: {
 							uploadedAt: Date.now(),
 							uploader: session.sub,
 							size: image.size,
 							hash: String(image.hash),
 							mimetype: String(image.mimetype),
-							location,
+							location: folder,
 						},
-						uploadMetadata: upload[0].metadata,
 					};
-					await col.doc(destination === "hl" ? "highlight" : imageName).set(uploadLog);
+					await col.doc(imageName).set(uploadLog);
 
 					res.status(200).json({
 						status: true,
