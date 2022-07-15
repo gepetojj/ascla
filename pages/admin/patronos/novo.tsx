@@ -28,6 +28,25 @@ const AdminPatronsNew: NextPage = () => {
 		content: [{ type: "paragraph" }],
 	});
 
+	useEffect(() => {
+		const keyboardHandler = (event: KeyboardEvent) => {
+			if (event.ctrlKey && event.code === "KeyI") {
+				setName("");
+				// @ts-expect-error O acadêmico abaixo não precisa ter as demais propriedades.
+				setSelectedAcademic({ id: "nenhum", name: "Nenhum" });
+				setChair(0);
+				setAvatar("");
+				setEditorContent({
+					type: "doc",
+					content: [{ type: "paragraph" }],
+				});
+			}
+		};
+
+		window.addEventListener("keypress", keyboardHandler);
+		return () => window.removeEventListener("keypress", keyboardHandler);
+	}, []);
+
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
 		if (data && !error) {
