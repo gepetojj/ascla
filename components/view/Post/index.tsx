@@ -1,4 +1,5 @@
 import { config } from "config";
+import type { Academic } from "entities/Academic";
 import type { BlogPost } from "entities/BlogPost";
 import type { User } from "entities/User";
 import { useJSON } from "hooks/useJSON";
@@ -29,11 +30,21 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 		fetch(...args).then(res => res.json())
 	);
 	const [author, setAuthor] = useState<User>();
+	const [authorAsAcademic, setAuthorAsAcademic] = useState<Academic>();
 	const contentHTML = useJSON(content);
 	const { pathname } = useRouter();
 
 	useEffect(() => {
-		data && !error && setAuthor(data.user);
+		if (data && !error) {
+			const user: User = data.user;
+			setAuthor(user);
+			if (user.metadata.academicId) {
+				fetch(`/api/academics/read?id=${user.metadata.academicId}`).then(async res => {
+					const data = await res.json();
+					setAuthorAsAcademic(data.academic as Academic);
+				});
+			}
+		}
 	}, [data, error]);
 
 	const share = useCallback(() => {
@@ -70,7 +81,11 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 			<aside className="flex flex-row justify-center items-center gap-4 md:flex-col md:justify-start md:gap-0">
 				<div>
 					<Image
-						src={author?.avatarUrl || "usuario-padrao.webp"}
+						src={
+							authorAsAcademic?.avatarUrl ||
+							author?.avatarUrl ||
+							"usuario-padrao.webp"
+						}
 						alt="Avatar do usuário"
 						width={74}
 						height={74}
@@ -78,10 +93,18 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 						unoptimized
 					/>
 				</div>
-				<div>
-					<h3 className="text-lg text-center text-black-main font-medium break-words">
-						{author?.name || "Nome do autor"}
-					</h3>
+				<div className="flex flex-col">
+					{authorAsAcademic ? (
+						<Link href={`/cadeiras/academicos/${authorAsAcademic.metadata?.urlId}`}>
+							<a className="text-lg text-center text-black-main font-medium break-words hover:underline">
+								{authorAsAcademic.name}
+							</a>
+						</Link>
+					) : (
+						<h3 className="text-lg text-center text-black-main font-medium break-words">
+							{author?.name || "Nome do autor"}
+						</h3>
+					)}
 					<div className="flex justify-center gap-2">
 						<div className="flex items-center gap-1 text-xs">
 							<AiOutlineClockCircle className="text-xl" />
