@@ -71,7 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					secret: process.env.NEXTAUTH_SECRET,
 					raw: true,
 				});
-				await fetch(`${config.basePath}/api/academics/update`, {
+				fetch(`${config.basePath}/api/academics/update`, {
 					method: "PUT",
 					headers: {
 						Accept: "application/json",
