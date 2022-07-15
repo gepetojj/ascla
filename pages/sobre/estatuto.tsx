@@ -1,10 +1,53 @@
+import { Button } from "components/input/Button";
 import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import React from "react";
+import { useRouter } from "next/router";
+import type { PDFDocumentProxy } from "pdfjs-dist/types/src/pdf";
+import React, { useCallback, useEffect, useState } from "react";
+import { CgSpinner } from "react-icons/cg";
+import { MdArrowLeft, MdArrowRight } from "react-icons/md";
+import { Store } from "react-notifications-component";
+import { Document, Page, pdfjs } from "react-pdf";
 
 const AboutStatute: NextPage = () => {
+	const { reload } = useRouter();
+	const [pages, setPages] = useState<number | null>(null);
+	const [page, setPage] = useState(1);
+
+	useEffect(() => {
+		pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+	}, []);
+
+	const onDocumentLoad = useCallback((pdf: PDFDocumentProxy) => {
+		setPages(pdf.numPages);
+	}, []);
+
+	const onDocumentLoadError = useCallback((err: Error) => {
+		let message = "Não foi possível carregar o arquivo PDF.";
+		if (err.name === "MissingPDFException") message = "O arquivo PDF não foi encontrado.";
+
+		Store.addNotification({
+			title: "Erro",
+			message,
+			type: "danger",
+			container: "bottom-right",
+			dismiss: {
+				duration: 10000,
+				onScreen: true,
+			},
+		});
+	}, []);
+
+	const onNextPage = useCallback(() => {
+		pages && page < pages && setPage(page => page + 1);
+	}, [page, pages]);
+
+	const onPreviousPage = useCallback(() => {
+		pages && page > 1 && setPage(page => page - 1);
+	}, [page, pages]);
+
 	return (
 		<>
 			<NextSeo
@@ -16,65 +59,92 @@ const AboutStatute: NextPage = () => {
 				title={`Estatuto da ${config.shortName}`}
 				className="flex flex-col justify-center items-center p-6 pb-10"
 			>
-				<div className="prose max-w-5xl text-justify">
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua. In mollis nunc sed id
-						semper risus in hendrerit. Placerat in egestas erat imperdiet sed euismod
-						nisi porta lorem. Velit sed ullamcorper morbi tincidunt ornare. Dui accumsan
-						sit amet nulla. Consectetur a erat nam at lectus. Duis ut diam quam nulla
-						porttitor. Pharetra vel turpis nunc eget lorem dolor sed viverra. Dictum
-						fusce ut placerat orci nulla pellentesque. Aenean et tortor at risus viverra
-						adipiscing at in tellus. Scelerisque fermentum dui faucibus in ornare quam
-						viverra orci. Amet commodo nulla facilisi nullam vehicula ipsum a arcu.
-						Interdum consectetur libero id faucibus nisl tincidunt. Eget nullam non nisi
-						est sit amet facilisis magna etiam. Purus sit amet volutpat consequat mauris
-						nunc congue nisi. Quam vulputate dignissim suspendisse in. Sagittis purus
-						sit amet volutpat consequat mauris nunc congue. At erat pellentesque
-						adipiscing commodo elit at imperdiet dui accumsan.
-					</p>
-					<p>
-						Consequat ac felis donec et odio pellentesque diam volutpat commodo.
-						Ultrices eros in cursus turpis massa tincidunt dui. Porta lorem mollis
-						aliquam ut porttitor. Odio euismod lacinia at quis risus. Et malesuada fames
-						ac turpis egestas integer eget aliquet. Mi eget mauris pharetra et ultrices
-						neque ornare. Fermentum dui faucibus in ornare. Ullamcorper sit amet risus
-						nullam eget. Eget felis eget nunc lobortis mattis aliquam faucibus purus in.
-						Aliquam malesuada bibendum arcu vitae elementum. Nunc congue nisi vitae
-						suscipit tellus mauris. Elit ut aliquam purus sit. Mi ipsum faucibus vitae
-						aliquet. Vitae auctor eu augue ut lectus arcu. Porttitor leo a diam
-						sollicitudin tempor id eu nisl. Pellentesque id nibh tortor id aliquet
-						lectus. Eget egestas purus viverra accumsan in.
-					</p>
-					<p>
-						Viverra mauris in aliquam sem fringilla ut. Odio facilisis mauris sit amet.
-						Turpis massa tincidunt dui ut ornare. Vehicula ipsum a arcu cursus vitae
-						congue mauris rhoncus aenean. Mi tempus imperdiet nulla malesuada. Id neque
-						aliquam vestibulum morbi blandit cursus. Sed faucibus turpis in eu mi.
-						Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi
-						tristique senectus. Orci a scelerisque purus semper. Vel pharetra vel turpis
-						nunc eget. Tempus quam pellentesque nec nam aliquam sem et tortor. Congue
-						quisque egestas diam in arcu cursus euismod quis. Enim ut tellus elementum
-						sagittis vitae et leo duis. Mauris commodo quis imperdiet massa tincidunt
-						nunc pulvinar sapien. Vitae proin sagittis nisl rhoncus mattis rhoncus urna
-						neque viverra. Duis convallis convallis tellus id interdum velit laoreet.
-						Elementum eu facilisis sed odio morbi. Ut lectus arcu bibendum at varius vel
-						pharetra. Tempus imperdiet nulla malesuada pellentesque elit eget. Sed
-						egestas egestas fringilla phasellus faucibus scelerisque eleifend.
-					</p>
-					<p>
-						Amet nisl suscipit adipiscing bibendum est ultricies integer. Sit amet est
-						placerat in egestas erat imperdiet. Nibh cras pulvinar mattis nunc.
-						Consectetur adipiscing elit ut aliquam purus. Quis imperdiet massa tincidunt
-						nunc pulvinar sapien et ligula ullamcorper. Nisi porta lorem mollis aliquam
-						ut porttitor. Nullam non nisi est sit amet facilisis magna etiam. Sed
-						vulputate mi sit amet mauris commodo quis imperdiet massa. Id faucibus nisl
-						tincidunt eget nullam non nisi est sit. At consectetur lorem donec massa
-						sapien faucibus et molestie. Eget gravida cum sociis natoque penatibus et
-						magnis dis. Dui nunc mattis enim ut tellus. Dictum varius duis at
-						consectetur lorem donec massa sapien faucibus. Leo integer malesuada nunc
-						vel risus commodo viverra maecenas.
-					</p>
+				<div className="flex justify-center items-center">
+					<Document
+						className="flex justify-center items-center flex-col w-full h-full bg-cream-100 rounded"
+						file="/assets/estatuto-ascla.pdf"
+						renderMode="svg"
+						onLoadSuccess={onDocumentLoad}
+						onLoadError={onDocumentLoadError}
+						error={() => {
+							return (
+								<div className="flex flex-col justify-center items-center w-full h-full gap-4 p-4">
+									<span className="text-lg font-medium">
+										Não foi possível carregar o PDF.
+									</span>
+									<Button className="bg-primary-main" onClick={() => reload()}>
+										Recarregar página
+									</Button>
+								</div>
+							);
+						}}
+						loading={() => {
+							return (
+								<div className="flex justify-center items-center w-full h-full gap-4 p-4">
+									<span className="text-lg font-medium">
+										O arquivo está carregando.
+									</span>
+									<CgSpinner className="text-xl text-current animate-spin" />
+								</div>
+							);
+						}}
+						noData={() => {
+							return (
+								<div className="flex flex-col justify-center items-center w-full h-full gap-4 p-4">
+									<span className="text-lg font-medium">
+										Nenhum arquivo PDF foi selecionado.
+									</span>
+								</div>
+							);
+						}}
+					>
+						<Page
+							className="flex flex-col justify-center items-center"
+							pageNumber={page}
+							onLoadError={onDocumentLoadError}
+							renderAnnotationLayer={false}
+							loading={() => {
+								return (
+									<div className="flex justify-center items-center w-full h-full gap-4 p-4">
+										<span className="text-lg font-medium">
+											Carregando a página, aguarde.
+										</span>
+										<CgSpinner className="text-xl text-current animate-spin" />
+									</div>
+								);
+							}}
+							noData={() => {
+								return (
+									<div className="flex flex-col justify-center items-center w-full h-full gap-4 p-4">
+										<span className="text-lg font-medium">
+											Nenhuma página foi selecionado.
+										</span>
+									</div>
+								);
+							}}
+						/>
+						<div className="flex justify-center items-center relative bottom-10">
+							<div className="flex items-center w-fit gap-2 px-1 bg-black-100/30 backdrop-blur-sm rounded">
+								<button
+									className="text-black-main disabled:text-black-300/70 disabled:cursor-not-allowed"
+									onClick={onPreviousPage}
+									disabled={pages ? page <= 1 : true}
+								>
+									<MdArrowLeft className="text-3xl" />
+								</button>
+								<span>
+									{page} de {pages || "?"}
+								</span>
+								<button
+									className="text-black-main disabled:text-black-300 disabled:cursor-not-allowed"
+									onClick={onNextPage}
+									disabled={pages ? page >= pages : true}
+								>
+									<MdArrowRight className="text-3xl" />
+								</button>
+							</div>
+						</div>
+					</Document>
 				</div>
 			</Main>
 		</>

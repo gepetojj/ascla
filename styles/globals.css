@@ -224,3 +224,19 @@ button {
 	margin-left: auto;
 	margin-right: auto;
 }
+
+.react-pdf__Page__svg,
+.react-pdf__Page__svg svg,
+.react-pdf__Page__textContent {
+	width: 100% !important;
+	height: 100% !important;
+	max-width: 50rem;
+}
+
+.react-pdf__Page__textContent {
+	@apply sr-only;
+}
+
+.react-pdf__message {
+	@apply flex h-full w-full flex-col;
+}
