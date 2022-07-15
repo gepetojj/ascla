@@ -22,14 +22,16 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">
 				<div className="flex justify-center items-center flex-wrap max-w-5xl">
 					{patrons?.length ? (
-						patrons.map(patron => (
-							<CardChairOccupant
-								key={patron.id}
-								number={patron.metadata.chair}
-								name={patron.name}
-								href={`/cadeiras/patronos/${patron.metadata.urlId}`}
-							/>
-						))
+						patrons
+							.sort((a, b) => a.metadata.chair - b.metadata.chair)
+							.map(patron => (
+								<CardChairOccupant
+									key={patron.id}
+									number={patron.metadata.chair}
+									name={patron.name}
+									href={`/cadeiras/patronos/${patron.metadata.urlId}`}
+								/>
+							))
 					) : (
 						<span className="text-xl">Não há patronos registrados.</span>
 					)}

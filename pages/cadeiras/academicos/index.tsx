@@ -25,14 +25,16 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 			>
 				<div className="flex justify-center items-center flex-wrap max-w-5xl">
 					{academics?.length ? (
-						academics.map(academic => (
-							<CardChairOccupant
-								key={academic.id}
-								number={academic.metadata.chair}
-								name={academic.name}
-								href={`/cadeiras/academicos/${academic.metadata.urlId}`}
-							/>
-						))
+						academics
+							.sort((a, b) => a.metadata.chair - b.metadata.chair)
+							.map(academic => (
+								<CardChairOccupant
+									key={academic.id}
+									number={academic.metadata.chair}
+									name={academic.name}
+									href={`/cadeiras/academicos/${academic.metadata.urlId}`}
+								/>
+							))
 					) : (
 						<span className="text-xl">Não há acadêmicos registrados.</span>
 					)}
