@@ -21,18 +21,23 @@ const AboutHistory: NextPage = () => {
 					<p>
 						O Portal Maltanet, do jornalista José Malta Fontes Neto, teve um papel
 						fundamental na expansão das produções literárias no sertão na década de
-						1990. Muito mais que isso! O veículo informativo e noticioso, inovou ao
-						criar um mural de recado, encurtou a distância entre os santanenses
-						espalhados pelo Brasil afora.
+						1990. Muito mais que isso! Empresa digital voltada à produção de conteúdo
+						informativo e comercial, inovou ao abrir espaço de interação entre os
+						santanenses, encurtando distância e promovendo ideias e congraçamento entre
+						conterrâneos espalhados pelo Brasil afora. Não tardou para que o grupo
+						pedisse a abertura de espaço para divulgação e promoção da cultura e, em
+						especial, a produção literária local.
 					</p>
 					<p>
-						Ao mesmo tempo, noticiou ao mundo digital que brotava uma nascente de ideias
-						que não mais parou de jorrar até os dias atuais, inspirada e guiada nos
-						exemplos de Tadeu Rocha, Breno Accioly, José Marques Melo, Oscar Silva, Raul
-						Pereira Monteiro, Clerisvaldo Braga das Chagas e Djalma Carvalho,
-						despontando uma geração de novos escritores que resultou na publicação da
-						série de livros coletivos: À Sombra do Umbuzeiro (2006), À Sombra do
-						Juazeiro (2008) e À Sombra da Quixabeira (2010).
+						Deu tão certo que não tardou em noticiar ao mundo digital que brotava uma
+						fonte de ideias que não parou de jorrar até os dias atuais, inspirada e
+						guiada nos exemplos de Tadeu Rocha, Breno Accioly, José Marques Melo, Oscar
+						Silva, Raul Pereira Monteiro, Clerisvaldo Braga das Chagas e Djalma
+						Carvalho, despontando uma geração de novos escritores que resultou na
+						publicação da série de livros coletivos: À Sombra do Umbuzeiro(2006), À
+						Sombra do Juazeiro (2008) e À Sombra da Quixabeira(2010). Uma das
+						escritoras, Maria do Socorro Farias Ricardo, nomeou a terra natal como a
+						“Terra dos Escritores”.
 					</p>
 					<p>
 						Os participantes do movimento literário se uniram para fortalecer o
