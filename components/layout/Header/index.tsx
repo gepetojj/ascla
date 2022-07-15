@@ -53,9 +53,6 @@ const HeaderComponent: FC = () => {
 					<Link href="/sobre/estatuto">
 						<a>Estatuto</a>
 					</Link>
-					<Link href="/sobre/sede">
-						<a>Sede</a>
-					</Link>
 				</HeaderLink>
 				<HeaderLink
 					href="#"
