@@ -84,9 +84,9 @@ const Contact: NextPage = () => {
 								Administrador -{" "}
 								<a
 									className="hover:underline"
-									href="mailto:asclasi.contato@gmail.com"
+									href="mailto:ascla.contato@gmail.com"
 								>
-									asclasi.contato@gmail.com
+									ascla.contato@gmail.com
 								</a>
 							</p>
 						</span>
