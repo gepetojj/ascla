@@ -172,6 +172,7 @@ FileInputComponent.propTypes = {
 	label: propTypes.string,
 	avatar: propTypes.string,
 	setAvatar: propTypes.func.isRequired,
+	previous: propTypes.string,
 };
 
 export const FileInput = memo(FileInputComponent);

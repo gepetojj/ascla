@@ -36,9 +36,10 @@ const AdminAcademicsNew: NextPage = () => {
 	useEffect(() => {
 		if (data && !error) {
 			setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
-			setSelectedPatron(patrons.find(patron => patron.id === "nenhum"));
+			// @ts-expect-error O patrono abaixo não precisa ter as demais propriedades.
+			setSelectedPatron({ id: "nenhum", name: "Nenhum" });
 		}
-	}, [data, error, patrons]);
+	}, [data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {

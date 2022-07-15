@@ -1,10 +1,12 @@
 import type { JSONContent } from "@tiptap/core";
 
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron, UpdatablePatron } from "entities/Patron";
 import { apiHandler } from "helpers/apiHandler";
 import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getToken } from "next-auth/jwt";
 
 interface UpdatePatron {
 	id?: string;
@@ -64,6 +66,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				// enviar resposta diferente.
 
 				await col.doc(id).update(patron);
+
+				// Altera o patronId do acadêmico escolhido para este
+				const token = await getToken({
+					req,
+					secret: process.env.NEXTAUTH_SECRET,
+					raw: true,
+				});
+				await fetch(`${config.basePath}/api/academics/update`, {
+					method: "PUT",
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify({
+						id: academicId,
+						patronId: id,
+					}),
+				});
+
 				res.json({ message: "Patrono atualizado com sucesso." });
 			} catch (err) {
 				console.error(err);

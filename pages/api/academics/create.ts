@@ -1,11 +1,13 @@
 import type { JSONContent } from "@tiptap/core";
 
+import { config } from "config";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { getIdFromText } from "helpers/getIdFromText";
 import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getToken } from "next-auth/jwt";
 import { v4 as uuid } from "uuid";
 
 interface NewAcademic {
@@ -64,6 +66,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				};
 
 				await col.doc(academic.id).create(academic);
+
+				// Altera o academicId do patrono escolhido para este
+				const token = await getToken({
+					req,
+					secret: process.env.NEXTAUTH_SECRET,
+					raw: true,
+				});
+				await fetch(`${config.basePath}/api/patrons/update`, {
+					method: "PUT",
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify({
+						id: patronId,
+						academicId,
+					}),
+				});
+
 				res.json({ message: "Acadêmico criado com sucesso." });
 			} catch (err) {
 				console.error(err);
