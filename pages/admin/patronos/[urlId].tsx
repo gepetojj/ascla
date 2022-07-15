@@ -35,10 +35,12 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
 		if (data && !error) {
-			setAcademics(data.academics);
-			setSelectedAcademic(academics.find(({ id }) => id === patron.metadata.academicId));
+			setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
+			setSelectedAcademic(
+				(data.academics as Academic[]).find(({ id }) => id === patron.metadata.academicId)
+			);
 		}
-	}, [academics, patron, data, error]);
+	}, [patron, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -81,14 +83,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (
-				!name ||
-				!selectedAcademic ||
-				chair < 1 ||
-				chair > 1000 ||
-				!avatar ||
-				!editorContent.content?.length
-			) {
+			if (!name || chair < 1 || chair > 1000 || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -105,9 +100,12 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 			fetcher({
 				id: patron.id,
 				name,
-				academicId: selectedAcademic.id,
+				academicId:
+					selectedAcademic?.id === "nenhum"
+						? undefined
+						: selectedAcademic?.id || undefined,
 				chair,
-				avatar,
+				avatar: avatar || undefined,
 				bio: editorContent,
 			});
 		},
@@ -136,7 +134,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 						required
 					/>
 					<Select
-						label="Escolha um acadêmico *"
+						label="Escolha um acadêmico"
 						options={academics}
 						selected={selectedAcademic}
 						onChange={selected => setSelectedAcademic(selected as Academic)}
@@ -154,7 +152,7 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 					/>
 					<FileInput
 						id="avatar"
-						label="Insira uma imagem *"
+						label="Insira uma imagem"
 						previous={patron.avatarUrl}
 						avatar={avatar}
 						setAvatar={setAvatar}

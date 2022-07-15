@@ -38,10 +38,12 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
 		if (data && !error) {
-			setPatrons(data.patrons);
-			setSelectedPatron(patrons.find(({ id }) => id === academic.metadata.patronId));
+			setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
+			setSelectedPatron(
+				(data.patrons as Patron[]).find(({ id }) => id === academic.metadata.patronId)
+			);
 		}
-	}, [academic, patrons, data, error]);
+	}, [academic, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -84,14 +86,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (
-				!name ||
-				!selectedPatron?.id ||
-				chair < 1 ||
-				chair > 1000 ||
-				!avatar ||
-				!editorContent.content?.length
-			) {
+			if (!name || chair < 1 || chair > 1000 || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -108,9 +103,10 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 			fetcher({
 				id: academic.id,
 				name,
-				patronId: selectedPatron.id,
+				patronId:
+					selectedPatron?.id === "nenhum" ? undefined : selectedPatron?.id || undefined,
 				chair,
-				avatar,
+				avatar: avatar || undefined,
 				bio: editorContent,
 			});
 		},
@@ -139,7 +135,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 						required
 					/>
 					<Select
-						label="Escolha um patrono *"
+						label="Escolha um patrono"
 						options={patrons}
 						selected={selectedPatron}
 						onChange={selected => setSelectedPatron(selected as Patron)}
@@ -157,7 +153,7 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 					/>
 					<FileInput
 						id="avatar"
-						label="Insira uma imagem *"
+						label="Insira uma imagem"
 						previous={academic.avatarUrl}
 						avatar={avatar}
 						setAvatar={setAvatar}
