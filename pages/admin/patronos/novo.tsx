@@ -30,8 +30,11 @@ const AdminPatronsNew: NextPage = () => {
 
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
-	}, [data, error]);
+		if (data && !error) {
+			setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
+			setSelectedAcademic(academics.find(academic => academic.id === "nenhum"));
+		}
+	}, [data, error, academics]);
 
 	useEffect(() => {
 		const onSuccess = () => {

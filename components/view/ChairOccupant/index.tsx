@@ -94,15 +94,17 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 					<h2 className="text-center text-xl font-semibold">
 						{oppositeType === "academic" ? "Acadêmico" : "Patrono"}
 					</h2>
-					<Link
-						href={`/cadeiras/${
-							oppositeType === "academic" ? "academicos" : "patronos"
-						}/${oppositeUrlId}`}
-					>
-						<a className="truncate hover:underline">
-							{oppositeName || "Nome do participante"}
-						</a>
-					</Link>
+					{oppositeName && oppositeUrlId ? (
+						<Link
+							href={`/cadeiras/${
+								oppositeType === "academic" ? "academicos" : "patronos"
+							}/${oppositeUrlId}`}
+						>
+							<a className="truncate hover:underline">{oppositeName}</a>
+						</Link>
+					) : (
+						<span className="truncate">Nenhum</span>
+					)}
 				</div>
 				<div className="flex flex-col justify-center mt-4 gap-1">
 					<button

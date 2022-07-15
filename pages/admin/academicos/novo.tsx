@@ -34,8 +34,11 @@ const AdminAcademicsNew: NextPage = () => {
 
 	// Lista os patronos para mostrar na seleção
 	useEffect(() => {
-		data && !error && setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
-	}, [data, error]);
+		if (data && !error) {
+			setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
+			setSelectedPatron(patrons.find(patron => patron.id === "nenhum"));
+		}
+	}, [data, error, patrons]);
 
 	useEffect(() => {
 		const onSuccess = () => {
