@@ -35,9 +35,10 @@ const AdminPatronsEdit: NextPage<Props> = ({ patron }) => {
 	// Lista os acadêmicos para mostrar na seleção
 	useEffect(() => {
 		if (data && !error) {
-			setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
+			const list = [{ id: "nenhum", name: "Nenhum" }, ...data.academics];
+			setAcademics(list);
 			setSelectedAcademic(
-				(data.academics as Academic[]).find(({ id }) => id === patron.metadata.academicId)
+				(list as Academic[]).find(({ id }) => patron.metadata.academicId === id)
 			);
 		}
 	}, [patron, data, error]);

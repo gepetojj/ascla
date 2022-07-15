@@ -51,9 +51,10 @@ const AdminPatronsNew: NextPage = () => {
 	useEffect(() => {
 		if (data && !error) {
 			setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
-			setSelectedAcademic(academics.find(academic => academic.id === "nenhum"));
+			// @ts-expect-error O acadêmico abaixo não precisa ter as demais propriedades.
+			setSelectedAcademic({ id: "nenhum", name: "Nenhum" });
 		}
-	}, [data, error, academics]);
+	}, [data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {
