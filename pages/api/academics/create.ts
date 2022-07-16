@@ -12,9 +12,9 @@ import { v4 as uuid } from "uuid";
 
 interface NewAcademic {
 	name: string;
-	patronId: string;
+	patronId?: string;
 	chair: number;
-	avatar: string;
+	avatar?: string;
 	bio: JSONContent;
 }
 
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const { name, patronId, chair, avatar, bio }: NewAcademic = req.body;
 
 			// TODO: Adicionar validação aos dados
-			if (!name || !patronId || !chair || !avatar || !bio.content?.length) {
+			if (!name || !chair || !bio.content?.length) {
 				res.status(400).json({
 					message: "Informe os dados do acadêmico corretamente.",
 				});
@@ -49,7 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 
 				const academicId = uuid();
-				const upload = await uploadAvatar(avatar, session.sub, academicId);
+				const upload = avatar
+					? await uploadAvatar(avatar, session.sub, academicId)
+					: {
+							link: "https://ik.imagekit.io/gepetojj/ascla/tr:w-124,f-auto,cm-pad_resize,q-75/usuario-padrao.webp",
+					  };
 
 				const academic: Academic = {
 					id: academicId,
@@ -57,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						urlId: customUrl,
 						createdAt: Date.now(),
 						updatedAt: 0,
-						patronId,
+						patronId: patronId || "nenhum",
 						chair,
 					},
 					name,

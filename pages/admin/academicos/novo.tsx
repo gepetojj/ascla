@@ -101,14 +101,7 @@ const AdminAcademicsNew: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (
-				!name ||
-				!selectedPatron?.id ||
-				chair < 1 ||
-				chair > 1000 ||
-				!avatar ||
-				!editorContent.content?.length
-			) {
+			if (!name || chair < 1 || chair > 1000 || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -122,7 +115,13 @@ const AdminAcademicsNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ name, patronId: selectedPatron.id, chair, avatar, bio: editorContent });
+			fetcher({
+				name,
+				patronId: selectedPatron?.id || "nenhum",
+				chair,
+				avatar: avatar || undefined,
+				bio: editorContent,
+			});
 		},
 		[fetcher, name, selectedPatron, chair, avatar, editorContent]
 	);

@@ -12,9 +12,9 @@ import { v4 as uuid } from "uuid";
 
 interface NewPatron {
 	name: string;
-	academicId: string;
+	academicId?: string;
 	chair: number;
-	avatar: string;
+	avatar?: string;
 	bio: JSONContent;
 }
 
@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const { name, academicId, chair, avatar, bio }: NewPatron = req.body;
 
 			// TODO: Adicionar validação aos dados
-			if (!name || !academicId || !chair || !avatar || !bio.content?.length) {
+			if (!name || !chair || !bio.content?.length) {
 				res.status(400).json({ message: "Informe os dados do patrono corretamente." });
 				return res;
 			}
@@ -47,7 +47,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				}
 
 				const patronId = uuid();
-				const upload = await uploadAvatar(avatar, session.sub, patronId);
+				const upload = avatar
+					? await uploadAvatar(avatar, session.sub, patronId)
+					: {
+							link: "https://ik.imagekit.io/gepetojj/ascla/tr:w-124,f-auto,cm-pad_resize,q-75/usuario-padrao.webp",
+					  };
 
 				const patron: Patron = {
 					id: patronId,
@@ -55,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						urlId: customUrl,
 						createdAt: Date.now(),
 						updatedAt: 0,
-						academicId,
+						academicId: academicId || "nenhum",
 						chair,
 					},
 					name,
