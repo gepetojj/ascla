@@ -23,22 +23,22 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 				title="Acadêmicos"
 				className="flex flex-col justify-center items-center p-6 pb-10"
 			>
-				<div className="flex justify-center items-center flex-wrap max-w-5xl">
+				<ul className="flex justify-center items-center flex-wrap max-w-5xl">
 					{academics?.length ? (
 						academics
 							.sort((a, b) => a.metadata.chair - b.metadata.chair)
 							.map(academic => (
 								<CardChairOccupant
 									key={academic.id}
-									number={academic.metadata.chair}
 									name={academic.name}
+									number={academic.metadata.chair}
 									href={`/cadeiras/academicos/${academic.metadata.urlId}`}
 								/>
 							))
 					) : (
 						<span className="text-xl">Não há acadêmicos registrados.</span>
 					)}
-				</div>
+				</ul>
 			</Main>
 		</>
 	);

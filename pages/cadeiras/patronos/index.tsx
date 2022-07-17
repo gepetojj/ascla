@@ -20,7 +20,7 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 			/>
 
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">
-				<div className="flex justify-center items-center flex-wrap max-w-5xl">
+				<ul className="flex justify-center items-center flex-wrap max-w-5xl">
 					{patrons?.length ? (
 						patrons
 							.sort((a, b) => a.metadata.chair - b.metadata.chair)
@@ -35,7 +35,7 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 					) : (
 						<span className="text-xl">Não há patronos registrados.</span>
 					)}
-				</div>
+				</ul>
 			</Main>
 		</>
 	);

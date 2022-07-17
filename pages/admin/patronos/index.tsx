@@ -83,16 +83,18 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 					</div>
 					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-2">
 						{patrons?.length ? (
-							patrons.map(patron => (
-								<EditableItem
-									key={patron.id}
-									title={patron.name}
-									editUrl={`/admin/patronos/${patron.metadata.urlId}`}
-									deleteAction={() => deletePatron(patron.id)}
-									loading={loading}
-									deleteLabel="Clique duas vezes para deletar o patrono permanentemente."
-								/>
-							))
+							patrons
+								.sort((a, b) => a.metadata.chair - b.metadata.chair)
+								.map(patron => (
+									<EditableItem
+										key={patron.id}
+										title={patron.name}
+										editUrl={`/admin/patronos/${patron.metadata.urlId}`}
+										deleteAction={() => deletePatron(patron.id)}
+										loading={loading}
+										deleteLabel="Clique duas vezes para deletar o patrono permanentemente."
+									/>
+								))
 						) : (
 							<p>Não há patronos ainda.</p>
 						)}

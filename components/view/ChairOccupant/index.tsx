@@ -86,8 +86,8 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 						unoptimized
 					/>
 				</div>
-				<div className="w-full text-center">
-					<h2 className="text-xl font-semibold break-words max-w-xl">{name}</h2>
+				<div className="flex flex-col gap-1 w-full text-center">
+					<h2 className="text-xl font-semibold break-words leading-tight max-w-xs">{name}</h2>
 					<span className="truncate">Cadeira Nº {chair < 10 ? `0${chair}` : chair}</span>
 				</div>
 				<div className="w-full text-center">

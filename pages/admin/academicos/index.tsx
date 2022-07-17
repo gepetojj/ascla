@@ -83,16 +83,18 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 					</div>
 					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-2">
 						{academics?.length ? (
-							academics.map(academic => (
-								<EditableItem
-									key={academic.id}
-									title={academic.name}
-									editUrl={`/admin/academicos/${academic.metadata.urlId}`}
-									deleteAction={() => deleteAcademic(academic.id)}
-									loading={loading}
-									deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
-								/>
-							))
+							academics
+								.sort((a, b) => a.metadata.chair - b.metadata.chair)
+								.map(academic => (
+									<EditableItem
+										key={academic.id}
+										title={academic.name}
+										editUrl={`/admin/academicos/${academic.metadata.urlId}`}
+										deleteAction={() => deleteAcademic(academic.id)}
+										loading={loading}
+										deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
+									/>
+								))
 						) : (
 							<p>Não há acadêmicos ainda.</p>
 						)}
