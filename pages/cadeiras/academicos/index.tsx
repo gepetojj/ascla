@@ -1,10 +1,12 @@
 import { CardChairOccupant } from "components/card/ChairOccupant";
+import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { Academic } from "entities/Academic";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
@@ -12,6 +14,8 @@ interface Props {
 }
 
 const Patrons: NextPage<Props> = ({ academics }) => {
+	const { query } = useRouter();
+
 	return (
 		<>
 			<NextSeo
@@ -23,6 +27,25 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 				title="Acadêmicos"
 				className="flex flex-col justify-center items-center p-6 pb-10"
 			>
+				<Search
+					data={academics}
+					options={{
+						keys: ["name", "metadata.chair"],
+					}}
+					matchComponent={match => {
+						const item = match.item as Academic;
+						return (
+							<CardChairOccupant
+								key={item.id}
+								name={item.name}
+								number={item.metadata.chair}
+								href={`/cadeiras/academicos/${item.metadata.urlId}`}
+							/>
+						);
+					}}
+					initialSearch={typeof query.search === "string" ? query.search : undefined}
+					placeholder="Procure acadêmicos:"
+				/>
 				<ul className="flex justify-center items-center flex-wrap max-w-5xl">
 					{academics?.length ? (
 						academics
