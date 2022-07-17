@@ -44,7 +44,7 @@ const Contact: NextPage = () => {
 							<div>
 								<MdCall className="text-xl" />
 							</div>
-							<p>(82) 99928-2075</p>
+							<p>(82) 99928-2412</p>
 						</span>
 					</div>
 					<div className="flex flex-col gap-1">
@@ -84,9 +84,9 @@ const Contact: NextPage = () => {
 								Administrador -{" "}
 								<a
 									className="hover:underline"
-									href="mailto:ascla.contato@gmail.com"
+									href="mailto:aslca.contato@gmail.com"
 								>
-									ascla.contato@gmail.com
+									aslca.contato@gmail.com
 								</a>
 							</p>
 						</span>

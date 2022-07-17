@@ -88,10 +88,10 @@ const AboutHistory: NextPage = () => {
 								loading="lazy"
 								width={450}
 								height={250}
-								alt="Imagem do evento da fundação (29/08/2012)"
+								alt="Imagem do evento da fundação (29/05/2012)"
 							/>
 							<figcaption className="text-center">
-								Evento da fundação (29/08/2012)
+								Evento da fundação (29/05/2012)
 							</figcaption>
 						</figure>
 					</div>
