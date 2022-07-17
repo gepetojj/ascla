@@ -14,13 +14,14 @@ interface Props {
 }
 
 const Patrons: NextPage<Props> = ({ academics }) => {
-	const { query } = useRouter();
+	const { query, pathname } = useRouter();
 
 	return (
 		<>
 			<NextSeo
 				title="Acadêmicos"
 				description={`Veja a lista de acadêmicos da ${config.shortName}.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main

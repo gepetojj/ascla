@@ -17,6 +17,7 @@ const ViewBlogPost: NextPage<Props> = ({ post }) => {
 			<NextSeo
 				title={`Blog - ${post.title || "Não encontrado"}`}
 				description={post.description}
+				canonical={`${config.basePath}/blog/${post.metadata.urlId}`}
 				openGraph={{
 					title: post.title,
 					description: post.description,

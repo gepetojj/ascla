@@ -3,14 +3,18 @@ import { config } from "config";
 import { IKImage } from "imagekitio-react";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import React from "react";
 
 const AboutHistory: NextPage = () => {
+	const { pathname } = useRouter();
+
 	return (
 		<>
 			<NextSeo
 				title="Sobre - História"
 				description={`Conheça a história da ${config.fullName}.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main

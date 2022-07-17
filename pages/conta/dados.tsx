@@ -9,10 +9,12 @@ import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
 const AccountData: NextPage = () => {
+	const { pathname } = useRouter();
 	const { data } = useSession();
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/users/self-update",
@@ -96,7 +98,11 @@ const AccountData: NextPage = () => {
 
 	return (
 		<>
-			<NextSeo title="Sua conta" description={`Gerencie sua conta da ${config.shortName}`} />
+			<NextSeo
+				title="Sua conta"
+				description={`Gerencie sua conta da ${config.shortName}`}
+				canonical={`${config.basePath}${pathname}`}
+			/>
 
 			<Main title="Sua conta">
 				<div className="flex flex-col justify-center gap-10 md:flex-row md:gap-32">

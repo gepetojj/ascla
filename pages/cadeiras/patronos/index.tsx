@@ -14,13 +14,14 @@ interface Props {
 }
 
 const Patrons: NextPage<Props> = ({ patrons }) => {
-	const { query } = useRouter();
+	const { query, pathname } = useRouter();
 
 	return (
 		<>
 			<NextSeo
 				title="Patronos"
 				description={`Veja a lista de patronos da ${config.shortName}.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main title="Patronos" className="flex flex-col justify-center items-center p-6 pb-10">

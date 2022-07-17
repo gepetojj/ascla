@@ -2,17 +2,21 @@ import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import React from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { CgInstagram } from "react-icons/cg";
 import { MdMap, MdCall, MdEmail } from "react-icons/md";
 
 const Contact: NextPage = () => {
+	const { pathname } = useRouter();
+
 	return (
 		<>
 			<NextSeo
 				title="Contato"
 				description={`Entre em contato com a ${config.shortName} a partir dos meios informados nesta página.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main title="Contato" className="flex flex-col justify-center items-center p-6 pb-10">

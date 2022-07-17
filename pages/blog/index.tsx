@@ -5,6 +5,7 @@ import type { BlogPost } from "entities/BlogPost";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
@@ -12,11 +13,14 @@ interface Props {
 }
 
 const Blog: NextPage<Props> = ({ posts }) => {
+	const { pathname } = useRouter();
+
 	return (
 		<>
 			<NextSeo
 				title="Blog"
 				description={`Veja as postagens feitas pelos acadêmicos da ${config.shortName}.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main title="Blog" className="flex flex-col justify-center items-center p-6 pb-10">

@@ -12,7 +12,7 @@ import { Store } from "react-notifications-component";
 import { Document, Page, pdfjs } from "react-pdf";
 
 const AboutStatute: NextPage = () => {
-	const { reload } = useRouter();
+	const { reload, pathname } = useRouter();
 	const [pages, setPages] = useState<number | null>(null);
 	const [page, setPage] = useState(1);
 
@@ -53,6 +53,7 @@ const AboutStatute: NextPage = () => {
 			<NextSeo
 				title="Sobre - Estatuto"
 				description={`Conheça o estatuto da ${config.fullName}.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main

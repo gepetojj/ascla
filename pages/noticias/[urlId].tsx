@@ -20,6 +20,7 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 			<NextSeo
 				title={`Notícias - ${news.title || "Não encontrado"}`}
 				description={news.description}
+				canonical={`${config.basePath}/noticias/${news.metadata.urlId}`}
 				openGraph={{
 					title: news.title,
 					description: news.description,

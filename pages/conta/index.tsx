@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { ImGoogle } from "react-icons/im";
 
 const Account: NextPage = () => {
-	const { push } = useRouter();
+	const { push, pathname } = useRouter();
 	const { data, status } = useSession();
 
 	useEffect(() => {
@@ -28,6 +28,7 @@ const Account: NextPage = () => {
 			<NextSeo
 				title="Faça login"
 				description="Faça login com uma conta Google para acessar funções especiais!"
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<main className="flex flex-col justify-center items-center h-screen bg-primary-200">

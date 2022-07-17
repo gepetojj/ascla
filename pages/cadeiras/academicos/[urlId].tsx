@@ -31,6 +31,7 @@ const ViewAcademic: NextPage<Props> = ({ academic }) => {
 			<NextSeo
 				title={`Acadêmicos - ${academic.name || "Não encontrado"}`}
 				description={`Conheça mais sobre o acadêmico ${academic.name} da ${config.shortName}.`}
+				canonical={`${config.basePath}/cadeiras/academicos/${academic.metadata.urlId}`}
 			/>
 
 			<Main title={academic.name} className="p-6 pb-12">

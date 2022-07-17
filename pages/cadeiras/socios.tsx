@@ -2,14 +2,18 @@ import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import React from "react";
 
 const Members: NextPage = () => {
+	const { pathname } = useRouter();
+
 	return (
 		<>
 			<NextSeo
 				title="Sócios"
 				description={`Veja a lista de sócios da ${config.shortName}.`}
+				canonical={`${config.basePath}${pathname}`}
 			/>
 
 			<Main title="Sócios" className="p-6 pb-10">

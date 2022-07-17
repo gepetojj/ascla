@@ -31,6 +31,7 @@ const ViewPatron: NextPage<Props> = ({ patron }) => {
 			<NextSeo
 				title={`Patronos - ${patron.name || "Não encontrado"}`}
 				description={`Conheça mais sobre o patrono ${patron.name} da ${config.shortName}.`}
+				canonical={`${config.basePath}/cadeiras/patronos/${patron.metadata.urlId}`}
 			/>
 
 			<Main title={patron.name} className="p-6 pb-12">
