@@ -73,7 +73,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 		<section className="flex flex-col-reverse justify-center w-full h-full gap-10 md:flex-row">
 			<article className="flex justify-center max-w-2xl w-full">
 				<div
-					className="prose max-w-full"
+					className="prose w-full"
 					/* # skipcq: JS-0440 */
 					dangerouslySetInnerHTML={{ __html: contentHTML }}
 				/>
