@@ -148,7 +148,7 @@ const AdminAcademicsNew: NextPage = () => {
 						required
 					/>
 					<Select
-						label="Escolha um patrono *"
+						label="Escolha um patrono"
 						options={patrons}
 						selected={selectedPatron}
 						onChange={selected => setSelectedPatron(selected as Patron)}
@@ -166,7 +166,7 @@ const AdminAcademicsNew: NextPage = () => {
 					/>
 					<FileInput
 						id="avatar"
-						label="Insira uma imagem *"
+						label="Insira uma imagem"
 						avatar={avatar}
 						setAvatar={setAvatar}
 					/>

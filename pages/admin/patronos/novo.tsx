@@ -142,7 +142,7 @@ const AdminPatronsNew: NextPage = () => {
 						required
 					/>
 					<Select
-						label="Escolha um acadêmico *"
+						label="Escolha um acadêmico"
 						options={academics}
 						selected={selectedAcademic}
 						onChange={selected => setSelectedAcademic(selected as Academic)}
@@ -160,7 +160,7 @@ const AdminPatronsNew: NextPage = () => {
 					/>
 					<FileInput
 						id="avatar"
-						label="Insira uma imagem *"
+						label="Insira uma imagem"
 						avatar={avatar}
 						setAvatar={setAvatar}
 					/>
