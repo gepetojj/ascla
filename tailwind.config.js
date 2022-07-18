@@ -49,6 +49,7 @@ module.exports = {
 			},
 			fontFamily: {
 				body: ["'Montserrat'", "sans-serif"],
+				special: ["'Nothing You Could Do'", "cursive"],
 			},
 		},
 	},

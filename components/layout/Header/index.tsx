@@ -31,7 +31,7 @@ const HeaderComponent: FC = () => {
 				</div>
 				<div className="flex flex-col justify-center ml-5">
 					<h1 className="text-2xl font-medium">{config.shortName}</h1>
-					<h2 className="text-sm font-medium">10 anos</h2>
+					<h2 className="font-special">10 anos</h2>
 				</div>
 			</div>
 			<nav

@@ -21,29 +21,25 @@ const HighlightViewComponent: FC = () => {
 			<div className="w-full h-60 px-4">
 				{/* -- Mobile -- */}
 				<div className="w-full h-60 bg-primary-main relative overflow-x-auto overflow-y-hidden lg:hidden">
-					<div>
-						<Image
-							src={`https://ik.imagekit.io/gepetojj/ascla/tr:w-1050,h-240/highlight?renew=${hlCache}`}
-							alt="Coletânea de imagens da história de Santana do Ipanema"
-							layout="fixed"
-							width={1050}
-							height={240}
-							priority
-						/>
-					</div>
+					<Image
+						src={`https://ik.imagekit.io/gepetojj/ascla/tr:w-1050,h-240/highlight?renew=${hlCache}`}
+						alt="Coletânea de imagens da história de Santana do Ipanema"
+						layout="fixed"
+						width={1050}
+						height={240}
+						priority
+					/>
 				</div>
 				{/* -- Desktop -- */}
 				<div className="w-full h-60 bg-primary-main relative overflow-x-auto overflow-y-hidden hidden lg:flex">
-					<div>
-						<Image
-							src={`https://ik.imagekit.io/gepetojj/ascla/tr:w-1050,h-240/highlight?renew=${hlCache}`}
-							alt="Coletânea de imagens da história de Santana do Ipanema"
-							layout="fill"
-							objectFit="cover"
-							objectPosition="center"
-							priority
-						/>
-					</div>
+					<Image
+						src={`https://ik.imagekit.io/gepetojj/ascla/tr:w-1050,h-240/highlight?renew=${hlCache}`}
+						alt="Coletânea de imagens da história de Santana do Ipanema"
+						layout="fill"
+						objectFit="cover"
+						objectPosition="center"
+						priority
+					/>
 				</div>
 			</div>
 			<div className="flex justify-center items-center w-full mt-2 gap-1 lg:hidden">
