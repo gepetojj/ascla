@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/core";
 
+import { Academic } from "./Academic";
 import type { DefaultMetadata } from "./DefaultMetadata";
 import type { User } from "./User";
 
@@ -13,14 +14,20 @@ export interface BlogPostMetadata extends DefaultMetadata {
 	authorId: User["id"];
 }
 
+export interface BlogPostWithAuthorMetadata extends DefaultMetadata {
+	/** Objeto do autor, podendo ser como usuário ou como acadêmico. */
+	authorId: User["id"];
+	author?: User | Academic;
+}
+
 /**
  * Estrutura dos dados de uma postagem.
  */
-export interface BlogPost {
+export interface BlogPost<WithAuthor = false> {
 	/** ID da postagem. */
 	id: string;
 	/** Metadados da postagem. */
-	metadata: BlogPostMetadata;
+	metadata: WithAuthor extends true ? BlogPostWithAuthorMetadata : BlogPostMetadata;
 	/** Título da postagem. */
 	title: string;
 	/** Descrição da postagem. */

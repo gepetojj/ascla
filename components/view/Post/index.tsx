@@ -1,20 +1,17 @@
 import { config } from "config";
-import type { Academic } from "entities/Academic";
 import type { BlogPost } from "entities/BlogPost";
-import type { User } from "entities/User";
 import { useJSON } from "hooks/useJSON";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, { FC, memo, useCallback } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdEdit, MdShare, MdUpdate } from "react-icons/md";
 import { Store } from "react-notifications-component";
-import useSWR from "swr";
 
 import { Image } from "../Image";
 
-export type PostViewProps = Omit<BlogPost, "id">;
+export type PostViewProps = Omit<BlogPost<true>, "id">;
 
 /**
  * Renderiza a página de uma postagem.
@@ -26,26 +23,8 @@ export type PostViewProps = Omit<BlogPost, "id">;
  */
 const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, description }) => {
 	const session = useSession();
-	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
-		fetch(...args).then(res => res.json())
-	);
-	const [author, setAuthor] = useState<User>();
-	const [authorAsAcademic, setAuthorAsAcademic] = useState<Academic>();
 	const contentHTML = useJSON(content);
 	const { pathname } = useRouter();
-
-	useEffect(() => {
-		if (data && !error) {
-			const user: User = data.user;
-			setAuthor(user);
-			if (user.metadata.academicId) {
-				fetch(`/api/academics/read?id=${user.metadata.academicId}`).then(async res => {
-					const data = await res.json();
-					setAuthorAsAcademic(data.academic as Academic);
-				});
-			}
-		}
-	}, [data, error]);
 
 	const share = useCallback(() => {
 		try {
@@ -81,11 +60,7 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 			<aside className="flex flex-row justify-center items-center gap-4 md:flex-col md:justify-start md:gap-0">
 				<div>
 					<Image
-						src={
-							authorAsAcademic?.avatarUrl ||
-							author?.avatarUrl ||
-							"usuario-padrao.webp"
-						}
+						src={metadata.author?.avatarUrl || "usuario-padrao.webp"}
 						alt="Avatar do usuário"
 						width={74}
 						height={74}
@@ -94,15 +69,15 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 					/>
 				</div>
 				<div className="flex flex-col">
-					{authorAsAcademic ? (
-						<Link href={`/cadeiras/academicos/${authorAsAcademic.metadata?.urlId}`}>
+					{metadata.author && "patronId" in metadata.author.metadata ? (
+						<Link href={`/cadeiras/academicos/${metadata.author.metadata.urlId}`}>
 							<a className="text-lg text-center text-black-main font-medium break-words hover:underline">
-								{authorAsAcademic.name}
+								{metadata.author.name}
 							</a>
 						</Link>
 					) : (
 						<h3 className="text-lg text-center text-black-main font-medium break-words">
-							{author?.name || "Nome do autor"}
+							{metadata.author?.name || "Nome do autor"}
 						</h3>
 					)}
 					<div className="flex justify-center gap-2">

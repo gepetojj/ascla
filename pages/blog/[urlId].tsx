@@ -8,7 +8,7 @@ import { ArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	post: BlogPost;
+	post: BlogPost<true>;
 }
 
 const ViewBlogPost: NextPage<Props> = ({ post }) => {
@@ -37,7 +37,7 @@ const ViewBlogPost: NextPage<Props> = ({ post }) => {
 				datePublished={new Date(post.metadata.createdAt).toISOString()}
 				dateModified={new Date(post.metadata.updatedAt).toISOString()}
 				images={[]}
-				authorName={post.metadata.authorId}
+				authorName={post.metadata.author?.name || ""}
 			/>
 
 			<Main title={post.title} className="p-6 pb-12">
@@ -53,13 +53,15 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "blogPosts", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col
-				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
-				.get();
-			if (query.empty || !query.docs) return { notFound: true };
+		async () => {
+			const res = await fetch(
+				`${config.basePath}/api/blog/read?urlId=${ctx.query.urlId}&author=true`
+			);
+			if (res.ok) {
+				const data = (await res.json()) as { post: BlogPost<true> };
+				return { props: { post: data.post } };
+			}
 
-			const post = query.docs[0].data() as BlogPost;
-			return { props: { post } };
+			return { notFound: true };
 		}
 	);

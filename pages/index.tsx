@@ -1,15 +1,59 @@
 import { Main } from "components/layout/Main";
 import { HighlightView } from "components/view/Highlight";
 import { config } from "config";
+import { BlogPost } from "entities/BlogPost";
 import type { NextPage } from "next";
+import Link from "next/link";
 import React from "react";
 import { GoQuote } from "react-icons/go";
+import useSWR from "swr";
 
 const Home: NextPage = () => {
+	const latestNews = useSWR<{ news: BlogPost<true>[] }>(
+		"/api/news/list?latest=true&author=true",
+		(...args: [string]) => fetch(...args).then(res => res.json())
+	);
+	const latestBlogPost = useSWR<{ posts: BlogPost<true>[] }>(
+		"/api/blog/list?latest=true&author=true",
+		(...args: [string]) => fetch(...args).then(res => res.json())
+	);
+
 	return (
 		<Main title={config.fullName}>
 			<HighlightView />
-			<div className="flex flex-col justify-center items-center px-6 py-20">
+			<div className="flex flex-col justify-center items-center px-6 py-20 gap-16 lg:flex-row">
+				<div className="flex flex-col gap-4">
+					{latestNews.data?.news && latestNews.data.news.length > 0 && !latestNews.error && (
+						<div>
+							<h3 className="text-xl font-medium">Última notícia:</h3>
+							<p>
+								<Link href={`/noticias/${latestNews.data.news[0].metadata.urlId}`}>
+									<a className="font-bold hover:underline">
+										{latestNews.data.news[0].title}
+									</a>
+								</Link>
+								, por {latestNews.data.news[0].metadata.author?.name}.
+							</p>
+						</div>
+					)}
+					{latestBlogPost.data?.posts &&
+						latestBlogPost.data.posts.length > 0 &&
+						!latestBlogPost.error && (
+							<div>
+								<h3 className="text-xl font-medium">Última postagem do blog:</h3>
+								<p>
+									<Link
+										href={`/blog/${latestBlogPost.data.posts[0].metadata.urlId}`}
+									>
+										<a className="font-bold hover:underline">
+											{latestBlogPost.data.posts[0].title}
+										</a>
+									</Link>
+									, por {latestBlogPost.data.posts[0].metadata.author?.name}.
+								</p>
+							</div>
+						)}
+				</div>
 				<blockquote className="px-8 pt-6">
 					<div className="flex">
 						<div className="w-fit pr-3">

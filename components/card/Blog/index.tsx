@@ -1,14 +1,12 @@
 import type { BlogPost } from "entities/BlogPost";
 import { IKImage } from "imagekitio-react";
-import type { User } from "next-auth";
 import Link from "next/link";
 import propTypes from "prop-types";
-import React, { FC, memo, useState, useEffect } from "react";
+import React, { FC, memo } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
-import useSWR from "swr";
 
-export interface CardBlogProps extends BlogPost {
+export interface CardBlogProps extends BlogPost<true> {
 	/**
 	 * Tipo da postagem, pode variar entre `blog` e `noticias`.
 	 * Será usado para definir a url da postagem.
@@ -31,15 +29,6 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 	metadata,
 	type,
 }) => {
-	const { data, error } = useSWR(`/api/users/read?id=${metadata.authorId}`, (...args) =>
-		fetch(...args).then(res => res.json())
-	);
-	const [author, setAuthor] = useState<User>();
-
-	useEffect(() => {
-		data && !error && setAuthor(data.user);
-	}, [data, error]);
-
 	return (
 		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-secondary-400 sm:flex-row sm:justify-start sm:items-start">
 			<div className="flex justify-center items-center max-w-[300px] w-full h-full rounded shadow">
@@ -68,7 +57,7 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 					<div className="flex flex-wrap gap-5 text-black-200 truncate">
 						<div className="flex items-center gap-2">
 							<MdAccountCircle className="text-xl" />
-							<span>{author?.name || "Nome do autor"}</span>
+							<span>{metadata.author?.name || "Nome do autor"}</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<AiOutlineClockCircle className="text-xl" />

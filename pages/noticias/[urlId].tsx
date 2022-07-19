@@ -9,7 +9,7 @@ import { NewsArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	news: BlogPost;
+	news: BlogPost<true>;
 }
 
 const NewsPost: NextPage<Props> = ({ news }) => {
@@ -40,7 +40,7 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 				datePublished={new Date(news.metadata.createdAt).toISOString()}
 				dateModified={new Date(news.metadata.updatedAt).toISOString()}
 				images={[]}
-				authorName={news.metadata.authorId}
+				authorName={news.metadata.author?.name || ""}
 				section="culture"
 				keywords={news.title.replaceAll(" ", ",").toLowerCase()}
 				body={htmlString}
@@ -61,13 +61,15 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "news", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col
-				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
-				.get();
-			if (query.empty || !query.docs) return { notFound: true };
+		async () => {
+			const res = await fetch(
+				`${config.basePath}/api/news/read?urlId=${ctx.query.urlId}&author=true`
+			);
+			if (res.ok) {
+				const data = (await res.json()) as { news: BlogPost<true> };
+				return { props: { news: data.news } };
+			}
 
-			const news = query.docs[0].data() as BlogPost;
-			return { props: { news } };
+			return { notFound: true };
 		}
 	);

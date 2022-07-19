@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
-	news: BlogPost[];
+	news: BlogPost<true>[];
 }
 
 const News: NextPage<Props> = ({ news }) => {
@@ -39,12 +39,13 @@ const News: NextPage<Props> = ({ news }) => {
 export default News;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler(ctx, { col: "news", autoTry: true }, async col => {
-		const query = await col.get();
-		const news: BlogPost[] = [];
+	gSSPHandler(ctx, { col: "news", autoTry: true }, async () => {
+		let news: BlogPost<true>[] = [];
 
-		if (!query.empty) {
-			for (const post of query.docs) news.push({ ...post.data(), content: {} } as BlogPost);
+		const res = await fetch(`${config.basePath}/api/news/list?author=true`);
+		if (res.ok) {
+			const data = (await res.json()) as { news: BlogPost<true>[] };
+			news = data.news.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
 		}
 
 		return { props: { news } };
