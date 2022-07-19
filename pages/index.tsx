@@ -2,6 +2,7 @@ import { Main } from "components/layout/Main";
 import { HighlightView } from "components/view/Highlight";
 import { config } from "config";
 import { BlogPost } from "entities/BlogPost";
+import { IKImage } from "imagekitio-react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import React from "react";
@@ -21,19 +22,41 @@ const Home: NextPage = () => {
 	return (
 		<Main title={config.fullName}>
 			<HighlightView />
-			<div className="flex flex-col justify-center items-center px-6 py-20 gap-16 lg:flex-row">
-				<div className="flex flex-col gap-4">
+			<div
+				className={`flex flex-col justify-center items-center px-6 py-20 gap-16 lg:flex-row ${
+					latestNews.data && latestBlogPost.data ? "pt-16" : ""
+				}`}
+			>
+				<div className="flex flex-col gap-6">
 					{latestNews.data?.news && latestNews.data.news.length > 0 && !latestNews.error && (
 						<div>
 							<h3 className="text-xl font-medium">Última notícia:</h3>
-							<p>
-								<Link href={`/noticias/${latestNews.data.news[0].metadata.urlId}`}>
-									<a className="font-bold hover:underline">
-										{latestNews.data.news[0].title}
-									</a>
-								</Link>
-								, por {latestNews.data.news[0].metadata.author?.name}.
-							</p>
+							<div className="flex flex-col items-center gap-4 mt-5 max-w-lg sm:flex-row sm:items-start sm:mt-3">
+								<IKImage
+									urlEndpoint={process.env.NEXT_PUBLIC_IK_URL}
+									path={
+										latestNews.data.news[0].thumbnailUrl ||
+										"https://dummyimage.com/150x75/000/fff.png&text=Imagem"
+									}
+									transformation={[{ width: 150, height: 75 }]}
+									lqip={{ active: true }}
+									loading="lazy"
+									width={150}
+									height={75}
+									alt="Imagem da notícia"
+									className="rounded"
+								/>
+								<p>
+									<Link
+										href={`/noticias/${latestNews.data.news[0].metadata.urlId}`}
+									>
+										<a className="font-bold hover:underline">
+											{latestNews.data.news[0].title}
+										</a>
+									</Link>
+									, por {latestNews.data.news[0].metadata.author?.name}.
+								</p>
+							</div>
 						</div>
 					)}
 					{latestBlogPost.data?.posts &&
@@ -41,16 +64,32 @@ const Home: NextPage = () => {
 						!latestBlogPost.error && (
 							<div>
 								<h3 className="text-xl font-medium">Última postagem do blog:</h3>
-								<p>
-									<Link
-										href={`/blog/${latestBlogPost.data.posts[0].metadata.urlId}`}
-									>
-										<a className="font-bold hover:underline">
-											{latestBlogPost.data.posts[0].title}
-										</a>
-									</Link>
-									, por {latestBlogPost.data.posts[0].metadata.author?.name}.
-								</p>
+								<div className="flex flex-col items-center gap-4 mt-5 max-w-lg sm:flex-row sm:items-start sm:mt-3">
+									<IKImage
+										urlEndpoint={process.env.NEXT_PUBLIC_IK_URL}
+										path={
+											latestBlogPost.data.posts[0].thumbnailUrl ||
+											"https://dummyimage.com/150x75/000/fff.png&text=Imagem"
+										}
+										transformation={[{ width: 150, height: 75 }]}
+										lqip={{ active: true }}
+										loading="lazy"
+										width={150}
+										height={75}
+										alt="Imagem do post"
+										className="rounded"
+									/>
+									<p>
+										<Link
+											href={`/blog/${latestBlogPost.data.posts[0].metadata.urlId}`}
+										>
+											<a className="font-bold hover:underline">
+												{latestBlogPost.data.posts[0].title}
+											</a>
+										</Link>
+										, por {latestBlogPost.data.posts[0].metadata.author?.name}.
+									</p>
+								</div>
 							</div>
 						)}
 				</div>
