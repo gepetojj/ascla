@@ -26,7 +26,9 @@ const CardChairOccupantComponent: FC<CardChairOccupantProps> = ({ number, name, 
 				Cadeira Nº {number < 10 ? `0${number}` : number}
 			</span>
 			<Link href={href}>
-				<a className="font-semibold text-lg text-black-100 leading-snug hover:underline">{name}</a>
+				<a className="font-semibold text-lg text-black-100 leading-snug hover:underline">
+					{name}
+				</a>
 			</Link>
 		</li>
 	);

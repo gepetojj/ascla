@@ -1,24 +1,39 @@
 import { Academic } from "entities/Academic";
-import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import { User } from "entities/User";
+import type { Post } from "entities/Post";
+import type { User } from "entities/User";
 import { apiHandler } from "helpers/apiHandler";
 import { getData } from "helpers/getData";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PostsType, PostsTypes } from "repositories/PostsRepository";
+import { postsRepo } from "repositories/implementations";
 
 interface Response extends DefaultResponse {
-	news?: BlogPost[];
+	posts?: Post[];
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	return apiHandler(req, res, { method: "get", col: "news" }, async col => {
+	return apiHandler(req, res, { method: "get", col: "blogPosts" }, async () => {
 		try {
-			let query = col.orderBy("metadata.createdAt", "desc");
 			let withAuthor = false;
+			let type: PostsType = "blogPosts";
+
+			if (
+				typeof req.query.type === "string" &&
+				PostsTypes.includes(req.query.type as PostsType)
+			) {
+				type = req.query.type as PostsType;
+			}
+
+			const allPosts = await postsRepo.getAll(type);
+			if (!allPosts) {
+				res.status(500).json({ message: "Nenhuma postagem foi encontrada." });
+				return res;
+			}
 
 			// Retorna apenas o post mais recente caso exista
 			if (typeof req.query.latest === "string" && req.query.latest === "true") {
-				query = query.limit(1);
+				allPosts.length = 1;
 			}
 
 			// Retorna o objeto completo do autor caso exista
@@ -26,18 +41,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				withAuthor = true;
 			}
 
-			const queryExec = await query.get();
-			const news: BlogPost<typeof withAuthor>[] = [];
-			for (const post of queryExec.docs) {
-				const data = post.data() as BlogPost;
-				const newData: BlogPost<true> = data;
-				
+			const posts: Post<typeof withAuthor>[] = [];
+			for (const post of allPosts) {
+				const newData: Post<true> = post;
+
 				if (!withAuthor) {
-					news.push(data);
+					posts.push(post);
 					continue;
 				}
 
-				const user = await getData<User>(data.metadata.authorId, "users");
+				const user = await getData<User>(post.metadata.authorId, "users");
 				if (user) {
 					newData.metadata.author = user;
 
@@ -50,13 +63,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					}
 				}
 
-				news.push(newData);
+				posts.push(newData);
 			}
 
-			res.json({ message: "Notícias listadas com sucesso.", news });
+			res.json({ message: "Postagens listadas com sucesso.", posts });
 		} catch (err) {
 			console.error(err);
-			res.status(500).json({ message: "Não foi possível listar as notícias." });
+			res.status(500).json({ message: "Não foi possível listar as postagens." });
 		}
 
 		return res;

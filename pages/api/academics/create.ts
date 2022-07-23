@@ -66,7 +66,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				});
 
 				if (!created) {
-					res.status(500).json({ message: "Não foi possível registrar o acadêmico no banco de dados." });
+					res.status(500).json({
+						message: "Não foi possível registrar o acadêmico no banco de dados.",
+					});
 					return res;
 				}
 

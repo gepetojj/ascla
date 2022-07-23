@@ -1,7 +1,7 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
 import { config } from "config";
-import type { BlogPost } from "entities/BlogPost";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useJSON } from "hooks/useJSON";
 import { GetServerSideProps, NextPage } from "next";
@@ -9,7 +9,7 @@ import { NewsArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	news: BlogPost<true>;
+	news: Post<true>;
 }
 
 const NewsPost: NextPage<Props> = ({ news }) => {
@@ -63,13 +63,12 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 		{ col: "news", ensure: { query: ["urlId"] }, autoTry: true },
 		async () => {
 			const res = await fetch(
-				`${config.basePath}/api/news/read?urlId=${ctx.query.urlId}&author=true`
+				`${config.basePath}/api/posts/read?urlId=${ctx.query.urlId}&author=true&type=news`
 			);
-			if (res.ok) {
-				const data = (await res.json()) as { news: BlogPost<true> };
-				return { props: { news: data.news } };
-			}
+			if (!res.ok) return { notFound: true };
 
-			return { notFound: true };
+			const data: { post: Post<true> } = await res.json();
+			const news = data.post;
+			return { props: { news } };
 		}
 	);

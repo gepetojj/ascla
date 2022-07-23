@@ -2,7 +2,7 @@ import { CardBlog } from "components/card/Blog";
 import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { BlogPost } from "entities/BlogPost";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
-	posts: BlogPost<true>[];
+	posts: Post<true>[];
 }
 
 const Blog: NextPage<Props> = ({ posts }) => {
@@ -32,7 +32,7 @@ const Blog: NextPage<Props> = ({ posts }) => {
 						threshold: 0.45,
 					}}
 					matchComponent={match => {
-						const item = match.item as BlogPost;
+						const item = match.item as Post;
 						return <CardBlog key={item.id} {...item} type="blog" />;
 					}}
 					initialSearch={typeof query.search === "string" ? query.search : undefined}
@@ -56,13 +56,12 @@ export default Blog;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler(ctx, { col: "blogPosts", autoTry: true }, async () => {
-		let posts: BlogPost<true>[] = [];
+		let posts: Post<true>[] = [];
 
-		const res = await fetch(`${config.basePath}/api/blog/list?author=true`);
-		if (res.ok) {
-			const data = (await res.json()) as { posts: BlogPost<true>[] };
-			posts = data.posts.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
-		}
+		const res = await fetch(`${config.basePath}/api/posts/list?author=true&type=blogPosts`);
+		if (!res.ok) return { props: { posts } };
 
+		const data: { posts: Post<true>[] } = await res.json();
+		posts = data.posts.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
 		return { props: { posts } };
 	});

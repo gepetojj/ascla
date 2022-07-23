@@ -1,4 +1,4 @@
-import type { BlogPost } from "entities/BlogPost";
+import type { Post } from "entities/Post";
 import { IKImage } from "imagekitio-react";
 import Link from "next/link";
 import propTypes from "prop-types";
@@ -6,7 +6,7 @@ import React, { FC, memo } from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 
-export interface CardBlogProps extends BlogPost<true> {
+export interface CardBlogProps extends Post<true> {
 	/**
 	 * Tipo da postagem, pode variar entre `blog` e `noticias`.
 	 * Será usado para definir a url da postagem.

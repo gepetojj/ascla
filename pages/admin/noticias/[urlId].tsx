@@ -3,8 +3,9 @@ import type { JSONContent } from "@tiptap/core";
 import { TextInput } from "components/input/TextInput";
 import { ThumbnailInput } from "components/input/ThumbnailInput";
 import { AdminForm } from "components/layout/AdminForm";
-import type { BlogPost } from "entities/BlogPost";
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage, GetServerSideProps } from "next";
@@ -13,11 +14,14 @@ import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	news: BlogPost;
+	news: Post;
 }
 
 const AdminNewsEdit: NextPage<Props> = ({ news }) => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/news/update", "put");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/posts/update?type=news",
+		"put"
+	);
 
 	const [title, setTitle] = useState(news.title);
 	const [description, setDescription] = useState(news.description);
@@ -126,13 +130,15 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "news", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
-			const news = query.docs[0];
+		async () => {
+			const res = await fetch(
+				`${config.basePath}/api/posts/read?urlId=${ctx.query.urlId}&type=news`
+			);
+			if (!res.ok) return { notFound: true };
 
-			if (query.empty || !news.exists) return { notFound: true };
+			const data: { post: Post } = await res.json();
+			const news: Post = data.post;
 
-			const data = news.data() as BlogPost;
-			return { props: { news: data } };
+			return { props: { news } };
 		}
 	);

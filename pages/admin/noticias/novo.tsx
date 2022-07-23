@@ -12,7 +12,10 @@ import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from 
 import { Store } from "react-notifications-component";
 
 const AdminNewsNewPost: NextPage = () => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/news/create", "post");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/posts/create?type=news",
+		"post"
+	);
 
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
@@ -69,13 +72,7 @@ const AdminNewsNewPost: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (
-				!title ||
-				!description ||
-				!thumbnailUrl ||
-				!customUrl ||
-				!editorContent.content?.length
-			) {
+			if (!title || !description || !thumbnailUrl || !editorContent.content?.length) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -89,9 +86,9 @@ const AdminNewsNewPost: NextPage = () => {
 				return;
 			}
 
-			fetcher({ title, description, thumbnailUrl, customUrl, content: editorContent });
+			fetcher({ title, description, thumbnailUrl, content: editorContent });
 		},
-		[fetcher, title, description, thumbnailUrl, customUrl, editorContent]
+		[fetcher, title, description, thumbnailUrl, editorContent]
 	);
 
 	return (

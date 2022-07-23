@@ -7,14 +7,14 @@ import type { User } from "./User";
 /**
  * Metadados de uma postagem.
  *
- * @see {@link BlogPost}
+ * @see {@link Post}
  */
-export interface BlogPostMetadata extends DefaultMetadata {
+export interface PostMetadata extends DefaultMetadata {
 	/** ID do usuário autor da postagem. */
 	authorId: User["id"];
 }
 
-export interface BlogPostWithAuthorMetadata extends DefaultMetadata {
+export interface PostWithAuthorMetadata extends DefaultMetadata {
 	/** Objeto do autor, podendo ser como usuário ou como acadêmico. */
 	authorId: User["id"];
 	author?: User | Academic;
@@ -23,11 +23,11 @@ export interface BlogPostWithAuthorMetadata extends DefaultMetadata {
 /**
  * Estrutura dos dados de uma postagem.
  */
-export interface BlogPost<WithAuthor = false> {
+export interface Post<WithAuthor = false> {
 	/** ID da postagem. */
 	id: string;
 	/** Metadados da postagem. */
-	metadata: WithAuthor extends true ? BlogPostWithAuthorMetadata : BlogPostMetadata;
+	metadata: WithAuthor extends true ? PostWithAuthorMetadata : PostMetadata;
 	/** Título da postagem. */
 	title: string;
 	/** Descrição da postagem. */
@@ -39,6 +39,10 @@ export interface BlogPost<WithAuthor = false> {
 }
 
 /** Estrutura dos dados que podem ser atualizados em uma postagem. */
-export type UpdatableBlogPost = Partial<Omit<BlogPost, "id">> & {
-	metadata: BlogPostMetadata;
-};
+export interface UpdatablePost {
+	"metadata.updatedAt": number;
+	title?: string;
+	description?: string;
+	content?: JSONContent;
+	thumbnailUrl?: string;
+}

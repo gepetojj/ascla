@@ -43,7 +43,7 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 
 	async getAll(): Promise<Academic[] | undefined> {
 		try {
-			const query = await this.col.get();
+			const query = await this.col.orderBy("metadata.chair", "asc").get();
 			if (query.empty || !query.docs) return undefined;
 
 			const academics: Academic[] = [];

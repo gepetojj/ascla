@@ -1,21 +1,25 @@
 import type { Academic } from "entities/Academic";
-import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Post } from "entities/Post";
 import type { User } from "entities/User";
 import { apiHandler } from "helpers/apiHandler";
 import { getData } from "helpers/getData";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PostsType, PostsTypes } from "repositories/PostsRepository";
+import { postsRepo } from "repositories/implementations";
 
 interface Response extends DefaultResponse {
-	post?: BlogPost;
+	post?: Post;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	return apiHandler(req, res, { method: "get", col: "blogPosts" }, async col => {
-		const postUrlId = req.query.urlId;
-		let withAuthor = false;
+	return apiHandler(req, res, { method: "get", col: "blogPosts" }, async () => {
+		const urlId = req.query.urlId;
 
-		if (!postUrlId || typeof postUrlId !== "string") {
+		let withAuthor = false;
+		let type: PostsType = "blogPosts";
+
+		if (!urlId || typeof urlId !== "string") {
 			res.status(400).json({ message: "Informe o ID do post." });
 			return res;
 		}
@@ -25,21 +29,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			withAuthor = true;
 		}
 
-		try {
-			const query = await col.where("metadata.urlId", "==", postUrlId).get();
+		if (
+			typeof req.query.type === "string" &&
+			PostsTypes.includes(req.query.type as PostsType)
+		) {
+			type = req.query.type as PostsType;
+		}
 
-			if (query.empty || !query.docs.length) {
+		try {
+			const post = await postsRepo.getBySlug(urlId, type);
+			if (!post) {
 				res.status(404).json({ message: "Post não encontrado." });
 				return res;
 			}
 
-			const post = query.docs[0].data() as BlogPost;
 			if (!withAuthor) {
 				res.json({ message: "Post listado com sucesso.", post });
 				return res;
 			}
 
-			const newPost: BlogPost<true> = post;
+			const newPost: Post<true> = post;
 			const user = await getData<User>(post.metadata.authorId, "users");
 			if (user) {
 				newPost.metadata.author = user;

@@ -3,8 +3,9 @@ import type { JSONContent } from "@tiptap/core";
 import { TextInput } from "components/input/TextInput";
 import { ThumbnailInput } from "components/input/ThumbnailInput";
 import { AdminForm } from "components/layout/AdminForm";
-import type { BlogPost } from "entities/BlogPost";
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage, GetServerSideProps } from "next";
@@ -13,11 +14,14 @@ import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	post: BlogPost;
+	post: Post;
 }
 
 const AdminPostEdit: NextPage<Props> = ({ post }) => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/blog/update", "put");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
+		"/api/posts/update?type=blogPosts",
+		"put"
+	);
 
 	const [title, setTitle] = useState(post.title);
 	const [description, setDescription] = useState(post.description);
@@ -126,13 +130,15 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "blogPosts", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
-			const post = query.docs[0];
+		async () => {
+			const res = await fetch(
+				`${config.basePath}/api/posts/read?urlId=${ctx.query.urlId}&type=blogPosts`
+			);
+			if (!res.ok) return { notFound: true };
 
-			if (query.empty || !post.exists) return { notFound: true };
+			const data: { post: Post } = await res.json();
+			const post: Post = data.post;
 
-			const data = post.data() as BlogPost;
-			return { props: { post: data } };
+			return { props: { post } };
 		}
 	);

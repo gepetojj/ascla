@@ -1,5 +1,5 @@
 import { config } from "config";
-import type { BlogPost } from "entities/BlogPost";
+import type { Post } from "entities/Post";
 import { useJSON } from "hooks/useJSON";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { Store } from "react-notifications-component";
 
 import { Image } from "../Image";
 
-export type PostViewProps = Omit<BlogPost<true>, "id">;
+export type PostViewProps = Omit<Post<true>, "id">;
 
 /**
  * Renderiza a página de uma postagem.

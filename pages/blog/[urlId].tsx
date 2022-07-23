@@ -1,14 +1,14 @@
 import { Main } from "components/layout/Main";
 import { PostView } from "components/view/Post";
 import { config } from "config";
-import type { BlogPost } from "entities/BlogPost";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { GetServerSideProps, NextPage } from "next";
 import { ArticleJsonLd, NextSeo } from "next-seo";
 import React from "react";
 
 interface Props {
-	post: BlogPost<true>;
+	post: Post<true>;
 }
 
 const ViewBlogPost: NextPage<Props> = ({ post }) => {
@@ -55,13 +55,12 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 		{ col: "blogPosts", ensure: { query: ["urlId"] }, autoTry: true },
 		async () => {
 			const res = await fetch(
-				`${config.basePath}/api/blog/read?urlId=${ctx.query.urlId}&author=true`
+				`${config.basePath}/api/posts/read?urlId=${ctx.query.urlId}&author=true&type=blogPosts`
 			);
-			if (res.ok) {
-				const data = (await res.json()) as { post: BlogPost<true> };
-				return { props: { post: data.post } };
-			}
+			if (!res.ok) return { notFound: true };
 
-			return { notFound: true };
+			const data: { post: Post<true> } = await res.json();
+			const post = data.post;
+			return { props: { post } };
 		}
 	);

@@ -43,7 +43,7 @@ export class FirebasePatronsRepository implements PatronsRepository {
 
 	async getAll(): Promise<Patron[] | undefined> {
 		try {
-			const query = await this.col.get();
+			const query = await this.col.orderBy("metadata.chair", "asc").get();
 			if (query.empty || !query.docs) return undefined;
 
 			const patrons: Patron[] = [];
@@ -103,7 +103,8 @@ export class FirebasePatronsRepository implements PatronsRepository {
 			if (bio && bio.content?.length) patron.bio = bio;
 			if (chair && typeof chair === "number") patron["metadata.chair"] = chair;
 			if (avatarUrl && typeof avatarUrl === "string") patron.avatarUrl = avatarUrl;
-			if (academicId && typeof academicId === "string") patron["metadata.academicId"] = academicId;
+			if (academicId && typeof academicId === "string")
+				patron["metadata.academicId"] = academicId;
 
 			// Não atualiza o documento caso nenhum campo tenha mudado além da data de atualização
 			if (Object.keys(patron).length <= 1) return false;

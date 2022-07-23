@@ -1,7 +1,8 @@
 import { EditableItem } from "components/card/EditableItem";
 import { Main } from "components/layout/Main";
-import type { BlogPost } from "entities/BlogPost";
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { GetServerSideProps, NextPage } from "next";
@@ -13,12 +14,12 @@ import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	posts: BlogPost[];
+	posts: Post[];
 }
 
 const AdminBlog: NextPage<Props> = ({ posts }) => {
 	const { data } = useSession();
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/blog/delete", "delete");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/posts/delete", "delete");
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -61,7 +62,7 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 
 	const deleteNews = useCallback(
 		(id: string) => {
-			fetcher(undefined, new URLSearchParams({ id }));
+			fetcher(undefined, new URLSearchParams({ id, type: "blogPosts" }));
 		},
 		[fetcher]
 	);
@@ -120,16 +121,12 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 export default AdminBlog;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "blogPosts", autoTry: true }, async col => {
-		const query = await col.get();
-		const posts: BlogPost[] = [];
+	gSSPHandler<Props>(ctx, { col: "blogPosts", autoTry: true }, async () => {
+		const res = await fetch(`${config.basePath}/api/posts/list?type=blogPosts`);
+		if (!res.ok) return { props: { posts: [] } };
 
-		if (!query.empty) {
-			for (const doc of query.docs) {
-				const post = doc.data() as BlogPost;
-				posts.push({ ...post, content: {} });
-			}
-		}
+		const data: { posts: Post[] } = await res.json();
+		const posts: Post[] = data.posts;
 
 		return { props: { posts } };
 	});

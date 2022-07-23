@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 
 			const data: { patron: Patron } = await res.json();
 			const patron: Patron = data.patron;
-			
+
 			return { props: { patron } };
 		}
 	);

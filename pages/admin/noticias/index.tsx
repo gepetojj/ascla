@@ -1,7 +1,8 @@
 import { EditableItem } from "components/card/EditableItem";
 import { Main } from "components/layout/Main";
-import type { BlogPost } from "entities/BlogPost";
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Post } from "entities/Post";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { GetServerSideProps, NextPage } from "next";
@@ -12,11 +13,11 @@ import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	news: BlogPost[];
+	news: Post[];
 }
 
 const AdminNews: NextPage<Props> = ({ news }) => {
-	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/news/delete", "delete");
+	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/posts/delete", "delete");
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -59,7 +60,7 @@ const AdminNews: NextPage<Props> = ({ news }) => {
 
 	const deleteNews = useCallback(
 		(id: string) => {
-			fetcher(undefined, new URLSearchParams({ id }));
+			fetcher(undefined, new URLSearchParams({ id, type: "news" }));
 		},
 		[fetcher]
 	);
@@ -103,16 +104,12 @@ const AdminNews: NextPage<Props> = ({ news }) => {
 export default AdminNews;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "news", autoTry: true }, async col => {
-		const query = await col.get();
-		const news: BlogPost[] = [];
+	gSSPHandler<Props>(ctx, { col: "news", autoTry: true }, async () => {
+		const res = await fetch(`${config.basePath}/api/posts/list?type=news`);
+		if (!res.ok) return { props: { news: [] } };
 
-		if (!query.empty) {
-			for (const doc of query.docs) {
-				const post = doc.data() as BlogPost;
-				news.push({ ...post, content: {} });
-			}
-		}
+		const data: { posts: Post[] } = await res.json();
+		const news: Post[] = data.posts;
 
 		return { props: { news } };
 	});

@@ -1,15 +1,24 @@
-import type { BlogPost } from "entities/BlogPost";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PostsType, PostsTypes } from "repositories/PostsRepository";
+import { postsRepo } from "repositories/implementations";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
 	return apiHandler(
 		req,
 		res,
 		{ method: "delete", col: "blogPosts", role: "academic" },
-		async (col, session) => {
+		async (_, session) => {
 			const { id } = req.query;
+
+			let type: PostsType = "blogPosts";
+			if (
+				typeof req.query.type === "string" &&
+				PostsTypes.includes(req.query.type as PostsType)
+			) {
+				type = req.query.type as PostsType;
+			}
 
 			if (!id || typeof id !== "string") {
 				res.status(400).json({ message: "Informe o ID do post." });
@@ -17,13 +26,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			if (session?.role === "academic") {
-				const query = await col.doc(id).get();
-				if (!query.exists) {
+				const post = await postsRepo.getById(id, type);
+				if (!post) {
 					res.status(400).json({ message: "Post não encontrado." });
 					return res;
 				}
 
-				const post = query.data() as BlogPost;
 				if (post.metadata.authorId !== session.sub) {
 					res.status(401).json({ message: "Esta postagem não é sua." });
 					return res;
@@ -31,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			try {
-				await col.doc(id).delete();
+				await postsRepo.delete(id, type);
 				res.json({ message: "Post deletado com sucesso." });
 			} catch (err) {
 				console.error(err);
