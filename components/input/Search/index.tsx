@@ -33,10 +33,10 @@ const SearchComponent: FC<SearchProps> = ({
 	const { push, pathname } = useRouter();
 	const fuse = useMemo(() => {
 		return new Fuse(data, {
-			...options,
 			includeScore: true,
-			threshold: 0.5,
+			threshold: 0.4,
 			useExtendedSearch: true,
+			...options,
 		});
 	}, [data, options]);
 
