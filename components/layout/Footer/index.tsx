@@ -42,7 +42,7 @@ const FooterComponent: FC = () => {
 					</div>
 				</FooterTopic>
 				<FooterTopic title="Academias" onCenter>
-					<ul className="flex flex-col gap-1 sm:gap-0">
+					<ul className="flex flex-col gap-2 sm:gap-0">
 						{academias.map(academia => (
 							<li key={academia.label.toLocaleLowerCase()}>
 								<a
@@ -58,7 +58,7 @@ const FooterComponent: FC = () => {
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Blogs" onCenter>
-					<ul className="flex flex-col gap-1 sm:gap-0">
+					<ul className="flex flex-col gap-2 sm:gap-0">
 						{blogs.map(blog => (
 							<li key={blog.label.toLocaleLowerCase()}>
 								<a
@@ -74,7 +74,7 @@ const FooterComponent: FC = () => {
 					</ul>
 				</FooterTopic>
 				<FooterTopic title="Jornais da Região" onCenter>
-					<ul className="flex flex-col gap-1 sm:gap-0">
+					<ul className="flex flex-col gap-2 sm:gap-0">
 						<li>
 							<a
 								href="https://www.maltanet.com.br/v2/"

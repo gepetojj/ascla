@@ -36,7 +36,7 @@ const HeaderComponent: FC = () => {
 			</div>
 			<nav
 				title="Páginas"
-				className="flex justify-center items-center flex-wrap w-full my-3 md:flex-nowrap md:my-0"
+				className="flex justify-center items-center flex-wrap w-full gap-2 my-3 md:flex-nowrap md:my-0"
 			>
 				<HeaderLink href="/" isActive={pathname === "/"}>
 					Início

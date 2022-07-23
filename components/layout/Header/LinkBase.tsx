@@ -46,7 +46,7 @@ const HeaderLinkBaseComponent: FC<HeaderLinkBaseProps> = ({
 		<button
 			type="button"
 			aria-label="Clique ou passe o mouse para mostrar as opções"
-			className={`m-1 px-2 py-1 rounded-sm cursor-pointer duration-200 ${
+			className={`px-2 py-1 rounded-sm cursor-pointer duration-200 ${
 				isHovering || isActive ? "bg-black-400/20" : "hover:bg-black-400/10"
 			}`}
 		>
