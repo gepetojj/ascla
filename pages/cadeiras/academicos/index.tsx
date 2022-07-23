@@ -48,7 +48,7 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 					placeholder="Procure acadêmicos:"
 					disabled={academics?.length <= 0}
 				/>
-				<ul className="flex justify-center items-center flex-wrap max-w-5xl">
+				<ul className="flex justify-center items-center flex-wrap max-w-5xl gap-4">
 					{academics?.length ? (
 						academics
 							.sort((a, b) => a.metadata.chair - b.metadata.chair)

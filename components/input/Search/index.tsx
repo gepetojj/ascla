@@ -22,6 +22,7 @@ export interface SearchProps {
 	initialSearch?: string;
 	placeholder?: string;
 	disabled?: boolean;
+	width?: string;
 }
 
 const SearchComponent: FC<SearchProps> = ({
@@ -31,6 +32,7 @@ const SearchComponent: FC<SearchProps> = ({
 	initialSearch,
 	placeholder,
 	disabled,
+	width,
 }) => {
 	const { push, pathname } = useRouter();
 	const fuse = useMemo(() => {
@@ -71,7 +73,9 @@ const SearchComponent: FC<SearchProps> = ({
 	return (
 		<>
 			<div
-				className={`flex relative max-w-3xl w-full h-fit justify-center items-center ${
+				className={`flex relative ${
+					width ? width : "max-w-3xl"
+				} w-full h-fit justify-center items-center ${
 					matches.length > 0 || search.length > 0 ? "mb-0" : "mb-4"
 				}`}
 			>
@@ -92,12 +96,16 @@ const SearchComponent: FC<SearchProps> = ({
 				</div>
 			</div>
 			{(matches.length > 0 || search.length > 0) && (
-				<div className="w-full max-w-3xl h-fit m-4 divide-y divide-black-300/40 divide-y-reverse">
+				<div
+					className={`w-full ${
+						width ? width : "max-w-3xl"
+					} h-fit m-4 mb-6 divide-y divide-black-300/40 divide-y-reverse`}
+				>
 					<span className="text-sm">
 						Resultados da sua pesquisa:{" "}
 						<span className="text-xs italic">({matches.length} resultados)</span>
 					</span>
-					<ul className="flex flex-wrap justify-center items-center pt-2 pb-4">
+					<ul className="flex flex-wrap justify-center items-center pt-2 pb-6 gap-4">
 						{matches.map(match => matchComponent(match))}
 					</ul>
 				</div>

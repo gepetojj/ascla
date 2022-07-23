@@ -30,7 +30,7 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 	type,
 }) => {
 	return (
-		<article className="flex flex-col-reverse justify-center items-center gap-5 p-4 bg-secondary-400 sm:flex-row sm:justify-start sm:items-start">
+		<li className="flex flex-col-reverse justify-center items-center w-full gap-5 p-4 bg-secondary-400 sm:flex-row sm:justify-start sm:items-start">
 			<div className="flex justify-center items-center max-w-[300px] w-full h-full rounded shadow">
 				<div className="w-full h-full">
 					<IKImage
@@ -71,7 +71,7 @@ const CardBlogComponent: FC<CardBlogProps> = ({
 					</Link>
 				</div>
 			</div>
-		</article>
+		</li>
 	);
 };
 

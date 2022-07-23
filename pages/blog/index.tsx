@@ -1,4 +1,5 @@
 import { CardBlog } from "components/card/Blog";
+import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { BlogPost } from "entities/BlogPost";
@@ -13,7 +14,7 @@ interface Props {
 }
 
 const Blog: NextPage<Props> = ({ posts }) => {
-	const { pathname } = useRouter();
+	const { pathname, query } = useRouter();
 
 	return (
 		<>
@@ -24,13 +25,28 @@ const Blog: NextPage<Props> = ({ posts }) => {
 			/>
 
 			<Main title="Blog" className="flex flex-col justify-center items-center p-6 pb-10">
-				<div className="flex flex-col gap-4 max-w-5xl w-full">
+				<Search
+					data={posts}
+					options={{
+						keys: ["title", "description", "metadata.author.name"],
+						threshold: 0.45,
+					}}
+					matchComponent={match => {
+						const item = match.item as BlogPost;
+						return <CardBlog key={item.id} {...item} type="blog" />;
+					}}
+					initialSearch={typeof query.search === "string" ? query.search : undefined}
+					placeholder="Procure postagens:"
+					disabled={posts?.length <= 0}
+					width="max-w-5xl"
+				/>
+				<ul className="flex flex-col gap-4 max-w-5xl w-full">
 					{!!posts && posts.length ? (
 						posts.map(post => <CardBlog key={post.id} {...post} type="blog" />)
 					) : (
 						<span className="text-lg text-center">Ainda não há postagens.</span>
 					)}
-				</div>
+				</ul>
 			</Main>
 		</>
 	);
