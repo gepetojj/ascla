@@ -21,6 +21,7 @@ export interface SearchProps {
 	matchComponent: (match: Fuse.FuseResult<SearchDataType>) => ReactNode;
 	initialSearch?: string;
 	placeholder?: string;
+	disabled?: boolean;
 }
 
 const SearchComponent: FC<SearchProps> = ({
@@ -29,6 +30,7 @@ const SearchComponent: FC<SearchProps> = ({
 	matchComponent,
 	initialSearch,
 	placeholder,
+	disabled,
 }) => {
 	const { push, pathname } = useRouter();
 	const fuse = useMemo(() => {
@@ -79,6 +81,7 @@ const SearchComponent: FC<SearchProps> = ({
 					placeholder={placeholder || "Pesquise:"}
 					value={search}
 					onChange={onSearchChange}
+					disabled={disabled}
 				/>
 				<div className="flex justify-center items-center absolute right-1 px-2 py-1 bg-cream-100/5 backdrop-blur-[2px]">
 					{search ? (

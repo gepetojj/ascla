@@ -43,6 +43,7 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 					}}
 					initialSearch={typeof query.search === "string" ? query.search : undefined}
 					placeholder="Procure patronos:"
+					disabled={patrons?.length <= 0}
 				/>
 				<ul className="flex justify-center items-center flex-wrap max-w-5xl">
 					{patrons?.length ? (
