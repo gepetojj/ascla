@@ -22,13 +22,12 @@ const AccountData: NextPage = () => {
 	);
 
 	const [name, setName] = useState("Seu nome");
-	const [avatarUrl, setAvatarUrl] = useState("");
 
 	const changeUserData = useCallback(() => {
-		if (!name && !avatarUrl) {
+		if (!name) {
 			Store.addNotification({
 				title: "Erro",
-				message: "Preencha pelo menos um campo.",
+				message: "Preencha o campo de nome.",
 				type: "danger",
 				container: "bottom-right",
 				dismiss: {
@@ -39,12 +38,9 @@ const AccountData: NextPage = () => {
 			return;
 		}
 
-		const data: { name?: string; avatarUrl?: string } = {};
-		if (name && typeof name === "string") data.name = name;
-		if (avatarUrl && typeof avatarUrl === "string") data.avatarUrl = avatarUrl;
-
+		const data: { name?: string } = { name };
 		fetcher(data);
-	}, [fetcher, name, avatarUrl]);
+	}, [fetcher, name]);
 
 	const signOutCallback = useCallback(() => {
 		signOut({ callbackUrl: "/conta" });
@@ -52,7 +48,6 @@ const AccountData: NextPage = () => {
 
 	useEffect(() => {
 		setName(String(data?.user?.name || ""));
-		setAvatarUrl(String(data?.user?.image || ""));
 	}, [data?.user?.name, data?.user?.image]);
 
 	useEffect(() => {
@@ -109,7 +104,7 @@ const AccountData: NextPage = () => {
 					<div className="flex flex-col items-center gap-4">
 						<div>
 							<Image
-								src={avatarUrl || "usuario-padrao.webp"}
+								src="usuario-padrao.webp"
 								alt="Avatar do usuário"
 								width={86}
 								height={86}
@@ -118,16 +113,8 @@ const AccountData: NextPage = () => {
 						</div>
 						<div className="flex flex-col gap-2">
 							<Button
-								title="Altera o avatar do seu usuário"
-								className="bg-secondary-800 text-cream-100 py-1.5"
-								loading={loading}
-								fullWidth
-							>
-								Alterar imagem
-							</Button>
-							<Button
 								title="Encerrar conexão com sua conta"
-								className="bg-red-500 text-cream-100 py-1.5"
+								className="bg-red-500 text-cream-100 py-1.5 w-32"
 								onClick={signOutCallback}
 								fullWidth
 							>
