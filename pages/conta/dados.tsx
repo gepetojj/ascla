@@ -104,7 +104,7 @@ const AccountData: NextPage = () => {
 					<div className="flex flex-col items-center gap-4">
 						<div>
 							<Image
-								src="usuario-padrao.webp"
+								src={data.user.image || "usuario-padrao.webp"}
 								alt="Avatar do usuário"
 								width={86}
 								height={86}
