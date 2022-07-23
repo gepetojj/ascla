@@ -55,13 +55,13 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "academics", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col
-				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
-				.get();
-			if (query.empty || !query.docs) return { notFound: true };
+		async () => {
+			const res = await fetch(`${config.basePath}/api/academics/read?id=${ctx.query.urlId}`);
+			if (!res.ok) return { notFound: true };
 
-			const academic = query.docs[0].data() as Academic;
+			const data: { academic: Academic } = await res.json();
+			const academic: Academic = data.academic;
+
 			return { props: { academic } };
 		}
 	);

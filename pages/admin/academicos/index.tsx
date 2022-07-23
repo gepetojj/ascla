@@ -1,6 +1,7 @@
 import { EditableItem } from "components/card/EditableItem";
 import { Main } from "components/layout/Main";
-import type { Academic } from "entities/Academic";
+import { config } from "config";
+import type { OptimizedAcademic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
@@ -12,7 +13,7 @@ import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	academics: Academic[];
+	academics: OptimizedAcademic[];
 }
 
 const AdminAcademics: NextPage<Props> = ({ academics }) => {
@@ -108,16 +109,12 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 export default AdminAcademics;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler(ctx, { col: "academics", autoTry: true }, async col => {
-		const query = await col.get();
-		const academics: Academic[] = [];
+	gSSPHandler(ctx, { col: "academics", autoTry: true }, async () => {
+		const res = await fetch(`${config.basePath}/api/academics/list?optimized=true`);
+		if (!res.ok) return { props: { academics: [] } };
 
-		if (!query.empty) {
-			for (const doc of query.docs) {
-				const academic = doc.data() as Academic;
-				academics.push({ ...academic, bio: {} });
-			}
-		}
+		const data: { academics: OptimizedAcademic[] } = await res.json();
+		const academics: OptimizedAcademic[] = data.academics;
 
 		return { props: { academics } };
 	});

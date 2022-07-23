@@ -55,13 +55,13 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "patrons", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col
-				.where("metadata.urlId", "==", (ctx.query.urlId as string) || "")
-				.get();
-			if (query.empty || !query.docs) return { notFound: true };
+		async () => {
+			const res = await fetch(`${config.basePath}/api/patrons/read?id=${ctx.query.urlId}`);
+			if (!res.ok) return { notFound: true };
 
-			const patron = query.docs[0].data() as Patron;
+			const data: { patron: Patron } = await res.json();
+			const patron: Patron = data.patron;
+			
 			return { props: { patron } };
 		}
 	);

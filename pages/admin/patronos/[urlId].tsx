@@ -4,6 +4,7 @@ import { FileInput } from "components/input/FileInput";
 import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
+import { config } from "config";
 import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
@@ -170,13 +171,13 @@ export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler<Props>(
 		ctx,
 		{ col: "patrons", ensure: { query: ["urlId"] }, autoTry: true },
-		async col => {
-			const query = await col.where("metadata.urlId", "==", ctx.query.urlId).get();
-			const patron = query.docs[0];
+		async () => {
+			const res = await fetch(`${config.basePath}/api/patrons/read?id=${ctx.query.urlId}`);
+			if (!res.ok) return { notFound: true };
 
-			if (query.empty || !patron.exists) return { notFound: true };
+			const data: { patron: Patron } = await res.json();
+			const patron: Patron = data.patron;
 
-			const data = patron.data() as Patron;
-			return { props: { patron: data } };
+			return { props: { patron } };
 		}
 	);

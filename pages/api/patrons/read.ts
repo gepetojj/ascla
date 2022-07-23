@@ -18,7 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			const patron = await patronsRepo.getById(id)
+			let patron = await patronsRepo.getById(id);
+			if (!patron) patron = await patronsRepo.getBySlug(id);
+
 			if (!patron) {
 				res.status(404).json({ message: "Patrono não encontrado." });
 				return res;

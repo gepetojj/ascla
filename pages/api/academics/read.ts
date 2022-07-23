@@ -18,7 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			const academic = await academicsRepo.getById(id)
+			let academic = await academicsRepo.getById(id);
+			if (!academic) academic = await academicsRepo.getBySlug(id);
+
 			if (!academic) {
 				res.status(404).json({ message: "Acadêmico não encontrado." });
 				return res;

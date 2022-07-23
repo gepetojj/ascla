@@ -1,7 +1,8 @@
 import { EditableItem } from "components/card/EditableItem";
 import { Main } from "components/layout/Main";
+import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import type { Patron } from "entities/Patron";
+import type { OptimizedPatron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
 import type { GetServerSideProps, NextPage } from "next";
@@ -12,7 +13,7 @@ import { MdAdd } from "react-icons/md";
 import { Store } from "react-notifications-component";
 
 interface Props {
-	patrons: Patron[];
+	patrons: OptimizedPatron[];
 }
 
 const AdminPatrons: NextPage<Props> = ({ patrons }) => {
@@ -108,16 +109,12 @@ const AdminPatrons: NextPage<Props> = ({ patrons }) => {
 export default AdminPatrons;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async col => {
-		const query = await col.get();
-		const patrons: Patron[] = [];
+	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async () => {
+		const res = await fetch(`${config.basePath}/api/patrons/list?optimized=true`);
+		if (!res.ok) return { props: { patrons: [] } };
 
-		if (!query.empty) {
-			for (const doc of query.docs) {
-				const patron = doc.data() as Patron;
-				patrons.push({ ...patron, bio: {} });
-			}
-		}
+		const data: { patrons: OptimizedPatron[] } = await res.json();
+		const patrons: OptimizedPatron[] = data.patrons;
 
 		return { props: { patrons } };
 	});
