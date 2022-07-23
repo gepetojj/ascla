@@ -102,7 +102,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 								oppositeType === "academic" ? "academicos" : "patronos"
 							}/${oppositeUrlId}`}
 						>
-							<a className="truncate hover:underline">{oppositeName}</a>
+							<a className="break-words max-w-xs hover:underline">{oppositeName}</a>
 						</Link>
 					) : (
 						<span className="truncate">Nenhum</span>
