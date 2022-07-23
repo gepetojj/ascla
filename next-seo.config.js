@@ -31,6 +31,15 @@ export default {
 		type: "website",
 		title: config.fullName,
 		description: `Acesse o site oficial da ${config.fullName} e familiarize-se com a cultura de Santana do Ipanema/AL`,
+		images: [
+			{
+				url: `${config.basePath}/images/meta-banner-ascla.png`,
+				width: 1200,
+				height: 628,
+				alt: "Imagem com o logotipo da academia e seu título.",
+				type: "image/png",
+			},
+		],
 	},
 	twitter: {
 		cardType: "summary_large_image",
