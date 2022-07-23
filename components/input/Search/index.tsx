@@ -66,9 +66,9 @@ const SearchComponent: FC<SearchProps> = ({
 	}, [push, pathname]);
 
 	useEffect(() => {
-		const results = fuse.search(search);
+		const results = fuse.search(initialSearch || search);
 		setMatches(results);
-	}, [fuse, search]);
+	}, [fuse, search, initialSearch]);
 
 	return (
 		<>
@@ -83,12 +83,12 @@ const SearchComponent: FC<SearchProps> = ({
 					className="w-full px-2 py-1 rounded duration-200 outline-none border border-black-300/10 focus:border-black-300/50"
 					type="text"
 					placeholder={placeholder || "Pesquise:"}
-					value={search}
+					value={initialSearch || search}
 					onChange={onSearchChange}
 					disabled={disabled}
 				/>
 				<div className="flex justify-center items-center absolute right-1 px-2 py-1 bg-cream-100/5 backdrop-blur-[2px]">
-					{search ? (
+					{initialSearch || search ? (
 						<MdClear className="text-xl cursor-pointer" onClick={onClearSearch} />
 					) : (
 						<MdSearch className="text-xl" />
