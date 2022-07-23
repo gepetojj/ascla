@@ -1,12 +1,10 @@
 import type { JSONContent } from "@tiptap/core";
 
-import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
-import { academicsRepo } from "repositories";
+import { academicsRepo, patronsRepo } from "repositories";
 
 interface UpdateAcademic {
 	id?: string;
@@ -22,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		req,
 		res,
 		{ method: "put", col: "academics", role: "admin" },
-		async (col, session) => {
+		async (_, session) => {
 			if (!session?.sub) {
 				res.status(401).json({ message: "Houve um erro com sua sessão." });
 				return res;
@@ -42,26 +40,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					const upload = await uploadAvatar(avatar, session.sub, id);
 					avatarUrl = upload.link;
 				}
-				await academicsRepo.update(id, { name, bio, chair, avatarUrl, patronId });
+				const updated = await academicsRepo.update(id, {
+					name,
+					bio,
+					chair,
+					avatarUrl,
+					patronId,
+				});
 
-				// Altera o academicId do patrono escolhido para este
-				const token = await getToken({
-					req,
-					secret: process.env.NEXTAUTH_SECRET,
-					raw: true,
-				});
-				fetch(`${config.basePath}/api/patrons/update`, {
-					method: "PUT",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify({
-						id: patronId,
-						academicId: id,
-					}),
-				});
+				// Atualiza a relação entre este acadêmico e seu patrono.
+				if (updated && patronId) await patronsRepo.update(patronId, { academicId: id });
 
 				res.json({ message: "Acadêmico atualizado com sucesso." });
 			} catch (err) {

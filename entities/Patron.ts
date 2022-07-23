@@ -27,8 +27,6 @@ export interface Patron {
 	bio: JSONContent;
 	/** Link para o avatar do acadêmico. */
 	avatarUrl: string;
-	/** @deprecated Avatares não são mais armazenados em base64, use a propriedade `avatarUrl`. */
-	avatar?: string;
 	/**
 	 * Metadados do patrono.
 	 *
@@ -38,6 +36,20 @@ export interface Patron {
 }
 
 /** Estrutura dos dados que podem ser atualizados em um patrono. */
-export type UpdatablePatron = Partial<Omit<Patron, "id">> & {
-	metadata: PatronMetadata;
-};
+export interface UpdatablePatron {
+	"metadata.updatedAt": number;
+	"metadata.chair"?: number;
+	"metadata.academicId"?: Academic["id"];
+	name?: string;
+	avatarUrl?: string;
+	bio?: JSONContent;
+}
+
+export interface OptimizedPatron {
+	id: string;
+	name: string;
+	metadata: {
+		chair: number;
+		urlId: string;
+	};
+}

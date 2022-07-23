@@ -39,7 +39,7 @@ export interface Academic {
 export interface UpdatableAcademic {
 	"metadata.updatedAt": number;
 	"metadata.chair"?: number;
-	"metadata.patronId"?: string;
+	"metadata.patronId"?: Patron["id"];
 	name?: string;
 	avatarUrl?: string;
 	bio?: JSONContent;

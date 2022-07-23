@@ -1,25 +1,25 @@
-import type { Academic, UpdatableAcademic } from "entities/Academic";
+import type { Patron, UpdatablePatron } from "entities/Patron";
 import { Collections } from "myFirebase/enums";
 import type {
-	AcademicsRepository,
-	CreateAcademicDTO,
-	UpdateAcademicDTO,
-} from "repositories/AcademicsRepository";
+	CreatePatronDTO,
+	PatronsRepository,
+	UpdatePatronDTO,
+} from "repositories/PatronsRepository";
 import { v4 as uuid } from "uuid";
 
-export class FirebaseAcademicsRepository implements AcademicsRepository {
+export class FirebasePatronsRepository implements PatronsRepository {
 	private readonly col: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
 
 	constructor() {
-		this.col = Collections.academics;
+		this.col = Collections.patrons;
 	}
 
-	async getById(id: string): Promise<Academic | undefined> {
+	async getById(id: string): Promise<Patron | undefined> {
 		if (!id) throw new Error("O ID é necessário para encontrar os dados.");
 
 		try {
 			const query = await this.col.doc(id).get();
-			const data = query.data() as Academic | undefined;
+			const data = query.data() as Patron | undefined;
 			return data;
 		} catch (err) {
 			console.trace(err);
@@ -27,13 +27,13 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 		}
 	}
 
-	async getBySlug(slug: string): Promise<Academic | undefined> {
+	async getBySlug(slug: string): Promise<Patron | undefined> {
 		if (!slug) throw new Error("O slug é necessário para encontrar os dados.");
 
 		try {
 			const query = await this.col.where("metadata.urlId", "==", slug).get();
 			if (query.empty || !query.docs) return undefined;
-			const data = query.docs[0].data() as Academic | undefined;
+			const data = query.docs[0].data() as Patron | undefined;
 			return data;
 		} catch (err) {
 			console.trace(err);
@@ -41,17 +41,17 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 		}
 	}
 
-	async getAll(): Promise<Academic[] | undefined> {
+	async getAll(): Promise<Patron[] | undefined> {
 		try {
 			const query = await this.col.get();
 			if (query.empty || !query.docs) return undefined;
 
-			const academics: Academic[] = [];
-			for (const academic of query.docs) {
-				const data = academic.data() as Academic;
-				academics.push(data);
+			const patrons: Patron[] = [];
+			for (const patron of query.docs) {
+				const data = patron.data() as Patron;
+				patrons.push(data);
 			}
-			return academics;
+			return patrons;
 		} catch (err) {
 			console.trace(err);
 			return undefined;
@@ -65,16 +65,16 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 		avatarUrl,
 		chair,
 		slug,
-		patronId,
-	}: CreateAcademicDTO): Promise<boolean> {
+		academicId,
+	}: CreatePatronDTO): Promise<boolean> {
 		try {
-			const data: Academic = {
+			const data: Patron = {
 				id: id || uuid(),
 				name,
 				bio,
 				avatarUrl,
 				metadata: {
-					patronId: patronId || "nenhum",
+					academicId: academicId || "nenhum",
 					chair,
 					urlId: slug,
 					createdAt: Date.now(),
@@ -91,24 +91,24 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 	}
 
 	async update(
-		id: Academic["id"],
-		{ name, bio, chair, avatarUrl, patronId }: UpdateAcademicDTO
+		id: Patron["id"],
+		{ name, bio, chair, avatarUrl, academicId }: UpdatePatronDTO
 	): Promise<boolean> {
 		try {
-			const academic: UpdatableAcademic = {
+			const patron: UpdatablePatron = {
 				"metadata.updatedAt": Date.now(),
 			};
 
-			if (name && typeof name === "string") academic.name = name;
-			if (bio && bio.content?.length) academic.bio = bio;
-			if (chair && typeof chair === "number") academic["metadata.chair"] = chair;
-			if (avatarUrl && typeof avatarUrl === "string") academic.avatarUrl = avatarUrl;
-			if (patronId && typeof patronId === "string") academic["metadata.patronId"] = patronId;
+			if (name && typeof name === "string") patron.name = name;
+			if (bio && bio.content?.length) patron.bio = bio;
+			if (chair && typeof chair === "number") patron["metadata.chair"] = chair;
+			if (avatarUrl && typeof avatarUrl === "string") patron.avatarUrl = avatarUrl;
+			if (academicId && typeof academicId === "string") patron["metadata.academicId"] = academicId;
 
 			// Não atualiza o documento caso nenhum campo tenha mudado além da data de atualização
-			if (Object.keys(academic).length <= 1) return false;
+			if (Object.keys(patron).length <= 1) return false;
 
-			await this.col.doc(id).update(academic);
+			await this.col.doc(id).update(patron);
 			return true;
 		} catch (err) {
 			console.trace(err);

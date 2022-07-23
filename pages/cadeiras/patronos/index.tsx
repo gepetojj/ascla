@@ -2,7 +2,7 @@ import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { Patron } from "entities/Patron";
+import type { OptimizedPatron, Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import React from "react";
 
 interface Props {
-	patrons: Patron[];
+	patrons: OptimizedPatron[];
 }
 
 const Patrons: NextPage<Props> = ({ patrons }) => {
@@ -69,13 +69,12 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 export default Patrons;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async col => {
-		const patrons: Patron[] = [];
+	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async () => {
+		const res = await fetch(`${config.basePath}/api/patrons/list?optimized=true`);
+		if (!res.ok) return { notFound: true };
 
-		const query = await col.get();
-		if (!query.empty && query.docs.length) {
-			for (const doc of query.docs) patrons.push(doc.data() as Patron);
-		}
+		const data: { patrons: OptimizedPatron[] } = await res.json();
+		const patrons: OptimizedPatron[] = data.patrons;
 
 		return { props: { patrons } };
 	});

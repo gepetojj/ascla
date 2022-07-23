@@ -7,7 +7,7 @@ import { gSSPHandler } from "helpers/gSSPHandler";
 import { useJSON } from "hooks/useJSON";
 import { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import useSWR from "swr";
 
 interface Props {
@@ -19,11 +19,11 @@ const ViewPatron: NextPage<Props> = ({ patron }) => {
 		`/api/academics/read?id=${patron.metadata.academicId}`,
 		(...args) => fetch(...args).then(res => res.json())
 	);
-	const [academic, setAcademic] = useState<Academic>();
 	const bioHTML = useJSON(patron.bio);
 
-	useEffect(() => {
-		data && !error && setAcademic(data.academic);
+	const academic = useMemo(() => {
+		if (data && !error) return data.academic as Academic;
+		return undefined;
 	}, [data, error]);
 
 	return (

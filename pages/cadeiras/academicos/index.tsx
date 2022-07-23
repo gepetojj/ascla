@@ -6,8 +6,7 @@ import type { OptimizedAcademic } from "entities/Academic";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React from "react";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import useSWR from "swr";
 
 const Patrons: NextPage = () => {

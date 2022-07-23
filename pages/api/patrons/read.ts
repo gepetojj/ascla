@@ -2,13 +2,14 @@ import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { apiHandler } from "helpers/apiHandler";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { patronsRepo } from "repositories/implementations";
 
 interface Response extends DefaultResponse {
 	patron?: Patron;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	return apiHandler(req, res, { method: "get", col: "patrons" }, async col => {
+	return apiHandler(req, res, { method: "get", col: "patrons" }, async () => {
 		try {
 			const { id } = req.query;
 
@@ -17,13 +18,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			const query = await col.doc(id).get();
-			if (!query.exists) {
+			const patron = await patronsRepo.getById(id)
+			if (!patron) {
 				res.status(404).json({ message: "Patrono não encontrado." });
 				return res;
 			}
 
-			const patron = query.data() as Patron;
 			res.json({ message: "Patrono listado com sucesso.", patron });
 		} catch (err) {
 			console.error(err);

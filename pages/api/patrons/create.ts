@@ -2,12 +2,12 @@ import type { JSONContent } from "@tiptap/core";
 
 import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import type { Patron } from "entities/Patron";
 import { apiHandler } from "helpers/apiHandler";
 import { getIdFromText } from "helpers/getIdFromText";
 import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
+import { patronsRepo } from "repositories/implementations";
 import { v4 as uuid } from "uuid";
 
 interface NewPatron {
@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		req,
 		res,
 		{ method: "post", col: "patrons", role: "admin" },
-		async (col, session) => {
+		async (_, session) => {
 			if (!session?.sub) {
 				res.status(401).json({ message: "Houve um erro com sua sessão." });
 				return res;
@@ -40,8 +40,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const customUrl = getIdFromText(name);
 
 			try {
-				const query = await col.where("metadata.urlId", "==", customUrl).get();
-				if (!query.empty || query.docs.length) {
+				const slugExists = await patronsRepo.getBySlug(customUrl);
+				if (!slugExists) {
 					res.status(400).json({ message: "O ID customizado do patrono já existe." });
 					return res;
 				}
@@ -53,21 +53,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 							link: "https://ik.imagekit.io/gepetojj/ascla/tr:w-124,f-auto,cm-pad_resize,q-75/usuario-padrao.webp",
 					  };
 
-				const patron: Patron = {
+				const created = await patronsRepo.create({
 					id: patronId,
-					metadata: {
-						urlId: customUrl,
-						createdAt: Date.now(),
-						updatedAt: 0,
-						academicId: academicId || "nenhum",
-						chair,
-					},
 					name,
 					bio,
 					avatarUrl: upload.link,
-				};
+					chair,
+					slug: customUrl,
+					academicId,
+				});
 
-				await col.doc(patron.id).create(patron);
+				if (!created) {
+					res.status(500).json({
+						message: "Não foi possível registrar o patrono no banco de dados.",
+					});
+					return res;
+				}
 
 				// Altera o patronId do acadêmico escolhido para este
 				const token = await getToken({
