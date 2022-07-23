@@ -1,12 +1,12 @@
 import type { JSONContent } from "@tiptap/core";
 
 import { config } from "config";
-import type { Academic, UpdatableAcademic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
+import { academicsRepo } from "repositories";
 
 interface UpdateAcademic {
 	id?: string;
@@ -37,31 +37,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			try {
-				const query = await col.doc(id).get();
-				const originalAcademic = query.data() as Academic;
-
-				if (!query.exists || !originalAcademic) {
-					res.status(400).json({ message: "Acadêmico não encontrado." });
-					return res;
-				}
-
-				const academic: UpdatableAcademic = {
-					metadata: {
-						...originalAcademic.metadata,
-						updatedAt: Date.now(),
-					},
-				};
-
-				if (name && typeof name === "string") academic.name = name;
-				if (patronId && typeof patronId === "string") academic.metadata.patronId = patronId;
-				if (chair && typeof chair === "number") academic.metadata.chair = chair;
+				let avatarUrl = "";
 				if (avatar && typeof avatar === "string") {
 					const upload = await uploadAvatar(avatar, session.sub, id);
-					academic.avatarUrl = upload.link;
+					avatarUrl = upload.link;
 				}
-				if (bio && bio.content?.length) academic.bio = bio;
-
-				await col.doc(id).update(academic);
+				await academicsRepo.update(id, { name, bio, chair, avatarUrl, patronId });
 
 				// Altera o academicId do patrono escolhido para este
 				const token = await getToken({

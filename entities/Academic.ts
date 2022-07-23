@@ -27,8 +27,6 @@ export interface Academic {
 	bio: JSONContent;
 	/** Link para o avatar do acadêmico. */
 	avatarUrl: string;
-	/** @deprecated Avatares não são mais armazenados em base64, use a propriedade `avatarUrl`. */
-	avatar?: string;
 	/**
 	 * Metadados do acadêmico.
 	 *
@@ -38,6 +36,20 @@ export interface Academic {
 }
 
 /** Estrutura dos dados que podem ser atualizados em um acadêmico. */
-export type UpdatableAcademic = Partial<Omit<Academic, "id">> & {
-	metadata: AcademicMetadata;
-};
+export interface UpdatableAcademic {
+	"metadata.updatedAt": number;
+	"metadata.chair"?: number;
+	"metadata.patronId"?: string;
+	name?: string;
+	avatarUrl?: string;
+	bio?: JSONContent;
+}
+
+export interface OptimizedAcademic {
+	id: string;
+	name: string;
+	metadata: {
+		chair: number;
+		urlId: string;
+	};
+}

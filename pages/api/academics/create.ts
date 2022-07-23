@@ -1,13 +1,13 @@
 import type { JSONContent } from "@tiptap/core";
 
 import { config } from "config";
-import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { getIdFromText } from "helpers/getIdFromText";
 import { uploadAvatar } from "helpers/uploadAvatar";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
+import { academicsRepo } from "repositories/implementations";
 import { v4 as uuid } from "uuid";
 
 interface NewAcademic {
@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		req,
 		res,
 		{ method: "post", col: "academics", role: "admin" },
-		async (col, session) => {
+		async (_, session) => {
 			if (!session?.sub) {
 				res.status(401).json({ message: "Houve um erro com sua sessão." });
 				return res;
@@ -42,8 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const customUrl = getIdFromText(name);
 
 			try {
-				const query = await col.where("metadata.urlId", "==", customUrl).get();
-				if (!query.empty || query.docs.length) {
+				const slugExists = await academicsRepo.getBySlug(customUrl);
+				if (slugExists) {
 					res.status(400).json({ message: "O ID customizado do acadêmico já existe." });
 					return res;
 				}
@@ -55,21 +55,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 							link: "https://ik.imagekit.io/gepetojj/ascla/tr:w-124,f-auto,cm-pad_resize,q-75/usuario-padrao.webp",
 					  };
 
-				const academic: Academic = {
+				const created = await academicsRepo.create({
 					id: academicId,
-					metadata: {
-						urlId: customUrl,
-						createdAt: Date.now(),
-						updatedAt: 0,
-						patronId: patronId || "nenhum",
-						chair,
-					},
 					name,
 					bio,
 					avatarUrl: upload.link,
-				};
+					chair,
+					slug: customUrl,
+					patronId,
+				});
 
-				await col.doc(academic.id).create(academic);
+				if (!created) {
+					res.status(500).json({ message: "Não foi possível registrar o acadêmico no banco de dados." });
+					return res;
+				}
 
 				// Altera o academicId do patrono escolhido para este
 				const token = await getToken({

@@ -23,6 +23,7 @@
 			"pages/*": ["pages/*"],
 			"api/*": ["pages/api/*"],
 			"public/*": ["public/*"],
+			"repositories/*": ["repositories/*"],
 			"styles/*": ["styles/*"]
 		}
 	},

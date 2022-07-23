@@ -2,19 +2,24 @@ import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { Academic } from "entities/Academic";
-import { gSSPHandler } from "helpers/gSSPHandler";
-import type { GetServerSideProps, NextPage } from "next";
+import type { OptimizedAcademic } from "entities/Academic";
+import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
+import { useMemo } from "react";
+import useSWR from "swr";
 
-interface Props {
-	academics: Academic[];
-}
-
-const Patrons: NextPage<Props> = ({ academics }) => {
+const Patrons: NextPage = () => {
 	const { query, pathname } = useRouter();
+	const { data, error } = useSWR("/api/academics/list?optimized=true", (...args) =>
+		fetch(...args).then(res => res.json())
+	);
+
+	const academics = useMemo(() => {
+		if (data && !error) return data.academics as OptimizedAcademic[];
+		return [];
+	}, [data, error]);
 
 	return (
 		<>
@@ -34,7 +39,7 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 						keys: ["name", "metadata.chair"],
 					}}
 					matchComponent={match => {
-						const item = match.item as Academic;
+						const item = match.item as OptimizedAcademic;
 						return (
 							<CardChairOccupant
 								key={item.id}
@@ -70,15 +75,3 @@ const Patrons: NextPage<Props> = ({ academics }) => {
 };
 
 export default Patrons;
-
-export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "academics", autoTry: true }, async col => {
-		const academics: Academic[] = [];
-
-		const query = await col.get();
-		if (!query.empty && query.docs.length) {
-			for (const doc of query.docs) academics.push(doc.data() as Academic);
-		}
-
-		return { props: { academics } };
-	});
