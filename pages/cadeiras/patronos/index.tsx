@@ -45,7 +45,7 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 					placeholder="Procure patronos:"
 					disabled={patrons?.length <= 0}
 				/>
-				<ul className="flex justify-center items-center flex-wrap max-w-5xl">
+				<ul className="flex justify-center items-center flex-wrap max-w-5xl gap-4">
 					{patrons?.length ? (
 						patrons
 							.sort((a, b) => a.metadata.chair - b.metadata.chair)
