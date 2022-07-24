@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /conta/dados
+Disallow: /admin
+
+Sitemap: https://www.aslca.org.br/sitemap.xml
