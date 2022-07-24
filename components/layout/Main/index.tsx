@@ -8,9 +8,9 @@ export interface MainProps extends HTMLAttributes<HTMLDivElement> {
 const MainComponent: FC<MainProps> = ({ title, children, ...props }) => {
 	return (
 		<main className={props.className ?? "p-6"} {...props}>
-			<h2 className="text-2xl text-center font-bold mt-4 mb-10 max-w-full break-words">
+			<h1 className="text-2xl text-center font-bold mt-4 mb-10 max-w-full break-words">
 				{title}
-			</h2>
+			</h1>
 			{children}
 		</main>
 	);

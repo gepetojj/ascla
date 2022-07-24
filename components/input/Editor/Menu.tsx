@@ -63,13 +63,6 @@ const EditorMenuComponent: FC = () => {
 				</div>
 				<div>
 					<EditorMenuOption
-						tooltip="Título 1"
-						onClick={() => toggleHeading(1)}
-						isActive={editor.isActive("heading", { level: 1 })}
-					>
-						H1
-					</EditorMenuOption>
-					<EditorMenuOption
 						tooltip="Título 2"
 						onClick={() => toggleHeading(2)}
 						isActive={editor.isActive("heading", { level: 2 })}

@@ -30,8 +30,8 @@ const HeaderComponent: FC = () => {
 					/>
 				</div>
 				<div className="flex flex-col justify-center ml-5">
-					<h1 className="text-2xl font-medium">{config.shortName}</h1>
-					<h2 className="text-lg font-special">10 anos</h2>
+					<h2 className="text-2xl font-medium">{config.shortName}</h2>
+					<h3 className="text-lg font-special">10 anos</h3>
 				</div>
 			</div>
 			<nav
