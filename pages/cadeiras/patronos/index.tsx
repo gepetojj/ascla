@@ -3,18 +3,22 @@ import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { OptimizedPatron, Patron } from "entities/Patron";
-import { gSSPHandler } from "helpers/gSSPHandler";
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
+import useSWR from "swr";
 
-interface Props {
-	patrons: OptimizedPatron[];
-}
-
-const Patrons: NextPage<Props> = ({ patrons }) => {
+const Patrons: NextPage = () => {
 	const { query, pathname } = useRouter();
+	const { data, error } = useSWR("/api/patrons/list?optimized=true", (...args: [string]) =>
+		fetch(...args).then(res => res.json())
+	);
+
+	const patrons = useMemo(() => {
+		if (data && !error) return data.patrons as OptimizedPatron[];
+		return [];
+	}, [data, error]);
 
 	return (
 		<>
@@ -67,14 +71,3 @@ const Patrons: NextPage<Props> = ({ patrons }) => {
 };
 
 export default Patrons;
-
-export const getServerSideProps: GetServerSideProps<Props> = ctx =>
-	gSSPHandler<Props>(ctx, { col: "patrons", autoTry: true }, async () => {
-		const res = await fetch(`${config.basePath}/api/patrons/list?optimized=true`);
-		if (!res.ok) return { notFound: true };
-
-		const data: { patrons: OptimizedPatron[] } = await res.json();
-		const patrons: OptimizedPatron[] = data.patrons;
-
-		return { props: { patrons } };
-	});
