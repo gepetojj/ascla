@@ -5,7 +5,8 @@ import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import React, { useMemo } from "react";
+import NProgress from "nprogress";
+import React, { useMemo, useEffect } from "react";
 import { ReactNotifications } from "react-notifications-component";
 import "styles/fonts.css";
 import "styles/globals.css";
@@ -13,7 +14,23 @@ import "styles/globals.css";
 import SEO from "../next-seo.config";
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-	const { pathname } = useRouter();
+	const { pathname, events } = useRouter();
+
+	useEffect(() => {
+		NProgress.configure({ showSpinner: false, speed: 800 });
+		const handleRouteStart = () => NProgress.start();
+		const handleRouteDone = () => NProgress.done();
+
+		events.on("routeChangeStart", handleRouteStart);
+		events.on("routeChangeComplete", handleRouteDone);
+		events.on("routeChangeError", handleRouteDone);
+
+		return () => {
+			events.off("routeChangeStart", handleRouteStart);
+			events.off("routeChangeComplete", handleRouteDone);
+			events.off("routeChangeError", handleRouteDone);
+		};
+	}, [events]);
 
 	const Layout = useMemo(() => {
 		if (pathname === "/conta") return <Component {...pageProps} />;
