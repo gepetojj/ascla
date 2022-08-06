@@ -117,15 +117,3 @@
 	font-style: normal;
 	font-display: swap;
 }
-
-@font-face {
-	font-family: "Nothing You Could Do";
-	src: url("../public/fonts/nycd-regular.eot");
-	src: url("../public/fonts/nycd-regular.eot?#iefix") format("embedded-opentype"),
-		url("../public/fonts/nycd-regular.woff2") format("woff2"),
-		url("../public/fonts/nycd-regular.woff") format("woff"),
-		url("../public/fonts/nycd-regular.ttf") format("truetype");
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-}
