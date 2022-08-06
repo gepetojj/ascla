@@ -76,7 +76,8 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 					<div className="flex justify-between items-center max-w-xl w-full">
 						<h1 className="text-2xl font-semibold">Postagens</h1>
 						<Link href="/admin/blog/novo">
-							<a>
+							<a className="flex items-center gap-2 px-2 border rounded-sm duration-200 bg-cream-main hover:brightness-95">
+								Criar
 								<MdAdd className="text-3xl cursor-pointer" />
 							</a>
 						</Link>

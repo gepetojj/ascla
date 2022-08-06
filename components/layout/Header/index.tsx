@@ -21,17 +21,13 @@ const HeaderComponent: FC = () => {
 			<div className="flex items-center">
 				<div className="flex items-center">
 					<Image
-						src="logo-ascla.webp"
+						src="logo-ascla-10anos.webp"
 						alt={`Logo da ${config.shortName}`}
 						layout="fixed"
-						width={94}
-						height={94}
+						width={230}
+						height={100}
 						priority
 					/>
-				</div>
-				<div className="flex flex-col justify-center ml-5">
-					<h2 className="text-2xl font-medium">{config.shortName}</h2>
-					<h3 className="text-lg font-special">10 anos</h3>
 				</div>
 			</div>
 			<nav

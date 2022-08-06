@@ -56,7 +56,10 @@ const Home: NextPage = () => {
 												{latestNews.data.posts[0].title}
 											</a>
 										</Link>
-										, por {latestNews.data.posts[0].metadata.author?.name}.
+										,{" "}
+										<span className="text-xs">
+											por {latestNews.data.posts[0].metadata.author?.name}.
+										</span>
 									</p>
 								</div>
 							</div>
@@ -89,7 +92,11 @@ const Home: NextPage = () => {
 												{latestBlogPost.data.posts[0].title}
 											</a>
 										</Link>
-										, por {latestBlogPost.data.posts[0].metadata.author?.name}.
+										,{" "}
+										<span className="text-xs">
+											por {latestBlogPost.data.posts[0].metadata.author?.name}
+											.
+										</span>
 									</p>
 								</div>
 							</div>

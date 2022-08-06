@@ -1,15 +1,6 @@
 import Fuse from "fuse.js";
 import { useRouter } from "next/router";
-import React, {
-	ChangeEvent,
-	FC,
-	memo,
-	ReactNode,
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import React, { ChangeEvent, FC, memo, ReactNode, useCallback, useMemo, useState } from "react";
 import { MdClear, MdSearch } from "react-icons/md";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +36,7 @@ const SearchComponent: FC<SearchProps> = ({
 	}, [data, options]);
 
 	const [search, setSearch] = useState(initialSearch || "");
-	const [matches, setMatches] = useState<Fuse.FuseResult<SearchDataType>[]>([]);
+	const matches: Fuse.FuseResult<SearchDataType>[] | [] = fuse.search(initialSearch || search);
 
 	const onSearchChange = useCallback(
 		({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -64,11 +55,6 @@ const SearchComponent: FC<SearchProps> = ({
 			shallow: true,
 		});
 	}, [push, pathname]);
-
-	useEffect(() => {
-		const results = fuse.search(initialSearch || search);
-		setMatches(results);
-	}, [fuse, search, initialSearch]);
 
 	return (
 		<>

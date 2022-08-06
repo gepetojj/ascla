@@ -39,7 +39,7 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 			<div className="flex items-center gap-2">
 				<Button title="Clique para editar o item">
 					<Link href={editUrl}>
-						<a>
+						<a className="duration-200 hover:text-black-200">
 							<MdMode className="text-xl cursor-pointer" />
 						</a>
 					</Link>
@@ -47,7 +47,7 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 
 				{deleteAction && (
 					<Button title={deleteLabel} onDoubleClick={deleteAction} loading={loading}>
-						<MdDelete className="text-xl" />
+						<MdDelete className="text-xl duration-200 hover:text-black-200" />
 					</Button>
 				)}
 			</div>

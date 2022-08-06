@@ -77,7 +77,8 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 					<div className="flex justify-between items-center max-w-xl w-full">
 						<h1 className="text-2xl font-semibold">Registro</h1>
 						<Link href="/admin/academicos/novo">
-							<a>
+							<a className="flex items-center gap-2 px-2 border rounded-sm duration-200 bg-cream-main hover:brightness-95">
+								Criar
 								<MdAdd className="text-3xl cursor-pointer" />
 							</a>
 						</Link>
