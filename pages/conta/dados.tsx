@@ -43,7 +43,7 @@ const AccountData: NextPage = () => {
 	}, [fetcher, name]);
 
 	const signOutCallback = useCallback(() => {
-		signOut({ callbackUrl: "/conta" });
+		signOut({ callbackUrl: `${config.basePath}/conta` });
 	}, []);
 
 	useEffect(() => {

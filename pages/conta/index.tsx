@@ -20,7 +20,7 @@ const Account: NextPage = () => {
 	}, [data, push]);
 
 	const signInWithGoogle = useCallback(() => {
-		signIn("google");
+		signIn("google", { callbackUrl: `${config.basePath}/conta/dados` });
 	}, []);
 
 	return (
