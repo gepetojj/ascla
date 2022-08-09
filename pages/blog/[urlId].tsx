@@ -27,6 +27,15 @@ const ViewBlogPost: NextPage<Props> = ({ post }) => {
 						modifiedTime: new Date(post.metadata.updatedAt).toDateString(),
 						section: "blog",
 					},
+					images: [
+						{
+							url: `https://ik.imagekit.io/gepetojj/ascla/tr:w-1200,h-628/${post.thumbnailUrl}`,
+							width: 1200,
+							height: 628,
+							alt: "Imagem de capa da postagem.",
+							type: "image/webp",
+						},
+					],
 				}}
 			/>
 			<ArticleJsonLd
@@ -36,7 +45,9 @@ const ViewBlogPost: NextPage<Props> = ({ post }) => {
 				description={post.description}
 				datePublished={new Date(post.metadata.createdAt).toISOString()}
 				dateModified={new Date(post.metadata.updatedAt).toISOString()}
-				images={[]}
+				images={[
+					`https://ik.imagekit.io/gepetojj/ascla/tr:w-1200,h-628/${post.thumbnailUrl}`,
+				]}
 				authorName={post.metadata.author?.name || ""}
 			/>
 

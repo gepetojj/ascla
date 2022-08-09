@@ -21,7 +21,13 @@ export type PostViewProps = Omit<Post<true>, "id">;
  * @param {PostViewProps} ...props Props do componente, desestruturados
  * @returns {FC<PostViewProps>} Componente
  */
-const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, description }) => {
+const PostViewComponent: FC<PostViewProps> = ({
+	metadata,
+	content,
+	title,
+	description,
+	thumbnailUrl,
+}) => {
 	const session = useSession();
 	const contentHTML = useJSON(content);
 	const { pathname } = useRouter();
@@ -50,7 +56,18 @@ const PostViewComponent: FC<PostViewProps> = ({ metadata, content, title, descri
 
 	return (
 		<section className="flex flex-col-reverse justify-center w-full h-full gap-10 md:flex-row">
-			<article className="flex justify-center max-w-2xl w-full">
+			<article className="flex flex-col justify-center max-w-2xl w-full">
+				{thumbnailUrl && (
+					<div className="flex flex-col prose w-full justify-center items-center pb-3 divide-y divide-black-300/40 divide-y-reverse">
+						<Image
+							src={thumbnailUrl}
+							alt="Imagem de capa da postagem"
+							width={1200}
+							height={628}
+						/>
+						<p className="text-sm italic pb-4">&quot;{description}&quot;</p>
+					</div>
+				)}
 				<div
 					className="prose w-full"
 					/* # skipcq: JS-0440 */

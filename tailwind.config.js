@@ -49,7 +49,30 @@ module.exports = {
 			},
 			fontFamily: {
 				body: ["'Montserrat'", "sans-serif"],
-				special: ["'Nothing You Could Do'", "cursive"],
+			},
+			keyframes: {
+				slide: {
+					"0%": {
+						opacity: 0,
+						transform: "translateX(-100%)",
+					},
+					"100%": {
+						opacity: 1,
+						transform: "translateX(0)",
+					},
+				},
+				appear: {
+					"0%": {
+						opacity: 0,
+					},
+					"100%": {
+						opacity: 1,
+					},
+				},
+			},
+			animation: {
+				slide: "slide 0.7s ease-out;",
+				appear: "appear 0.15s ease-out;",
 			},
 		},
 	},

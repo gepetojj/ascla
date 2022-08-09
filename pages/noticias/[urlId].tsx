@@ -30,6 +30,15 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 						modifiedTime: new Date(news.metadata.updatedAt).toISOString(),
 						section: "notícias",
 					},
+					images: [
+						{
+							url: `https://ik.imagekit.io/gepetojj/ascla/tr:w-1200,h-628/${news.thumbnailUrl}`,
+							width: 1200,
+							height: 628,
+							alt: "Imagem de capa da notícia.",
+							type: "image/webp",
+						},
+					],
 				}}
 			/>
 			<NewsArticleJsonLd
@@ -39,7 +48,9 @@ const NewsPost: NextPage<Props> = ({ news }) => {
 				dateCreated={new Date(news.metadata.createdAt).toISOString()}
 				datePublished={new Date(news.metadata.createdAt).toISOString()}
 				dateModified={new Date(news.metadata.updatedAt).toISOString()}
-				images={[]}
+				images={[
+					`https://ik.imagekit.io/gepetojj/ascla/tr:w-1200,h-628/${news.thumbnailUrl}`,
+				]}
 				authorName={news.metadata.author?.name || ""}
 				section="culture"
 				keywords={news.title.replaceAll(" ", ",").toLowerCase()}

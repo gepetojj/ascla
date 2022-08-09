@@ -31,7 +31,7 @@ const Home: NextPage = () => {
 					{latestNews.data?.posts &&
 						latestNews.data.posts.length > 0 &&
 						!latestNews.error && (
-							<div>
+							<div className="animate-slide">
 								<h3 className="text-xl font-medium">Última notícia:</h3>
 								<div className="flex flex-col items-center gap-4 mt-5 max-w-lg sm:flex-row sm:items-start sm:mt-3">
 									<IKImage
@@ -67,7 +67,7 @@ const Home: NextPage = () => {
 					{latestBlogPost.data?.posts &&
 						latestBlogPost.data.posts.length > 0 &&
 						!latestBlogPost.error && (
-							<div>
+							<div className="animate-slide">
 								<h3 className="text-xl font-medium">Última postagem do blog:</h3>
 								<div className="flex flex-col items-center gap-4 mt-5 max-w-lg sm:flex-row sm:items-start sm:mt-3">
 									<IKImage

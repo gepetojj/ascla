@@ -34,7 +34,7 @@ const EditableItemComponent: FC<EditableItemProps> = ({
 	deleteLabel,
 }) => {
 	return (
-		<div className="flex justify-between items-center w-full bg-secondary-400 px-2 py-1 gap-3 rounded-sm">
+		<div className="flex justify-between items-center w-full bg-secondary-400 px-2 py-1 gap-3 rounded-sm animate-appear">
 			<span className="max-w-full break-words">{title}</span>
 			<div className="flex items-center gap-2">
 				<Button title="Clique para editar o item">
