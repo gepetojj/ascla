@@ -104,7 +104,7 @@ const AdminNewsEdit: NextPage<Props> = ({ news }) => {
 					<TextInput
 						id="title"
 						label="Título *"
-						className="w-full sm:w-80"
+						className="w-full sm:w-[30rem]"
 						value={title}
 						onChange={({ target }) => setTitle(target.value)}
 						required
@@ -112,7 +112,7 @@ const AdminNewsEdit: NextPage<Props> = ({ news }) => {
 					<TextInput
 						id="description"
 						label="Descrição curta *"
-						className="w-full sm:w-80"
+						className="w-full sm:w-[30rem]"
 						value={description}
 						onChange={({ target }) => setDescription(target.value)}
 						required

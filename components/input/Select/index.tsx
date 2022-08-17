@@ -35,7 +35,7 @@ const SelectComponent: FC<SelectProps> = ({ label, options, selected, onChange }
 			<Listbox.Label className="text-xs text-black-300 font-medium ml-1">
 				{label}
 			</Listbox.Label>
-			<Listbox.Button className="w-full text-left px-2 py-1 bg-cream-100 border border-black-200/10 rounded outline-none duration-200 focus:border-black-200/20 sm:w-80">
+			<Listbox.Button className="w-full text-left px-2 py-1 bg-cream-100 border border-black-200/10 rounded outline-none duration-200 focus:border-black-200/20 sm:w-[30rem]">
 				{selected?.name || "Escolha uma opção"}
 			</Listbox.Button>
 			<Listbox.Options className="flex flex-col absolute w-full max-h-96 top-16 p-2 gap-1 bg-gray-100 border border-black-200/10 rounded z-10 overflow-y-auto">

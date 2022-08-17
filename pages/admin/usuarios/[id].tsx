@@ -117,7 +117,13 @@ const AdminUsersEdit: NextPage<Props> = ({ user }) => {
 				noEditor
 			>
 				<>
-					<TextInput id="name" label="Nome do usuário" value={user.name} readOnly />
+					<TextInput
+						id="name"
+						label="Nome do usuário"
+						className="sm:w-[30rem]"
+						value={user.name}
+						readOnly
+					/>
 					<Select
 						label="Escolha um cargo *"
 						options={roles}

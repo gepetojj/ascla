@@ -123,7 +123,7 @@ const ThumbnailInputComponent: FC<ThumbnailInputProps> = ({ id, setThumbnail }) 
 				</div>
 			</Dialog>
 
-			<div className="flex flex-col gap-1 w-full sm:w-60">
+			<div className="flex flex-col gap-1 w-full sm:w-96">
 				<label htmlFor={id} className="text-xs text-black-300 font-medium ml-1">
 					Insira uma imagem de capa:
 				</label>

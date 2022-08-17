@@ -4,11 +4,10 @@ import { TextInput } from "components/input/TextInput";
 import { ThumbnailInput } from "components/input/ThumbnailInput";
 import { AdminForm } from "components/layout/AdminForm";
 import type { DefaultResponse } from "entities/DefaultResponse";
-import { getIdFromText } from "helpers/getIdFromText";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
-import React, { useCallback, useState, FormEvent, ChangeEvent, useEffect } from "react";
+import React, { useCallback, useState, FormEvent, useEffect } from "react";
 import { Store } from "react-notifications-component";
 
 const AdminBlogNew: NextPage = () => {
@@ -19,7 +18,6 @@ const AdminBlogNew: NextPage = () => {
 
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
-	const [customUrl, setCustomUrl] = useState("");
 	const [thumbnailUrl, setThumbnailUrl] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
@@ -64,11 +62,6 @@ const AdminBlogNew: NextPage = () => {
 		};
 	}, [events]);
 
-	const onTitleChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
-		setTitle(target.value);
-		setCustomUrl(getIdFromText(target.value));
-	}, []);
-
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
@@ -107,25 +100,18 @@ const AdminBlogNew: NextPage = () => {
 					<TextInput
 						id="title"
 						label="Título *"
-						className="w-full sm:w-80"
+						className="w-full sm:w-[30rem]"
 						value={title}
-						onChange={onTitleChange}
+						onChange={({ target }) => setTitle(target.value)}
 						required
 					/>
 					<TextInput
 						id="description"
 						label="Descrição curta *"
-						className="w-full sm:w-80"
+						className="w-full sm:w-[30rem]"
 						value={description}
 						onChange={({ target }) => setDescription(target.value)}
 						required
-					/>
-					<TextInput
-						id="customUrl"
-						label="URL Personalizada"
-						className="w-full sm:w-80"
-						value={customUrl}
-						readOnly
 					/>
 					<ThumbnailInput id="thumbnail" setThumbnail={setThumbnailUrl} />
 				</>

@@ -142,7 +142,7 @@ const AdminAcademicsNew: NextPage = () => {
 					<TextInput
 						id="name"
 						label="Nome *"
-						className="w-full sm:w-80"
+						className="w-full sm:w-[30rem]"
 						value={name}
 						onChange={({ target }) => setName(target.value)}
 						required
@@ -156,7 +156,7 @@ const AdminAcademicsNew: NextPage = () => {
 					<TextInput
 						id="chair"
 						label="Cadeira *"
-						className="w-full sm:w-32"
+						className="w-full sm:w-60"
 						type="number"
 						min={1}
 						max={1000}
