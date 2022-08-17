@@ -5,6 +5,8 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
 
+import { Video } from "./videoExtension";
+
 export const editorExtensions: Extensions = [
 	StarterKit,
 	TextAlign.configure({
@@ -15,4 +17,5 @@ export const editorExtensions: Extensions = [
 	}),
 	Underline,
 	Image,
+	Video,
 ];

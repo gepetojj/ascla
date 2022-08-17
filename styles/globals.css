@@ -43,6 +43,10 @@ button {
 	@apply my-1;
 }
 
+.ProseMirror-selectednode {
+	@apply outline outline-2 outline-offset-4 outline-primary-main rounded duration-200;
+}
+
 .rnc__notification-container--bottom-right {
 	min-width: 325px;
 	pointer-events: all;

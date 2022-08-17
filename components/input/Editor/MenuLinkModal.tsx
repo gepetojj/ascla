@@ -82,7 +82,7 @@ const MenuLinkModalComponent: FC<MenuLinkModalProps> = ({ open, onClose }) => {
 						>
 							{link && (
 								<Button
-									className="bg-red-500 text-cream-100 py-1.5 w-full"
+									className="bg-red-500 text-cream-100 py-1.5"
 									onClick={onClear}
 								>
 									Remover

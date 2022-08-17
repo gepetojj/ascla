@@ -1,11 +1,5 @@
-import {
-	Dropzone,
-	FileItem,
-	FullScreenPreview,
-	FileValidated,
-	FileDuiResponse,
-} from "@dropzone-ui/react";
-import { Dialog } from "@headlessui/react";
+import { Dropzone, FileItem, FileValidated, FileDuiResponse } from "@dropzone-ui/react";
+import { Dialog, Switch } from "@headlessui/react";
 
 import propTypes from "prop-types";
 import React, { FC, memo, useCallback, useState } from "react";
@@ -34,6 +28,7 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 	const { editor } = useEditor();
 	const [files, setFiles] = useState<FileValidated[]>([]);
 	const [imageLink, setImageLink] = useState("");
+	const [isImage, setIsImage] = useState(true);
 
 	const onUpdateFiles = useCallback((incomming: FileValidated[]) => {
 		setFiles(incomming);
@@ -51,7 +46,7 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 		if (!editor || !imageLink) {
 			Store.addNotification({
 				title: "Erro",
-				message: "Adicione o link da imagem.",
+				message: "Adicione o link da imagem/vídeo.",
 				type: "danger",
 				container: "bottom-right",
 				dismiss: {
@@ -62,15 +57,20 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 			return;
 		}
 
-		editor
-			.chain()
-			.focus()
-			.setImage({ src: imageLink, alt: "Imagem adicionada pelo editor da postagem." })
-			.run();
+		if (isImage) {
+			editor
+				.chain()
+				.focus()
+				.setImage({ src: imageLink, alt: "Imagem adicionada pelo editor da postagem." })
+				.run();
+		} else {
+			editor.chain().focus().setVideo(imageLink).run();
+		}
+
 		setFiles([]);
 		setImageLink("");
 		onClose();
-	}, [editor, imageLink, onClose]);
+	}, [editor, imageLink, onClose, isImage]);
 
 	if (!editor) return null;
 
@@ -83,11 +83,13 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 			<div className="flex justify-center items-center max-w-lg bg-cream-100 border border-black-200/20 shadow-sm rounded">
 				<Dialog.Panel className="flex flex-col p-4 gap-4">
 					<div>
-						<Dialog.Title className="text-2xl font-bold">Inserir imagem</Dialog.Title>
+						<Dialog.Title className="text-2xl font-bold">
+							Inserir imagem/vídeo
+						</Dialog.Title>
 						<Dialog.Description className="text-sm text-black-300">
-							Faça upload de uma imagem para inseri-la no editor. Você só pode fazer
-							um upload por vez, e quando seu link aparecer na caixa de texto, clique
-							em adicionar.
+							Faça upload de um/a vídeo/imagem para inseri-la no editor. Você só pode
+							fazer um upload por vez, e quando seu link aparecer na caixa de texto,
+							clique em &quot;Adicionar&quot; (ou adicione o link diretamente).
 						</Dialog.Description>
 					</div>
 					<div className="flex flex-col gap-2">
@@ -95,7 +97,7 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 							value={files}
 							onChange={onUpdateFiles}
 							onUploadFinish={onUploadFinish}
-							accept="image/*"
+							accept="image/*,video/*"
 							maxFiles={1}
 							label="Solte um arquivo aqui ou clique para escolher."
 							localization="PT-pt"
@@ -118,8 +120,25 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 									resultOnTooltip
 								/>
 							))}
-							<FullScreenPreview />
 						</Dropzone>
+						<div className="flex justify-center items-center w-full gap-4">
+							<span>É um vídeo</span>
+							<Switch
+								checked={isImage}
+								onChange={setIsImage}
+								className={`${
+									isImage ? "bg-cyan-600" : " bg-teal-600"
+								} relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+							>
+								<span className="sr-only">Define se é uma imagem ou vídeo.</span>
+								<span
+									className={`${
+										isImage ? "translate-x-6" : "translate-x-1"
+									} inline-block h-4 w-4 transform rounded-full bg-white duration-200`}
+								/>
+							</Switch>
+							<span>É uma imagem</span>
+						</div>
 						<TextInput
 							id="url"
 							label="Link:"

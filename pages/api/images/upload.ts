@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		req,
 		res,
 		{ method: "post", col: "images", role: "academic" },
-		async (col, session) => {
+		async (_, session) => {
 			if (!session?.sub) {
 				res.status(401).json({ status: false, message: "Houve um erro com sua sessão." });
 				return res;
@@ -35,7 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				maxFiles: 1,
 				maxFileSize: 5 * 1024 * 1024, // 5 MB
 				hashAlgorithm: "md5",
-				filter: ({ mimetype }) => !!mimetype && mimetype.includes("image"),
+				filter: ({ mimetype }) =>
+					!!mimetype && (mimetype.includes("image") || mimetype.includes("video")),
 			});
 
 			try {
@@ -89,7 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 							location: folder,
 						},
 					};
-					await col.doc(imageName).set(uploadLog);
+					/* await col.doc(imageName).set(uploadLog); */
 
 					res.status(200).json({
 						status: true,
