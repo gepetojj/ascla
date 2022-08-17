@@ -31,4 +31,12 @@ export const blogs = [
 		label: "Apenso com Grifo",
 		url: "https://www.apensocomgrifo.com/",
 	},
+	{
+		label: "Clerisvaldo Chagas",
+		url: "https://clerisvaldobchagas.blogspot.com/",
+	},
+	{
+		label: "A palavra é para dizer",
+		url: "https://apalavraeparadizer.blogspot.com/",
+	},
 ] as const;
