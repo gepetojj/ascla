@@ -5,6 +5,7 @@ import { Button } from "components/input/Button";
 import { useJSON } from "hooks/useJSON";
 import dynamic from "next/dynamic";
 import React, { Children, FC, FormEventHandler, Fragment, memo, ReactNode } from "react";
+import { MdSend } from "react-icons/md";
 
 import { Main } from "../Main";
 
@@ -43,11 +44,16 @@ const AdminFormComponent: FC<AdminFormProps> = ({
 						{Children.toArray(children)[0]}
 					</div>
 					<Button
-						className="bg-primary-400 w-full sm:w-fit sm:px-3"
+						className="bg-primary-400 w-full gap-2 sm:w-fit sm:px-3"
 						type="submit"
 						loading={loading}
 					>
 						{submitLabel || "Enviar"}
+						{!loading && (
+							<div>
+								<MdSend />
+							</div>
+						)}
 					</Button>
 				</div>
 
@@ -92,7 +98,7 @@ const AdminFormComponent: FC<AdminFormProps> = ({
 								/>
 							</Tab.Panel>
 							<Tab.Panel className="pt-4 animate-appear">
-								{editorContent && (
+								{contentHTML && (
 									<div
 										className="prose w-full"
 										/* # skipcq: JS-0440 */
