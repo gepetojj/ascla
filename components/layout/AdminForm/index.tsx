@@ -97,10 +97,10 @@ const AdminFormComponent: FC<AdminFormProps> = ({
 									onChange={onEditorChange}
 								/>
 							</Tab.Panel>
-							<Tab.Panel className="pt-4 animate-appear">
+							<Tab.Panel className="flex flex-col justify-center items-center pt-4 animate-appear">
 								{contentHTML && (
 									<div
-										className="prose w-full"
+										className="prose"
 										/* # skipcq: JS-0440 */
 										dangerouslySetInnerHTML={{ __html: contentHTML }}
 									/>
