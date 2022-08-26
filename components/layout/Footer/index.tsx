@@ -1,11 +1,15 @@
 import { Image } from "components/view/Image";
 import { academias, blogs, config } from "config";
-import React, { memo, FC } from "react";
+import { useRouter } from "next/router";
+import React, { memo, FC, useRef } from "react";
 import { MdSearch } from "react-icons/md";
 
 import { FooterTopic } from "./Topic";
 
 const FooterComponent: FC = () => {
+	const { push } = useRouter();
+	const search = useRef<HTMLInputElement>(null);
+
 	return (
 		<footer className="flex flex-col w-full h-full p-6 gap-8 bg-primary-main text-black-100">
 			<div className="flex items-center gap-4">
@@ -28,14 +32,23 @@ const FooterComponent: FC = () => {
 				<FooterTopic title="Pesquisar:">
 					<div className="relative w-60">
 						<input
-							className="w-full px-2 py-1 bg-cream-300 text-black-600 rounded-sm outline-none placeholder:text-black-500 focus:shadow-md"
+							className="w-full px-2 py-1 rounded duration-200 outline-none border border-black-300/10 focus:border-black-300/50"
 							type="text"
 							placeholder="Procure por notícias:"
+							ref={search}
 						/>
 						<button
 							type="button"
 							aria-label="Clique para pesquisar"
 							className="flex justify-center items-center absolute h-full top-0 right-0 p-2 backdrop-blur-[1px] rounded-sm bg-cream-500/30 duration-200 hover:brightness-90"
+							onClick={() =>
+								push({
+									pathname: "/noticias",
+									query: {
+										search: search?.current?.value,
+									},
+								})
+							}
 						>
 							<MdSearch className="text-xl" />
 						</button>
