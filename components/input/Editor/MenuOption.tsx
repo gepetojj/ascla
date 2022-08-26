@@ -27,8 +27,8 @@ const EditorMenuOptionComponent: FC<EditorMenuOptionProps> = ({
 		<button
 			type="button"
 			title={tooltip}
-			className={`bg-grey-200 p-1 mx-1 rounded-sm duration-200 ${
-				isActive ? "brightness-90 hover:brightness-[.85]" : "hover:brightness-95"
+			className={`p-1 mx-1 rounded-sm duration-200 ${
+				isActive ? "bg-slate-200" : "hover:bg-slate-200/50"
 			}`}
 			{...props}
 		>
