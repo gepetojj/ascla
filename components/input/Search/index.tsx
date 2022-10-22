@@ -38,21 +38,24 @@ const SearchComponent: FC<SearchProps> = ({
 	const [search, setSearch] = useState(initialSearch || "");
 	const matches: Fuse.FuseResult<SearchDataType>[] | [] = fuse.search(initialSearch || search);
 
-	const onSearchChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
-		if (target.value.length > 70) return;
-		setSearch(target.value);
+	const onSearchChange = useCallback(
+		({ target }: ChangeEvent<HTMLInputElement>) => {
+			if (target.value.length > 70) return;
+			setSearch(target.value);
 
-		const changeTimeout = setTimeout(() => {
-			if (search === initialSearch) return;
+			const changeTimeout = setTimeout(() => {
+				if (search === initialSearch) return;
 
-			const state = history.state;
-			const title = document.title;
-			const url = `${window.location.origin}${window.location.pathname}?search=${target.value}`;
-			history.pushState(state, title, url);
-		}, 2 * 1000);
+				const state = history.state;
+				const title = document.title;
+				const url = `${window.location.origin}${window.location.pathname}?search=${target.value}`;
+				history.pushState(state, title, url);
+			}, 2 * 1000);
 
-		return () => clearTimeout(changeTimeout);
-	}, [initialSearch, search]);
+			return () => clearTimeout(changeTimeout);
+		},
+		[initialSearch, search]
+	);
 
 	const onClearSearch = useCallback(() => {
 		setSearch("");

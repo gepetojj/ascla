@@ -22,10 +22,15 @@ export interface UpdatePostDTO {
 	content?: JSONContent;
 }
 
+export interface PostsPagination {
+	page: number;
+	limit: number;
+}
+
 export interface PostsRepository {
 	getById(id: string, type: PostsType): Promise<Post | undefined>;
 	getBySlug(slug: string, type: PostsType): Promise<Post | undefined>;
-	getAll(type: PostsType): Promise<Post[] | undefined>;
+	getAll(type: PostsType, pagination?: PostsPagination): Promise<Post[] | undefined>;
 	create(data: CreatePostDTO, type: PostsType): Promise<boolean>;
 	update(id: Post["id"], type: PostsType, data: UpdatePostDTO): Promise<boolean>;
 	delete(id: string, type: PostsType): Promise<boolean>;

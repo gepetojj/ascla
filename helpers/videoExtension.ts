@@ -4,7 +4,6 @@
  Check out the original one at https://github.com/sereneinserenade/tiptap-extension-video
 
 */
-
 import { Node, nodeInputRule } from "@tiptap/react";
 
 import { Plugin, PluginKey } from "prosemirror-state";

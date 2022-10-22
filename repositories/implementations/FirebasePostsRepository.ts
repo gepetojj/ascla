@@ -2,6 +2,7 @@ import { Post, UpdatablePost } from "entities/Post";
 import { Collections } from "myFirebase/enums";
 import type {
 	CreatePostDTO,
+	PostsPagination,
 	PostsRepository,
 	PostsType,
 	UpdatePostDTO,
@@ -39,16 +40,25 @@ export class FirebasePostsRepository implements PostsRepository {
 		}
 	}
 
-	async getAll(type: PostsType): Promise<Post<false>[] | undefined> {
+	async getAll(
+		type: PostsType,
+		pagination?: PostsPagination
+	): Promise<Post<false>[] | undefined> {
 		if (!type) throw new Error("O tipo é necessário para encontrar os dados.");
 		const col = Collections[type];
 
 		try {
-			const query = await col.orderBy("metadata.createdAt", "desc").get();
-			if (query.empty || !query.docs) return undefined;
+			const query = col.orderBy("metadata.createdAt", "desc");
+
+			if (pagination) {
+				query.limit(pagination.limit).offset(pagination.page * pagination.limit);
+			}
+
+			const queryData = await query.get();
+			if (queryData.empty || !queryData.docs) return undefined;
 
 			const posts: Post[] = [];
-			for (const post of query.docs) {
+			for (const post of queryData.docs) {
 				const data = post.data() as Post;
 				posts.push(data);
 			}

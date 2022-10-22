@@ -79,7 +79,12 @@ const AdminBlogNew: NextPage = () => {
 				return;
 			}
 
-			fetcher({ title, description, thumbnailUrl, content: editorContent });
+			fetcher({
+				title,
+				description,
+				thumbnailUrl,
+				content: editorContent,
+			});
 		},
 		[fetcher, title, description, thumbnailUrl, editorContent]
 	);

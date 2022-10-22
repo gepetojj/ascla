@@ -44,7 +44,7 @@ button {
 }
 
 .ProseMirror-selectednode {
-	@apply outline outline-2 outline-offset-4 outline-primary-main rounded duration-200;
+	@apply rounded outline outline-2 outline-offset-4 outline-primary-main duration-200;
 }
 
 .rnc__notification-container--bottom-right {

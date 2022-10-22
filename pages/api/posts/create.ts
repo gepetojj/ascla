@@ -5,13 +5,14 @@ import { apiHandler } from "helpers/apiHandler";
 import { getIdFromText } from "helpers/getIdFromText";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostsType, PostsTypes } from "repositories/PostsRepository";
-import { postsRepo } from "repositories/implementations";
+import { postsRepo, academicsRepo } from "repositories/implementations";
 
 interface NewPost {
 	title: string;
 	description: string;
 	thumbnailUrl: string;
 	content: JSONContent;
+	authorId?: string;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DefaultResponse>) {
@@ -34,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			const { title, description, thumbnailUrl, content }: NewPost = req.body;
+			let authorId: string | undefined = req.body.authorId;
 
 			// TODO: Adicionar validação aos dados
 			if (!title || !description || !thumbnailUrl || !content.content?.length) {
@@ -49,13 +51,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					return res;
 				}
 
+				if (authorId) {
+					if (typeof authorId !== "string") {
+						authorId = session.sub;
+					} else {
+						const authorExists = await academicsRepo.getById(authorId);
+						if (!authorExists) authorId = session.sub;
+					}
+				}
+
 				await postsRepo.create(
 					{
 						title,
 						description,
 						thumbnailUrl,
 						content,
-						authorId: session.sub,
+						authorId: authorId || session.sub,
 						slug,
 					},
 					type

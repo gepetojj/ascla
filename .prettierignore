@@ -1,6 +1,7 @@
 tests/coverage/
 emulator_data/
 node_modules/
+.netlify/
 .vercel/
 build/
 .next/
@@ -8,6 +9,7 @@ build/
 .swc/
 out/
 
+.yarnrc.yml
 yarn.lock
 *.log
 .env

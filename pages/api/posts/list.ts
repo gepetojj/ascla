@@ -18,6 +18,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			let withAuthor = false;
 			let type: PostsType = "blogPosts";
 
+			// Configuração da paginação
+			let page = 0; // Min: 0 e Max: 1000
+			let limit = 10; // Min: 10 e Max: 100
+
 			if (
 				typeof req.query.type === "string" &&
 				PostsTypes.includes(req.query.type as PostsType)
@@ -25,7 +29,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				type = req.query.type as PostsType;
 			}
 
-			const allPosts = await postsRepo.getAll(type);
+			if (
+				typeof req.query.page === "string" &&
+				Number(req.query.page) >= 0 &&
+				Number(req.query.page) <= 1000
+			) {
+				page = Number(req.query.page);
+			}
+
+			if (
+				typeof req.query.limit === "string" &&
+				Number(req.query.limit) >= 10 &&
+				Number(req.query.limit) <= 100
+			) {
+				limit = Number(req.query.limit);
+			}
+
+			const allPosts = await postsRepo.getAll(type, { page, limit });
 			if (!allPosts) {
 				res.status(500).json({ message: "Nenhuma postagem foi encontrada." });
 				return res;
@@ -42,7 +62,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			const posts: Post<typeof withAuthor>[] = [];
-			for (const post of allPosts) {
+
+			const postsAuthors: Academic[] = [];
+			const postsAuthorsIds: string[] = [];
+
+			for (let post of allPosts) {
+				post = { ...post, content: {} };
 				const newData: Post<true> = post;
 
 				if (!withAuthor) {
@@ -50,16 +75,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					continue;
 				}
 
-				const user = await getData<User>(post.metadata.authorId, "users");
-				if (user) {
-					newData.metadata.author = user;
+				if (postsAuthorsIds.includes(post.metadata.authorId)) {
+					newData.metadata.author =
+						postsAuthors[postsAuthorsIds.indexOf(post.metadata.authorId)];
+					posts.push(newData);
+					continue;
+				}
 
-					if (user.metadata.academicId) {
-						const academic = await getData<Academic>(
-							user.metadata.academicId,
-							"academics"
-						);
-						if (academic) newData.metadata.author = academic;
+				const user = await getData<User>(post.metadata.authorId, "users");
+				if (!user) continue;
+
+				newData.metadata.author = { ...user, bio: {} };
+				if (!user.metadata.academicId) continue;
+
+				const academic = await getData<Academic>(user.metadata.academicId, "academics");
+				if (academic) {
+					newData.metadata.author = { ...academic, bio: {} };
+
+					if (!postsAuthorsIds.includes(user.id)) {
+						postsAuthors.push({ ...academic, bio: {} });
+						postsAuthorsIds.push(user.id);
 					}
 				}
 

@@ -95,6 +95,7 @@ const AdminBlog: NextPage<Props> = ({ posts }) => {
 										? post.metadata.authorId === data?.user?.id
 										: true
 								)
+								.sort((a, b) => a.metadata.createdAt - b.metadata.createdAt)
 								.map(post => (
 									<EditableItem
 										key={post.id}
