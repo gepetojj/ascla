@@ -3,7 +3,7 @@ import { HighlightView } from "components/view/Highlight";
 import { config } from "config";
 import { Post } from "entities/Post";
 import { IKImage } from "imagekitio-react";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 import { GoQuote } from "react-icons/go";
@@ -122,3 +122,7 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+	return { props: {} };
+};
