@@ -3,7 +3,7 @@ import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
 import type { OptimizedAcademic } from "entities/Academic";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -74,3 +74,9 @@ const Patrons: NextPage = () => {
 };
 
 export default Patrons;
+
+// Solução temporária para erro em deploy de páginas estáticas na netlify
+export const getServerSideProps: GetServerSideProps = async () => {
+	return { props: {} };
+};
+

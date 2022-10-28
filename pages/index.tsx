@@ -123,6 +123,7 @@ const Home: NextPage = () => {
 
 export default Home;
 
+// Solução temporária para erro em deploy de páginas estáticas na netlify
 export const getServerSideProps: GetServerSideProps = async () => {
 	return { props: {} };
 };

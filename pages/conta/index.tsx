@@ -1,7 +1,7 @@
 import { Button } from "components/input/Button";
 import { Image } from "components/view/Image";
 import { config } from "config";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useSession, signIn } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
@@ -78,3 +78,8 @@ const Account: NextPage = () => {
 };
 
 export default Account;
+
+// Solução temporária para erro em deploy de páginas estáticas na netlify
+export const getServerSideProps: GetServerSideProps = async () => {
+	return { props: {} };
+};

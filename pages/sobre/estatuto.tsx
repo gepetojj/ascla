@@ -1,7 +1,7 @@
 import { Button } from "components/input/Button";
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import type { PDFDocumentProxy } from "pdfjs-dist/types/src/pdf";
@@ -153,3 +153,8 @@ const AboutStatute: NextPage = () => {
 };
 
 export default AboutStatute;
+
+// Solução temporária para erro em deploy de páginas estáticas na netlify
+export const getServerSideProps: GetServerSideProps = async () => {
+	return { props: {} };
+};

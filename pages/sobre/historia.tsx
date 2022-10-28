@@ -1,7 +1,7 @@
 import { Main } from "components/layout/Main";
 import { config } from "config";
 import { IKImage } from "imagekitio-react";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
@@ -111,3 +111,8 @@ const AboutHistory: NextPage = () => {
 };
 
 export default AboutHistory;
+
+// Solução temporária para erro em deploy de páginas estáticas na netlify
+export const getServerSideProps: GetServerSideProps = async () => {
+	return { props: {} };
+};

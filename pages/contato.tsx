@@ -1,6 +1,6 @@
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
@@ -102,3 +102,8 @@ const Contact: NextPage = () => {
 };
 
 export default Contact;
+
+// Solução temporária para erro em deploy de páginas estáticas na netlify
+export const getServerSideProps: GetServerSideProps = async () => {
+	return { props: {} };
+};
