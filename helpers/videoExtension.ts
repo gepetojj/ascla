@@ -99,6 +99,7 @@ export const Video = Node.create({
 				key: new PluginKey("videoDropPlugin"),
 
 				props: {
+					// @ts-expect-error Há um conflito de interfaces que não afeta o funcionamento do plugin.
 					handleDOMEvents: {
 						drop(view, event) {
 							const {

@@ -9,6 +9,7 @@ build/
 .swc/
 out/
 
+package-lock.json
 .yarnrc.yml
 yarn.lock
 *.log

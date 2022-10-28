@@ -8,6 +8,7 @@ build/
 .swc/
 out/
 
+package-lock.json
 *.config.js
 yarn.lock
 *.log
