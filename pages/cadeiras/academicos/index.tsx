@@ -79,4 +79,3 @@ export default Patrons;
 export const getServerSideProps: GetServerSideProps = async () => {
 	return { props: {} };
 };
-

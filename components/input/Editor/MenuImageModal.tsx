@@ -64,7 +64,9 @@ const MenuImageModalComponent: FC<MenuImageModalProps> = ({ open, onClose }) => 
 				.setImage({ src: imageLink, alt: "Imagem adicionada pelo editor da postagem." })
 				.run();
 		} else {
-			editor.chain().focus().setVideo(imageLink).run();
+			imageLink.includes("youtube.com") || imageLink.includes("youtu.be")
+				? editor.chain().focus().setYoutubeVideo({ src: imageLink }).run()
+				: editor.chain().focus().setVideo(imageLink).run();
 		}
 
 		setFiles([]);
