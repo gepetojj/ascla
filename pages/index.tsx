@@ -53,13 +53,13 @@ const Home: NextPage = () => {
 											href={`/noticias/${latestNews.data.posts[0].metadata.urlId}`}
 										>
 											<a className="font-bold hover:underline">
-												{latestNews.data.posts[0].title}
+												{latestNews.data.posts[0].title}.
 											</a>
 										</Link>
-										,{" "}
+										{/* ,{" "}
 										<span className="text-xs">
 											por {latestNews.data.posts[0].metadata.author?.name}.
-										</span>
+										</span> */}
 									</p>
 								</div>
 							</div>

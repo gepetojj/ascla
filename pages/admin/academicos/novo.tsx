@@ -15,8 +15,15 @@ import useSWR from "swr";
 
 const AdminAcademicsNew: NextPage = () => {
 	const [patrons, setPatrons] = useState<Patron[]>([]);
-	const { data, error } = useSWR("/api/patrons/list", (...args) =>
-		fetch(...args).then(res => res.json())
+	useSWR("/api/patrons/list", (...args) =>
+		fetch(...args).then(res =>
+			res.json().then(data => {
+				setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
+				// @ts-expect-error O patrono abaixo não precisa ter as demais propriedades.
+				!selectedPatron && setSelectedPatron({ id: "nenhum", name: "Nenhum" });
+				return data;
+			})
+		)
 	);
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/academics/create",
@@ -50,15 +57,6 @@ const AdminAcademicsNew: NextPage = () => {
 		window.addEventListener("keypress", keyboardHandler);
 		return () => window.removeEventListener("keypress", keyboardHandler);
 	}, []);
-
-	// Lista os patronos para mostrar na seleção
-	useEffect(() => {
-		if (data && !error) {
-			setPatrons([{ id: "nenhum", name: "Nenhum" }, ...data.patrons]);
-			// @ts-expect-error O patrono abaixo não precisa ter as demais propriedades.
-			setSelectedPatron({ id: "nenhum", name: "Nenhum" });
-		}
-	}, [data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {

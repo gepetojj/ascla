@@ -18,8 +18,15 @@ interface Props {
 
 const AdminUsersEdit: NextPage<Props> = ({ user }) => {
 	const [academics, setAcademics] = useState<Academic[]>([]);
-	const { data, error } = useSWR("/api/academics/list", (...args) =>
-		fetch(...args).then(res => res.json())
+	useSWR("/api/academics/list", (...args) =>
+		fetch(...args).then(res =>
+			res.json().then(data => {
+				setAcademics(data.academics);
+				!academic &&
+					setAcademic(academics.find(({ id }) => id === user.metadata.academicId));
+				return data;
+			})
+		)
 	);
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>("/api/users/update", "put");
 
@@ -32,14 +39,6 @@ const AdminUsersEdit: NextPage<Props> = ({ user }) => {
 		roles.find(role => role.id === user.metadata.role)
 	);
 	const [academic, setAcademic] = useState<Academic>();
-
-	// Lista os acadêmicos para mostrar na seleção
-	useEffect(() => {
-		if (data && !error) {
-			setAcademics(data.academics);
-			setAcademic(academics.find(({ id }) => id === user.metadata.academicId));
-		}
-	}, [user.metadata.academicId, academics, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {

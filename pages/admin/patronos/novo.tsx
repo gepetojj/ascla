@@ -14,8 +14,15 @@ import useSWR from "swr";
 
 const AdminPatronsNew: NextPage = () => {
 	const [academics, setAcademics] = useState<Academic[]>([]);
-	const { data, error } = useSWR("/api/academics/list", (...args) =>
-		fetch(...args).then(res => res.json())
+	useSWR("/api/academics/list", (...args) =>
+		fetch(...args).then(res =>
+			res.json().then(data => {
+				setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
+				// @ts-expect-error O acadêmico abaixo não precisa ter as demais propriedades.
+				!selectedAcademic && setSelectedAcademic({ id: "nenhum", name: "Nenhum" });
+				return data;
+			})
+		)
 	);
 	const { fetcher, events, loading } = useFetcher("/api/patrons/create", "post");
 
@@ -46,15 +53,6 @@ const AdminPatronsNew: NextPage = () => {
 		window.addEventListener("keypress", keyboardHandler);
 		return () => window.removeEventListener("keypress", keyboardHandler);
 	}, []);
-
-	// Lista os acadêmicos para mostrar na seleção
-	useEffect(() => {
-		if (data && !error) {
-			setAcademics([{ id: "nenhum", name: "Nenhum" }, ...data.academics]);
-			// @ts-expect-error O acadêmico abaixo não precisa ter as demais propriedades.
-			setSelectedAcademic({ id: "nenhum", name: "Nenhum" });
-		}
-	}, [data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {

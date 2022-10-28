@@ -1,16 +1,29 @@
 import type { JSONContent } from "@tiptap/core";
 
+import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { ThumbnailInput } from "components/input/ThumbnailInput";
 import { AdminForm } from "components/layout/AdminForm";
+import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { useFetcher } from "hooks/useFetcher";
 import type { NextPage } from "next";
 import { NextSeo } from "next-seo";
 import React, { useCallback, useState, FormEvent, useEffect } from "react";
 import { Store } from "react-notifications-component";
+import useSWR from "swr";
 
 const AdminBlogNew: NextPage = () => {
+	const [academics, setAcademics] = useState<Academic[]>([]);
+	const [selectedAcademic, setSelectedAcademic] = useState<Academic>();
+	useSWR("/api/academics/list", (...args) =>
+		fetch(...args).then(res =>
+			res.json().then(data => {
+				setAcademics(data.academics);
+				return data;
+			})
+		)
+	);
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/posts/create?type=blogPosts",
 		"post"
@@ -84,9 +97,10 @@ const AdminBlogNew: NextPage = () => {
 				description,
 				thumbnailUrl,
 				content: editorContent,
+				authorId: selectedAcademic?.id,
 			});
 		},
-		[fetcher, title, description, thumbnailUrl, editorContent]
+		[fetcher, title, description, thumbnailUrl, editorContent, selectedAcademic]
 	);
 
 	return (
@@ -117,6 +131,12 @@ const AdminBlogNew: NextPage = () => {
 						value={description}
 						onChange={({ target }) => setDescription(target.value)}
 						required
+					/>
+					<Select
+						label="Escolha o autor da postagem"
+						options={academics}
+						selected={selectedAcademic}
+						onChange={selected => setSelectedAcademic(selected as Academic)}
 					/>
 					<ThumbnailInput id="thumbnail" setThumbnail={setThumbnailUrl} />
 				</>

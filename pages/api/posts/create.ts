@@ -3,9 +3,10 @@ import type { JSONContent } from "@tiptap/core";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { getIdFromText } from "helpers/getIdFromText";
+import { Collections } from "myFirebase/enums";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PostsType, PostsTypes } from "repositories/PostsRepository";
-import { postsRepo, academicsRepo } from "repositories/implementations";
+import { postsRepo } from "repositories/implementations";
 
 interface NewPost {
 	title: string;
@@ -55,8 +56,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					if (typeof authorId !== "string") {
 						authorId = session.sub;
 					} else {
-						const authorExists = await academicsRepo.getById(authorId);
-						if (!authorExists) authorId = session.sub;
+						const authorExists = await Collections["users"]
+							.where("metadata.academicId", "==", authorId)
+							.get();
+						if (authorExists && authorExists.docs.length > 0) {
+							authorId = authorExists.docs[0].data().id;
+						} else authorId = session.sub;
 					}
 				}
 

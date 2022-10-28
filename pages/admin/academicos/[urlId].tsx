@@ -22,8 +22,18 @@ interface Props {
 
 const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [patrons, setPatrons] = useState<Patron[]>([]);
-	const { data, error } = useSWR("/api/patrons/list", (...args) =>
-		fetch(...args).then(res => res.json())
+	useSWR("/api/patrons/list", (...args) =>
+		fetch(...args).then(res =>
+			res.json().then(data => {
+				const list = [{ id: "nenhum", name: "Nenhum" }, ...data.patrons];
+				setPatrons(list);
+				!selectedPatron &&
+					setSelectedPatron(
+						(list as Patron[]).find(({ id }) => id === academic.metadata.patronId)
+					);
+				return data;
+			})
+		)
 	);
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
 		"/api/academics/update",
@@ -35,17 +45,6 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [chair, setChair] = useState(academic.metadata.chair || 0);
 	const [avatar, setAvatar] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>(academic.bio);
-
-	// Lista os patronos para mostrar na seleção
-	useEffect(() => {
-		if (data && !error) {
-			const list = [{ id: "nenhum", name: "Nenhum" }, ...data.patrons];
-			setPatrons(list);
-			setSelectedPatron(
-				(list as Patron[]).find(({ id }) => id === academic.metadata.patronId)
-			);
-		}
-	}, [academic, data, error]);
 
 	useEffect(() => {
 		const onSuccess = () => {
