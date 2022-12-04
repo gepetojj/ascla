@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { ImGoogle } from "react-icons/im";
 
 const Account: NextPage = () => {
-	const { push, pathname } = useRouter();
+	const { push, pathname, query } = useRouter();
 	const { data, status } = useSession();
 
 	useEffect(() => {
@@ -20,8 +20,13 @@ const Account: NextPage = () => {
 	}, [data, push]);
 
 	const signInWithGoogle = useCallback(() => {
-		signIn("google", { callbackUrl: `${config.basePath}/conta/dados` });
-	}, []);
+		const callback = new URL("/conta/dados", config.basePath);
+		if (query.convite && typeof query.convite === "string") {
+			callback.searchParams.set("convite", query.convite);
+		}
+
+		signIn("google", { callbackUrl: callback.toString() });
+	}, [query]);
 
 	return (
 		<>

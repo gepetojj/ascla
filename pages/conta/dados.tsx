@@ -4,8 +4,11 @@ import { Main } from "components/layout/Main";
 import { Image } from "components/view/Image";
 import { config } from "config";
 import type { DefaultResponse } from "entities/DefaultResponse";
+import type { Invite } from "entities/Invite";
 import { useFetcher } from "hooks/useFetcher";
+import { Collections } from "myFirebase/enums";
 import { GetServerSideProps, NextPage } from "next";
+import { getToken } from "next-auth/jwt";
 import { signOut, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
@@ -13,7 +16,11 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Store } from "react-notifications-component";
 
-const AccountData: NextPage = () => {
+interface Props {
+	message?: string;
+}
+
+const AccountData: NextPage<Props> = ({ message }) => {
 	const { pathname } = useRouter();
 	const { data } = useSession();
 	const { fetcher, events, loading } = useFetcher<DefaultResponse>(
@@ -49,6 +56,21 @@ const AccountData: NextPage = () => {
 	useEffect(() => {
 		setName(String(data?.user?.name || ""));
 	}, [data?.user?.name, data?.user?.image]);
+
+	useEffect(() => {
+		if (!message) return;
+
+		Store.addNotification({
+			title: "Alerta",
+			message,
+			type: "danger",
+			container: "bottom-right",
+			dismiss: {
+				duration: 5000,
+				onScreen: true,
+			},
+		});
+	}, [message]);
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -187,6 +209,31 @@ const AccountData: NextPage = () => {
 export default AccountData;
 
 // Solução temporária para erro em deploy de páginas estáticas na netlify
-export const getServerSideProps: GetServerSideProps = async () => {
-	return { props: {} };
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+	if (!query.convite || typeof query.convite !== "string") return { props: {} };
+
+	const invite = await Collections.invites.doc(query.convite).get();
+	if (!invite.exists) return { props: { message: "Convite inexistente." } };
+
+	const token = await getToken({ req });
+	if (!token) return { props: { message: "Erro na sessão." } };
+
+	const userId = token.sub || "";
+	const inviteData: Invite = invite.data() as Invite;
+
+	if (!inviteData.valid || inviteData.usedBy) return { props: { message: "Convite inválido." } };
+
+	await Collections.users.doc(userId).update({
+		"metadata.role": inviteData.role || "common",
+		"metadata.academicId": inviteData.academicId || null,
+	});
+
+	if (!inviteData.infinite) {
+		await Collections.invites.doc(query.convite).update({
+			usedBy: userId,
+			valid: false,
+		} as Invite);
+	}
+
+	return { props: { message: "Saia e faça login novamente para efetivar as alterações." } };
 };
