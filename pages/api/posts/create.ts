@@ -35,8 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				type = req.query.type as PostsType;
 			}
 
-			const { title, description, thumbnailUrl, content }: NewPost = req.body;
-			let authorId: string | undefined = req.body.authorId;
+			const { title, description, thumbnailUrl, content, authorId }: NewPost = req.body;
+			let authorUserId = session.sub;
 
 			// TODO: Adicionar validação aos dados
 			if (!title || !description || !thumbnailUrl || !content.content?.length) {
@@ -48,20 +48,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				const slug = getIdFromText(title);
 				const slugExists = await postsRepo.getBySlug(slug, type);
 				if (slugExists) {
-					res.status(400).json({ message: "Uma postagem com o mesmo nome já existe." });
+					res.status(400).json({ message: "Uma postagem com o mesmo título já existe." });
 					return res;
 				}
 
 				if (authorId) {
-					if (typeof authorId !== "string") {
-						authorId = session.sub;
+					const author = await Collections["users"]
+						.where("metadata.academicId", "==", authorId)
+						.get();
+					if (!author.empty && author.docs[0].exists) {
+						authorUserId = author.docs[0].data().id || session.sub;
 					} else {
-						const authorExists = await Collections["users"]
-							.where("metadata.academicId", "==", authorId)
-							.get();
-						if (authorExists && authorExists.docs.length > 0) {
-							authorId = authorExists.docs[0].data().id;
-						} else authorId = session.sub;
+						res.status(400).json({
+							message:
+								"É necessário que um usuário esteja registrado como este acadêmico.",
+						});
+						return res;
 					}
 				}
 
@@ -71,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						description,
 						thumbnailUrl,
 						content,
-						authorId: authorId || session.sub,
+						authorId: authorUserId,
 						slug,
 					},
 					type
