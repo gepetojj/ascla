@@ -7,14 +7,44 @@ import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Props {
-	posts: Post<true>[];
+	initialPosts: Post<true>[];
 }
 
-const Blog: NextPage<Props> = ({ posts }) => {
+const Blog: NextPage<Props> = ({ initialPosts }) => {
 	const { pathname, query } = useRouter();
+	const [posts, setPosts] = useState<Post<true>[]>(initialPosts);
+	const [hasMore, setHasMore] = useState(true);
+
+	const loadMorePosts = async () => {
+		const url = new URL(`${config.basePath}/api/posts/list`);
+		url.searchParams.set("author", "true");
+		url.searchParams.set("type", "blogPosts");
+		url.searchParams.set("page", String(Math.floor(posts.length / initialPosts.length)));
+
+		fetch(url)
+			.then(async res => {
+				if (!res.ok) {
+					setHasMore(false);
+					return;
+				}
+
+				const newPosts: { posts: Post<true>[] } = await res.json();
+				if (!newPosts.posts || newPosts.posts.length <= 0) {
+					setHasMore(false);
+					return;
+				}
+
+				setPosts(posts => [...posts, ...newPosts.posts]);
+				setHasMore(newPosts.posts.length === initialPosts.length);
+			})
+			.catch(() => {
+				setHasMore(false);
+			});
+	};
 
 	return (
 		<>
@@ -40,9 +70,28 @@ const Blog: NextPage<Props> = ({ posts }) => {
 					disabled={posts?.length <= 0}
 					width="max-w-5xl"
 				/>
-				<ul className="flex flex-col gap-4 max-w-5xl w-full">
+				<ul>
 					{!!posts && posts.length ? (
-						posts.map(post => <CardBlog key={post.id} {...post} type="blog" />)
+						<InfiniteScroll
+							className="flex flex-col gap-4 max-w-5xl w-full"
+							dataLength={posts.length}
+							next={loadMorePosts}
+							hasMore={hasMore}
+							loader={
+								<span className="text-lg text-center">
+									Carregando mais postagens...
+								</span>
+							}
+							endMessage={
+								<span className="text-lg text-center">
+									Você viu todas as postagens! 🎉
+								</span>
+							}
+						>
+							{posts.map(post => (
+								<CardBlog key={post.id} {...post} type="blog" />
+							))}
+						</InfiniteScroll>
 					) : (
 						<span className="text-lg text-center">Ainda não há postagens.</span>
 					)}
@@ -56,12 +105,12 @@ export default Blog;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler(ctx, { col: "blogPosts", autoTry: true }, async () => {
-		let posts: Post<true>[] = [];
+		let initialPosts: Post<true>[] = [];
 
 		const res = await fetch(`${config.basePath}/api/posts/list?author=true&type=blogPosts`);
-		if (!res.ok) return { props: { posts } };
+		if (!res.ok) return { props: { initialPosts } };
 
 		const data: { posts: Post<true>[] } = await res.json();
-		posts = data.posts.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
-		return { props: { posts } };
+		initialPosts = data.posts.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
+		return { props: { initialPosts } };
 	});

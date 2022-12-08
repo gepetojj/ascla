@@ -1,4 +1,4 @@
-import { Academic } from "entities/Academic";
+import type { Academic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Post } from "entities/Post";
 import type { User } from "entities/User";
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			if (
 				typeof req.query.limit === "string" &&
-				Number(req.query.limit) >= 10 &&
+				Number(req.query.limit) >= 5 &&
 				Number(req.query.limit) <= 100
 			) {
 				limit = Number(req.query.limit);

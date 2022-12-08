@@ -7,14 +7,44 @@ import { gSSPHandler } from "helpers/gSSPHandler";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Props {
-	news: Post<true>[];
+	initialNews: Post<true>[];
 }
 
-const News: NextPage<Props> = ({ news }) => {
+const News: NextPage<Props> = ({ initialNews }) => {
 	const { pathname, query } = useRouter();
+	const [news, setNews] = useState<Post<true>[]>(initialNews);
+	const [hasMore, setHasMore] = useState(true);
+
+	const loadMorePosts = async () => {
+		const url = new URL(`${config.basePath}/api/posts/list`);
+		url.searchParams.set("author", "true");
+		url.searchParams.set("type", "news");
+		url.searchParams.set("page", String(Math.floor(news.length / initialNews.length)));
+
+		fetch(url)
+			.then(async res => {
+				if (!res.ok) {
+					setHasMore(false);
+					return;
+				}
+
+				const newPosts: { posts: Post<true>[] } = await res.json();
+				if (!newPosts.posts || newPosts.posts.length <= 0) {
+					setHasMore(false);
+					return;
+				}
+
+				setNews(news => [...news, ...newPosts.posts]);
+				setHasMore(newPosts.posts.length === initialNews.length);
+			})
+			.catch(() => {
+				setHasMore(false);
+			});
+	};
 
 	return (
 		<>
@@ -40,11 +70,30 @@ const News: NextPage<Props> = ({ news }) => {
 					disabled={news?.length <= 0}
 					width="max-w-5xl"
 				/>
-				<ul className="flex flex-col gap-4 max-w-5xl w-full">
+				<ul>
 					{!!news && news.length ? (
-						news.map(post => <CardBlog key={post.id} {...post} type="noticias" />)
+						<InfiniteScroll
+							className="flex flex-col gap-4 max-w-5xl w-full"
+							dataLength={news.length}
+							next={loadMorePosts}
+							hasMore={hasMore}
+							loader={
+								<span className="text-lg text-center">
+									Carregando mais notícias...
+								</span>
+							}
+							endMessage={
+								<span className="text-lg text-center">
+									Você viu todas as notícias! 🎉
+								</span>
+							}
+						>
+							{news.map(post => (
+								<CardBlog key={post.id} {...post} type="blog" />
+							))}
+						</InfiniteScroll>
 					) : (
-						<span className="text-lg text-center">Ainda não há notícias.</span>
+						<span className="text-lg text-center">Ainda não há postagens.</span>
 					)}
 				</ul>
 			</Main>
@@ -56,12 +105,12 @@ export default News;
 
 export const getServerSideProps: GetServerSideProps<Props> = ctx =>
 	gSSPHandler(ctx, { col: "news", autoTry: true }, async () => {
-		let news: Post<true>[] = [];
+		let initialNews: Post<true>[] = [];
 
 		const res = await fetch(`${config.basePath}/api/posts/list?author=true&type=news`);
-		if (!res.ok) return { props: { news } };
+		if (!res.ok) return { props: { initialNews } };
 
 		const data: { posts: Post<true>[] } = await res.json();
-		news = data.posts.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
-		return { props: { news } };
+		initialNews = data.posts.sort((a, b) => b.metadata.createdAt - a.metadata.createdAt);
+		return { props: { initialNews } };
 	});

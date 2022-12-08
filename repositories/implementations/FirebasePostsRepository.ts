@@ -48,10 +48,10 @@ export class FirebasePostsRepository implements PostsRepository {
 		const col = Collections[type];
 
 		try {
-			const query = col.orderBy("metadata.createdAt", "desc");
+			let query = col.orderBy("metadata.createdAt", "desc");
 
 			if (pagination) {
-				query.limit(pagination.limit).offset(pagination.page * pagination.limit);
+				query = query.limit(pagination.limit).offset(pagination.page * pagination.limit);
 			}
 
 			const queryData = await query.get();
