@@ -88,7 +88,7 @@ const Patrons: NextPage = () => {
 							</div>
 						))
 					) : (
-						<p className="text-xl">Não há acadêmicos registrados.</p>
+						<p className="text-xl text-center">Não há acadêmicos registrados.</p>
 					)}
 				</div>
 			</Main>
