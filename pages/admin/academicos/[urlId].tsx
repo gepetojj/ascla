@@ -5,7 +5,7 @@ import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
 import { config } from "config";
-import type { Academic } from "entities/Academic";
+import { type Academic, type AcademicType, AcademicTypes } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { gSSPHandler } from "helpers/gSSPHandler";
@@ -43,6 +43,9 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const [name, setName] = useState(academic.name);
 	const [selectedPatron, setSelectedPatron] = useState<Patron | undefined>(undefined);
 	const [chair, setChair] = useState(academic.metadata.chair || 0);
+	const [type, setType] = useState<{ id: AcademicType; name: string }>(
+		AcademicTypes.find(({ id }) => id === academic.metadata.type) || AcademicTypes[0]
+	);
 	const [avatar, setAvatar] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>(academic.bio);
 
@@ -87,7 +90,11 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || chair < 1 || chair > 1000 || !editorContent.content?.length) {
+			if (
+				!name ||
+				(type.id === "primary" && (chair < 1 || chair > 1000)) ||
+				!editorContent.content?.length
+			) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -106,12 +113,13 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 				name,
 				patronId:
 					selectedPatron?.id === "nenhum" ? undefined : selectedPatron?.id || undefined,
-				chair,
+				chair: type.id === "primary" ? chair : -1,
+				type: type.id,
 				avatar: avatar || undefined,
 				bio: editorContent,
 			});
 		},
-		[fetcher, academic.id, name, selectedPatron, chair, avatar, editorContent]
+		[fetcher, academic.id, name, selectedPatron, chair, type, avatar, editorContent]
 	);
 
 	return (
@@ -141,17 +149,27 @@ const AdminAcademicsEdit: NextPage<Props> = ({ academic }) => {
 						selected={selectedPatron}
 						onChange={selected => setSelectedPatron(selected as Patron)}
 					/>
-					<TextInput
-						id="chair"
-						label="Cadeira *"
-						className="w-full sm:w-60"
-						type="number"
-						min={1}
-						max={1000}
-						value={chair}
-						onChange={({ target }) => setChair(Number(target.value))}
-						required
+					<Select
+						label="Escolha o tipo *"
+						options={AcademicTypes}
+						selected={type}
+						onChange={selected =>
+							setType(selected as { id: AcademicType; name: string })
+						}
 					/>
+					{type.id === "primary" && (
+						<TextInput
+							id="chair"
+							label="Cadeira (necessário se tipo for 'efetivo')"
+							className="w-full sm:w-60"
+							type="number"
+							min={1}
+							max={1000}
+							value={chair}
+							onChange={({ target }) => setChair(Number(target.value))}
+							required
+						/>
+					)}
 					<FileInput
 						id="avatar"
 						label="Insira uma imagem"

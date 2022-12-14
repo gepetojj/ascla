@@ -43,6 +43,7 @@ const ViewAcademic: NextPage<Props> = ({ academic }) => {
 					oppositeType="patron"
 					oppositeName={patron?.name}
 					oppositeUrlId={patron?.metadata.urlId}
+					type={academic.metadata.type}
 				/>
 			</Main>
 		</>

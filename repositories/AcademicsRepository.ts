@@ -1,6 +1,6 @@
 import type { JSONContent } from "@tiptap/core";
 
-import type { Academic } from "entities/Academic";
+import type { Academic, AcademicType } from "entities/Academic";
 
 export interface CreateAcademicDTO {
 	id?: string;
@@ -8,6 +8,7 @@ export interface CreateAcademicDTO {
 	bio: JSONContent;
 	avatarUrl: string;
 	chair: number;
+	type: AcademicType;
 	slug: string;
 	patronId?: string;
 }
@@ -17,6 +18,7 @@ export interface UpdateAcademicDTO {
 	bio?: JSONContent;
 	avatarUrl?: string;
 	chair?: number;
+	type?: AcademicType;
 	patronId?: string;
 }
 

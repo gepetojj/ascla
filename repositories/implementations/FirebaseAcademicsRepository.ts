@@ -64,6 +64,7 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 		bio,
 		avatarUrl,
 		chair,
+		type,
 		slug,
 		patronId,
 	}: CreateAcademicDTO): Promise<boolean> {
@@ -76,6 +77,7 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 				metadata: {
 					patronId: patronId || "nenhum",
 					chair,
+					type,
 					urlId: slug,
 					createdAt: Date.now(),
 					updatedAt: 0,
@@ -92,7 +94,7 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 
 	async update(
 		id: Academic["id"],
-		{ name, bio, chair, avatarUrl, patronId }: UpdateAcademicDTO
+		{ name, bio, chair, type, avatarUrl, patronId }: UpdateAcademicDTO
 	): Promise<boolean> {
 		try {
 			const academic: UpdatableAcademic = {
@@ -102,6 +104,7 @@ export class FirebaseAcademicsRepository implements AcademicsRepository {
 			if (name && typeof name === "string") academic.name = name;
 			if (bio && bio.content?.length) academic.bio = bio;
 			if (chair && typeof chair === "number") academic["metadata.chair"] = chair;
+			if (type && typeof type === "string") academic["metadata.type"] = type;
 			if (avatarUrl && typeof avatarUrl === "string") academic.avatarUrl = avatarUrl;
 			if (patronId && typeof patronId === "string") academic["metadata.patronId"] = patronId;
 

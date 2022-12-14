@@ -1,7 +1,7 @@
 import { EditableItem } from "components/card/EditableItem";
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { OptimizedAcademic } from "entities/Academic";
+import { AcademicTypes, OptimizedAcademic } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { gSSPHandler } from "helpers/gSSPHandler";
 import { useFetcher } from "hooks/useFetcher";
@@ -83,20 +83,41 @@ const AdminAcademics: NextPage<Props> = ({ academics }) => {
 							</a>
 						</Link>
 					</div>
-					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-2">
+					<div className="flex flex-col justify-center items-center max-w-xl w-full gap-4">
 						{academics?.length ? (
-							academics
-								.sort((a, b) => a.metadata.chair - b.metadata.chair)
-								.map(academic => (
-									<EditableItem
-										key={academic.id}
-										title={academic.name}
-										editUrl={`/admin/academicos/${academic.metadata.urlId}`}
-										deleteAction={() => deleteAcademic(academic.id)}
-										loading={loading}
-										deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
-									/>
-								))
+							AcademicTypes.map(({ id, name }) => (
+								<div key={id} className="flex flex-col gap-2 w-full">
+									<h2 className="font-medium">
+										{name === "In Memoriam" ? (
+											<span className="italic">{name}</span>
+										) : (
+											name + "s"
+										)}
+									</h2>
+									{academics
+										.filter(academic => academic.metadata.type === id)
+										.sort((a, b) => a.metadata.chair - b.metadata.chair)
+										.length > 0 ? (
+										academics
+											.filter(academic => academic.metadata.type === id)
+											.sort((a, b) => a.metadata.chair - b.metadata.chair)
+											.map(academic => (
+												<EditableItem
+													key={academic.id}
+													title={academic.name}
+													editUrl={`/admin/academicos/${academic.metadata.urlId}`}
+													deleteAction={() => deleteAcademic(academic.id)}
+													loading={loading}
+													deleteLabel="Clique duas vezes para deletar o acadêmico permanentemente."
+												/>
+											))
+									) : (
+										<p className="text-center">
+											Não há acadêmicos desta categoria ainda.
+										</p>
+									)}
+								</div>
+							))
 						) : (
 							<p>Não há acadêmicos ainda.</p>
 						)}

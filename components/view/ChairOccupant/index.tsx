@@ -1,5 +1,6 @@
 import { Image } from "components/view/Image";
 import { config } from "config";
+import { AcademicType, AcademicTypes } from "entities/Academic";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,6 +29,7 @@ export interface ChairOccupantViewProps {
 	oppositeName?: string;
 	/** Link para a página do oposto do ocupante. */
 	oppositeUrlId?: string;
+	type?: AcademicType;
 }
 
 /**
@@ -47,6 +49,7 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 	oppositeType,
 	oppositeName,
 	oppositeUrlId,
+	type,
 }) => {
 	const session = useSession();
 	const { pathname } = useRouter();
@@ -90,24 +93,47 @@ const ChairOccupantViewComponent: FC<ChairOccupantViewProps> = ({
 					<h2 className="text-xl font-semibold break-words leading-tight max-w-xs">
 						{name}
 					</h2>
-					<span className="truncate">Cadeira Nº {chair < 10 ? `0${chair}` : chair}</span>
-				</div>
-				<div className="w-full text-center max-w-xs">
-					<h2 className="text-center text-xl font-semibold">
-						{oppositeType === "academic" ? "Acadêmico" : "Patrono"}
-					</h2>
-					{oppositeName && oppositeUrlId ? (
-						<Link
-							href={`/cadeiras/${
-								oppositeType === "academic" ? "academicos" : "patronos"
-							}/${oppositeUrlId}`}
-						>
-							<a className="break-words max-w-xs hover:underline">{oppositeName}</a>
-						</Link>
-					) : (
-						<span className="truncate">Nenhum</span>
+					{chair && chair >= 1 && (
+						<span className="truncate">
+							Cadeira Nº {chair < 10 ? `0${chair}` : chair}
+						</span>
 					)}
 				</div>
+				{chair && chair >= 1 ? (
+					<div className="w-full text-center max-w-xs">
+						<h2 className="text-center text-xl font-semibold">
+							{oppositeType === "academic" ? "Acadêmico" : "Patrono"}
+						</h2>
+						{oppositeName && oppositeUrlId ? (
+							<Link
+								href={`/cadeiras/${
+									oppositeType === "academic" ? "academicos" : "patronos"
+								}/${oppositeUrlId}`}
+							>
+								<a className="break-words max-w-xs hover:underline">
+									{oppositeName}
+								</a>
+							</Link>
+						) : (
+							<span className="truncate">Nenhum</span>
+						)}
+					</div>
+				) : !!type ? (
+					<div className="w-full text-center max-w-xs">
+						<h2 className="text-center text-lg font-medium">
+							{AcademicTypes.find(({ id }) => id === type)?.name === "In Memoriam" ? (
+								<span className="italic">
+									{AcademicTypes.find(({ id }) => id === type)?.name}
+								</span>
+							) : (
+								<span>
+									Acadêmico(a)
+									<br /> {AcademicTypes.find(({ id }) => id === type)?.name}
+								</span>
+							)}
+						</h2>
+					</div>
+				) : null}
 				<div className="flex flex-col justify-center mt-4 gap-1">
 					<button
 						type="button"

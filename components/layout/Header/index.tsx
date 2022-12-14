@@ -62,9 +62,6 @@ const HeaderComponent: FC = () => {
 					<Link href="/cadeiras/academicos">
 						<a>Acadêmicos</a>
 					</Link>
-					<Link href="/cadeiras/socios">
-						<a>Sócios</a>
-					</Link>
 				</HeaderLink>
 				<HeaderLink href="/noticias" isActive={pathname.startsWith("/noticias")}>
 					Notícias

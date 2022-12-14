@@ -1,5 +1,6 @@
 import type { JSONContent } from "@tiptap/core";
 
+import type { AcademicType } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import { apiHandler } from "helpers/apiHandler";
 import { uploadAvatar } from "helpers/uploadAvatar";
@@ -11,6 +12,7 @@ interface UpdateAcademic {
 	name?: string;
 	patronId?: string;
 	chair?: number;
+	type?: AcademicType;
 	bio?: JSONContent;
 	avatar?: string;
 }
@@ -26,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res;
 			}
 
-			const { id, name, patronId, chair, avatar, bio }: UpdateAcademic = req.body;
+			const { id, name, patronId, chair, type, avatar, bio }: UpdateAcademic = req.body;
 
 			// TODO: Adicionar validação aos dados
 			if (!id) {
@@ -44,6 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					name,
 					bio,
 					chair,
+					type,
 					avatarUrl,
 					patronId,
 				});

@@ -4,6 +4,7 @@ import { FileInput } from "components/input/FileInput";
 import { Select } from "components/input/Select";
 import { TextInput } from "components/input/TextInput";
 import { AdminForm } from "components/layout/AdminForm";
+import { type AcademicType, AcademicTypes } from "entities/Academic";
 import type { DefaultResponse } from "entities/DefaultResponse";
 import type { Patron } from "entities/Patron";
 import { useFetcher } from "hooks/useFetcher";
@@ -33,30 +34,12 @@ const AdminAcademicsNew: NextPage = () => {
 	const [name, setName] = useState("");
 	const [selectedPatron, setSelectedPatron] = useState(patrons.find(() => false));
 	const [chair, setChair] = useState(0);
+	const [type, setType] = useState<{ id: AcademicType; name: string }>(AcademicTypes[0]);
 	const [avatar, setAvatar] = useState("");
 	const [editorContent, setEditorContent] = useState<JSONContent>({
 		type: "doc",
 		content: [{ type: "paragraph" }],
 	});
-
-	useEffect(() => {
-		const keyboardHandler = (event: KeyboardEvent) => {
-			if (event.ctrlKey && event.code === "KeyI") {
-				setName("");
-				// @ts-expect-error O patrono abaixo não precisa ter as demais propriedades.
-				setSelectedPatron({ id: "nenhum", name: "Nenhum" });
-				setChair(0);
-				setAvatar("");
-				setEditorContent({
-					type: "doc",
-					content: [{ type: "paragraph" }],
-				});
-			}
-		};
-
-		window.addEventListener("keypress", keyboardHandler);
-		return () => window.removeEventListener("keypress", keyboardHandler);
-	}, []);
 
 	useEffect(() => {
 		const onSuccess = () => {
@@ -99,7 +82,11 @@ const AdminAcademicsNew: NextPage = () => {
 	const onFormSubmit = useCallback(
 		(event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
-			if (!name || chair < 1 || chair > 1000 || !editorContent.content?.length) {
+			if (
+				!name ||
+				(type.id === "primary" && (chair < 1 || chair > 1000)) ||
+				!editorContent.content?.length
+			) {
 				Store.addNotification({
 					title: "Erro",
 					message: "Preencha todos os campos corretamente.",
@@ -116,12 +103,13 @@ const AdminAcademicsNew: NextPage = () => {
 			fetcher({
 				name,
 				patronId: selectedPatron?.id || "nenhum",
-				chair,
+				chair: type.id === "primary" ? chair : -1,
+				type: type.id,
 				avatar: avatar || undefined,
 				bio: editorContent,
 			});
 		},
-		[fetcher, name, selectedPatron, chair, avatar, editorContent]
+		[fetcher, name, selectedPatron, chair, type, avatar, editorContent]
 	);
 
 	return (
@@ -151,17 +139,27 @@ const AdminAcademicsNew: NextPage = () => {
 						selected={selectedPatron}
 						onChange={selected => setSelectedPatron(selected as Patron)}
 					/>
-					<TextInput
-						id="chair"
-						label="Cadeira *"
-						className="w-full sm:w-60"
-						type="number"
-						min={1}
-						max={1000}
-						value={chair}
-						onChange={({ target }) => setChair(Number(target.value))}
-						required
+					<Select
+						label="Escolha o tipo"
+						options={AcademicTypes}
+						selected={type}
+						onChange={selected =>
+							setType(selected as { id: AcademicType; name: string })
+						}
 					/>
+					{type.id === "primary" && (
+						<TextInput
+							id="chair"
+							label="Cadeira (necessário se tipo for 'efetivo')"
+							className="w-full sm:w-60"
+							type="number"
+							min={1}
+							max={1000}
+							value={chair}
+							onChange={({ target }) => setChair(Number(target.value))}
+							required
+						/>
+					)}
 					<FileInput
 						id="avatar"
 						label="Insira uma imagem"

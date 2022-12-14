@@ -2,7 +2,7 @@ import { CardChairOccupant } from "components/card/ChairOccupant";
 import { Search } from "components/input/Search";
 import { Main } from "components/layout/Main";
 import { config } from "config";
-import type { OptimizedAcademic } from "entities/Academic";
+import { AcademicTypes, OptimizedAcademic } from "entities/Academic";
 import type { GetServerSideProps, NextPage } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -52,22 +52,45 @@ const Patrons: NextPage = () => {
 					placeholder="Procure acadêmicos:"
 					disabled={academics?.length <= 0}
 				/>
-				<ul className="flex justify-center items-center flex-wrap max-w-5xl gap-4">
+				<div className="flex flex-col gap-6 max-w-[49rem] w-full">
 					{academics?.length ? (
-						academics
-							.sort((a, b) => a.metadata.chair - b.metadata.chair)
-							.map(academic => (
-								<CardChairOccupant
-									key={academic.id}
-									name={academic.name}
-									number={academic.metadata.chair}
-									href={`/cadeiras/academicos/${academic.metadata.urlId}`}
-								/>
-							))
+						AcademicTypes.map(({ id, name }) => (
+							<div key={id} className="flex flex-col gap-2 max-w-5xl w-full">
+								<h2 className="font-medium">
+									{name === "In Memoriam" ? (
+										<span className="italic">{name}</span>
+									) : (
+										name + "s"
+									)}
+								</h2>
+								<ul className="flex justify-center items-center flex-wrap w-full gap-4">
+									{academics
+										.filter(academic => academic.metadata.type === id)
+										.sort((a, b) => a.metadata.chair - b.metadata.chair)
+										.length > 0 ? (
+										academics
+											.filter(academic => academic.metadata.type === id)
+											.sort((a, b) => a.metadata.chair - b.metadata.chair)
+											.map(academic => (
+												<CardChairOccupant
+													key={academic.id}
+													name={academic.name}
+													number={academic.metadata.chair}
+													href={`/cadeiras/academicos/${academic.metadata.urlId}`}
+												/>
+											))
+									) : (
+										<p className="text-center">
+											Não há acadêmicos desta categoria ainda.
+										</p>
+									)}
+								</ul>
+							</div>
+						))
 					) : (
-						<span className="text-xl">Não há acadêmicos registrados.</span>
+						<p className="text-xl">Não há acadêmicos registrados.</p>
 					)}
-				</ul>
+				</div>
 			</Main>
 		</>
 	);

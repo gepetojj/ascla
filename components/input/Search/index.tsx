@@ -68,7 +68,7 @@ const SearchComponent: FC<SearchProps> = ({
 		<>
 			<div
 				className={`flex relative ${
-					width ? width : "max-w-3xl"
+					width ? width : "max-w-[49rem]"
 				} w-full h-fit justify-center items-center ${
 					matches.length > 0 || search.length > 0 ? "mb-0" : "mb-4"
 				}`}
@@ -92,7 +92,7 @@ const SearchComponent: FC<SearchProps> = ({
 			{(matches.length > 0 || search.length > 0) && (
 				<div
 					className={`w-full ${
-						width ? width : "max-w-3xl"
+						width ? width : "max-w-[49rem]"
 					} h-fit m-4 mb-6 divide-y divide-black-300/40 divide-y-reverse`}
 				>
 					<span className="text-sm">
