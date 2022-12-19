@@ -89,7 +89,7 @@ const News: NextPage<Props> = ({ initialNews }) => {
 							}
 						>
 							{news.map(post => (
-								<CardBlog key={post.id} {...post} type="blog" />
+								<CardBlog key={post.id} {...post} type="noticias" />
 							))}
 						</InfiniteScroll>
 					) : (
