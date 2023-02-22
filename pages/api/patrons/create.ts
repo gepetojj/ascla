@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			try {
 				const slugExists = await patronsRepo.getBySlug(customUrl);
-				if (!slugExists) {
+				if (slugExists) {
 					res.status(400).json({ message: "O ID customizado do patrono já existe." });
 					return res;
 				}
