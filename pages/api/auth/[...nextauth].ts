@@ -22,15 +22,15 @@ export default NextAuth({
 		async signIn({ account, profile }) {
 			const users = Collections.users;
 			const user: User = {
-				id: profile.sub || "",
+				id: profile?.sub || "",
 				metadata: {
-					urlId: profile.sub || "",
-					provider: account.provider,
+					urlId: profile?.sub || "",
+					provider: account?.provider || "",
 					role: "common",
 				},
-				email: profile.email || "",
-				avatarUrl: String(profile.picture),
-				name: profile.name || "",
+				email: profile?.email || "",
+				avatarUrl: String(profile?.image),
+				name: profile?.name || "",
 			};
 
 			// Cria o usuário no banco de dados se não existir.
