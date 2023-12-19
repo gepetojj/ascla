@@ -4,7 +4,7 @@ export const config = {
 	basePath:
 		process.env.NODE_ENV === "development"
 			? "http://localhost:3000"
-			: "https://www.aslca.org.br",
+			: process.env.WEB_URL || "https://ascla.netlify.app",
 } as const;
 
 export const academias = [
