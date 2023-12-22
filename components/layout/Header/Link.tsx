@@ -24,27 +24,25 @@ const HeaderLinkComponent: FC<HeaderLinkProps> = ({
 	if (showOnHover) {
 		return (
 			<div
-				className="flex justify-center items-start relative z-10"
+				className="flex justify-center items-start relative z-10 group"
 				onMouseEnter={toggleHover}
 				onMouseLeave={toggleHover}
 			>
 				<HeaderLinkBase as="button" isActive={isActive} isHovering={isHovering}>
 					{label}
 				</HeaderLinkBase>
-				<div
-					className={`flex flex-col justify-center items-center absolute w-fit px-3 py-2 top-12 rounded-sm 
-					bg-gray-500/40 backdrop-blur-sm border border-gray-100/5 ease-linear transform origin-top duration-100 ${
-						isHovering ? "scale-100" : "scale-0"
-					}`}
-				>
-					{Children.toArray(children).map((option, index) => (
-						<div
-							key={`header-link-${index}`}
-							className="w-full text-center p-1 cursor-pointer hover:underline underline-offset-1"
-						>
-							{option}
-						</div>
-					))}
+				<div className="absolute ease-linear transform origin-top duration-100 scale-0 group-hover:scale-100">
+					<div className="scale-0 group-hover:scale-100 w-full h-12" />
+					<div className="flex flex-col justify-center items-center w-fit px-3 py-2 rounded-sm bg-gray-500/40 backdrop-blur-sm border border-gray-100/5">
+						{Children.toArray(children).map((option, index) => (
+							<div
+								key={`header-link-${index}`}
+								className="w-full text-center p-1 cursor-pointer hover:underline underline-offset-1"
+							>
+								{option}
+							</div>
+						))}
+					</div>
 				</div>
 			</div>
 		);

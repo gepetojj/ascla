@@ -17,7 +17,7 @@ const HeaderComponent: FC = () => {
 	}, [push, data]);
 
 	return (
-		<header className="flex flex-col justify-center items-center bg-primary-main text-black-100 px-6 py-5 gap-4 lg:flex-row md:justify-between">
+		<header className="flex flex-col justify-center items-center bg-gradient-to-r from-primary-main to-[#8fd095] text-black-100 px-6 py-5 gap-4 lg:flex-row md:justify-between">
 			<div className="flex items-center">
 				<div className="flex items-center">
 					<Image

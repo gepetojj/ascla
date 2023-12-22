@@ -132,7 +132,17 @@ const FooterComponent: FC = () => {
 				</FooterTopic>
 			</div>
 			<span className="text-center text-sm font-medium mt-2">
-				{config.shortName} - {new Date().getFullYear()} - Todos os direitos reservados.
+				{config.shortName} - {new Date().getFullYear()} - Todos os direitos reservados.{" "}
+				<br />
+				Desenvolvido por{" "}
+				<a
+					href="http://www.github.com/gepetojj"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="text-slate-800 hover:underline"
+				>
+					Gepetojj
+				</a>
 			</span>
 		</footer>
 	);
