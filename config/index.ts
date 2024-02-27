@@ -39,4 +39,8 @@ export const blogs = [
 		label: "A palavra é para dizer",
 		url: "https://apalavraeparadizer.blogspot.com/",
 	},
+	{
+		label: "Blog do Etevaldo",
+		url: "https://blogdoetevaldo.blogspot.com/"
+	}
 ] as const;
